@@ -1,5 +1,7 @@
 "use client";
-import { useState, MouseEvent } from "react";
+import { useFormik } from "formik";
+import { useState } from "react";
+import * as Yup from "yup";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -7,9 +9,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useRouter } from "next/navigation";
+
 export default function LoginForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = (): void => setShowPassword(!showPassword);
   const router = useRouter();
   const handleSignUpClick = () => {
     router.push("/register");
@@ -17,20 +18,55 @@ export default function LoginForm() {
   const handleForgotClick = () => {
     router.push("/forgot");
   };
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log("Form values", values);
+      // Replace with your form submission logic (e.g., API call)
+    },
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = (): void => {
+    setShowPassword(!showPassword);
+  };
+
   const handleMouseDownPassword = (
-    event: MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     event.preventDefault();
   };
+
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-3xl font-bold mb-6 text-center">Sign in to SSMS</h2>
-      <form className="w-full flex flex-col items-center">
+      <form
+        className="w-full flex flex-col items-center"
+        onSubmit={formik.handleSubmit}>
         <div className="mb-4">
           <TextField
-            id="outlined-basic"
+            id="email"
+            name="email"
             label="Email"
             variant="outlined"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
             sx={{
               width: "300px",
               "& .MuiOutlinedInput-root": { borderRadius: "25px" },
@@ -39,10 +75,16 @@ export default function LoginForm() {
         </div>
         <div className="mb-6">
           <TextField
-            id="outlined-password"
+            id="password"
+            name="password"
             label="Password"
             variant="outlined"
             type={showPassword ? "text" : "password"}
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
             sx={{
               width: "300px",
               "& .MuiOutlinedInput-root": { borderRadius: "25px" },
@@ -65,7 +107,7 @@ export default function LoginForm() {
         <div className="flex items-center justify-center mb-4 w-full">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[300px]"
-            type="button">
+            type="submit">
             Sign In
           </button>
         </div>
