@@ -1,39 +1,39 @@
-'use client';
-import { useFormik } from 'formik';
-import { useState } from 'react';
-import * as Yup from 'yup';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import GoogleIcon from '@mui/icons-material/Google';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useFormik } from "formik";
+import { useState } from "react";
+import * as Yup from "yup";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import GoogleIcon from "@mui/icons-material/Google";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const router = useRouter();
   const handleSignUpClick = () => {
-    router.push('/register');
+    router.push("/register");
   };
   const handleForgotClick = () => {
-    router.push('/forgot');
+    router.push("/forgot");
   };
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string().required('Password is required'),
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log('Form values', values);
+      console.log("Form values", values);
       // Replace with your form submission logic (e.g., API call)
     },
   });
@@ -62,14 +62,12 @@ export default function LoginForm() {
         <div className="w-full lg:w-1/2 mb-2 lg:mb-0">
           <button
             type="button"
-            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-          >
+            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
               className="w-4"
-              id="google"
-            >
+              id="google">
               <path
                 fill="#fbbb00"
                 d="M113.47 309.408 95.648 375.94l-65.139 1.378C11.042 341.211 0 299.9 0 256c0-42.451 10.324-82.483 28.624-117.732h.014L86.63 148.9l25.404 57.644c-5.317 15.501-8.215 32.141-8.215 49.456.002 18.792 3.406 36.797 9.651 53.408z"
@@ -86,15 +84,14 @@ export default function LoginForm() {
                 fill="#f14336"
                 d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
               />
-            </svg>{' '}
-            Google{' '}
+            </svg>{" "}
+            Google{" "}
           </button>
         </div>
         <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
           <button
             type="button"
-            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-          >
+            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300">
             {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 16 16"
@@ -107,16 +104,14 @@ export default function LoginForm() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               id="facebook"
-              className="w-5"
-            >
+              className="w-5">
               <linearGradient
                 id="Ld6sqrtcxMyckEl6xeDdMa"
                 x1="9.993"
                 x2="40.615"
                 y1="9.993"
                 y2="40.615"
-                gradientUnits="userSpaceOnUse"
-              >
+                gradientUnits="userSpaceOnUse">
                 <stop offset="0" stop-color="#2aa4f4" />
                 <stop offset="1" stop-color="#007ad9" />
               </linearGradient>
@@ -138,8 +133,7 @@ export default function LoginForm() {
       </div>
       <form
         className="w-full flex flex-col items-center"
-        onSubmit={formik.handleSubmit}
-      >
+        onSubmit={formik.handleSubmit}>
         <div className="mb-4 w-full">
           <TextField
             fullWidth
@@ -153,7 +147,7 @@ export default function LoginForm() {
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
             sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '25px' },
+              "& .MuiOutlinedInput-root": { borderRadius: "25px" },
             }}
           />
         </div>
@@ -164,14 +158,14 @@ export default function LoginForm() {
             name="password"
             label="Password"
             variant="outlined"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
             sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '25px' },
+              "& .MuiOutlinedInput-root": { borderRadius: "25px" },
             }}
             InputProps={{
               endAdornment: (
@@ -180,8 +174,7 @@ export default function LoginForm() {
                     aria-label="toggle password visibility"
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
+                    edge="end">
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -190,23 +183,28 @@ export default function LoginForm() {
           />
         </div>
         <div className="my-4 text-lg text-right w-full">
-          <a href="#" className="text-blue-500 hover:underline">
+          <a
+            href="#"
+            className="text-blue-500 hover:underline"
+            onClick={handleForgotClick}>
             Forgot password?
           </a>
         </div>
         <div className="flex items-center justify-center my-4 w-full">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-            type="submit"
-          >
+            type="submit">
             Sign In
           </button>
         </div>
       </form>
       <div className="mt-4 text-lg text-gray-600 text-center">
         <p>
-          Don't have account?{' '}
-          <a href="#" className="text-blue-500 hover:underline">
+          Don't have account?{" "}
+          <a
+            href="#"
+            className="text-blue-500 hover:underline"
+            onClick={handleSignUpClick}>
             Sign up
           </a>
         </p>
