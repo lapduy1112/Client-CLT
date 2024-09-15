@@ -1,7 +1,5 @@
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      main page
-    </main>
-  );
-}
+const IndexPage = () => {
+  return <p>Redirecting...</p>;
+};
+
+export default IndexPage;
