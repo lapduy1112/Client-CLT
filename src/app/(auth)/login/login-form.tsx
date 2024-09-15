@@ -112,8 +112,8 @@ export default function LoginForm() {
                 y1="9.993"
                 y2="40.615"
                 gradientUnits="userSpaceOnUse">
-                <stop offset="0" stop-color="#2aa4f4" />
-                <stop offset="1" stop-color="#007ad9" />
+                <stop offset="0" stopColor="#2aa4f4" />
+                <stop offset="1" stopColor="#007ad9" />
               </linearGradient>
               <path
                 fill="url(#Ld6sqrtcxMyckEl6xeDdMa)"
@@ -200,7 +200,7 @@ export default function LoginForm() {
       </form>
       <div className="mt-4 text-lg text-gray-600 text-center">
         <p>
-          Don't have account?{" "}
+          Don&apos;t have account?{" "}
           <a
             href="#"
             className="text-blue-500 hover:underline"
