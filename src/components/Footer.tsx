@@ -35,7 +35,7 @@ const Footer = () => {
                 info@example.com
               </a>
             </Typography>
-            <Box className="flex items-center mt-2 space-x-3">
+            <Box className="flex items-center mt-1 space-x-3">
               <Typography variant="body2" className="mr-2">
                 Follow us on:
               </Typography>
@@ -68,38 +68,33 @@ const Footer = () => {
             </Box>
           </Box>
 
-          {/* Phần bên phải */}
           <Box className="flex flex-col text-center md:text-right">
             <Typography variant="h6" gutterBottom>
               Quick Links
             </Typography>
             <Link
+              href="/home"
+              className="text-blue-400 hover:underline mb-1 block">
+              Home
+            </Link>
+            <Link
               href="/service"
               className="text-blue-400 hover:underline mb-1 block">
               Service
             </Link>
-            <Link
-              href="/shipping"
-              className="text-blue-400 hover:underline mb-1 block">
-              Shipping
+            <Link href="/route" className="text-blue-400 hover:underline block">
+              Route
             </Link>
             <Link
-              href="/about-us"
+              href="/port"
               className="text-blue-400 hover:underline mb-1 block">
-              About Us
-            </Link>
-            <Link
-              href="/pricing"
-              className="text-blue-400 hover:underline block">
-              Pricing
+              Port
             </Link>
           </Box>
         </Box>
 
-        {/* Thanh ngang phân cách */}
         <Box className="border-t border-gray-700 my-6"></Box>
 
-        {/* Phần bản quyền */}
         <Box className="text-center">
           <Typography variant="body2" className="mb-2">
             © {new Date().getFullYear()} MyApp. All rights reserved.

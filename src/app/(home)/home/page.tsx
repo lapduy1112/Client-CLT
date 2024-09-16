@@ -1,12 +1,15 @@
 import React from "react";
 import MainLayout from "../MainLayout";
-import { Container, Typography } from "@mui/material";
 import HomeCarousel from "@/components/HomeCarousel";
+import { Stats } from "@/components/Stats";
+import About from "@/components/About";
 
 const Home = () => {
   return (
     <MainLayout>
       <HomeCarousel />
+      <Stats />
+      <About />
     </MainLayout>
   );
 };

@@ -6,8 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import Image from "next/image";
 import PersonIcon from "@mui/icons-material/Person";
-import TextField from "@mui/material/TextField";
-import { styled } from "@mui/material/styles";
+import Link from "next/link";
 import {
   Avatar,
   Menu,
@@ -17,11 +16,11 @@ import {
   Button,
   AppBar,
 } from "@mui/material";
-
+import { useRouter } from "next/navigation";
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl); // check menu open
-
+  const open = Boolean(anchorEl);
+  const router = useRouter();
   const handleProfileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -32,6 +31,7 @@ const Header = () => {
 
   const handleProfile = () => {
     console.log("Profile clicked");
+    router.push(`/profile`);
     handleClose();
   };
   const handleHistory = () => {
@@ -66,18 +66,26 @@ const Header = () => {
           </Box>
         </div>
         <Box className="flex items-center">
-          <Button color="inherit" className="text-white mx-2">
-            Home
-          </Button>
-          <Button color="inherit" className="text-white mx-2">
-            Services
-          </Button>
-          <Button color="inherit" className="text-white mx-2">
-            Route
-          </Button>
-          <Button color="inherit" className="text-white mx-2">
-            About Us
-          </Button>
+          <Link href="/home" passHref>
+            <Button color="inherit" className="text-white mx-2">
+              Home
+            </Button>
+          </Link>
+          <Link href="/services" passHref>
+            <Button color="inherit" className="text-white mx-2">
+              Services
+            </Button>
+          </Link>
+          <Link href="/route" passHref>
+            <Button color="inherit" className="text-white mx-2">
+              Route
+            </Button>
+          </Link>
+          <Link href="/port" passHref>
+            <Button color="inherit" className="text-white mx-2">
+              Port
+            </Button>
+          </Link>
 
           <IconButton color="inherit" onClick={handleProfileClick}>
             <PersonIcon />
