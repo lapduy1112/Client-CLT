@@ -61,8 +61,8 @@ export default function RoutePage() {
                 onChange={handleSortChange}
                 className="appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="">SORT</option>
-                <option value="mostPopular">Most Popular</option>
-                <option value="bestRating">Best Rating</option>
+                <option value="latestRoute">Latest Route</option>
+                <option value="availableRoute">Available Route</option>
                 <option value="newest">Newest</option>
                 <option value="priceLowToHigh">Price: Low to High</option>
                 <option value="priceHighToLow">Price: High to Low</option>
