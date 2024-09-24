@@ -5,13 +5,15 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import RoomIcon from "@mui/icons-material/Room";
 import WavesIcon from "@mui/icons-material/Waves";
 import { blue, grey } from "@mui/material/colors";
+import AdjustIcon from '@mui/icons-material/Adjust';
 interface RouteDetailProps {
   from: string;
   to: string;
   distance: string;
   travelTime: string;
-  departureTime: string;
-  arrivalTime: string;
+  status: string;
+  departureDate: Date;
+  arrivalDate: Date;
 }
 
 const RouteInfo: React.FC<RouteDetailProps> = ({
@@ -19,9 +21,16 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
   to,
   distance,
   travelTime,
-  departureTime,
-  arrivalTime,
+  departureDate,
+  status,
+  arrivalDate,
 }) => {
+  const formattedDepartureDate = new Date(departureDate)
+    .toISOString()
+    .split("T")[0];
+  const formattedArrivalDate = new Date(arrivalDate)
+    .toISOString()
+    .split("T")[0];
   return (
     <Card
       style={{
@@ -94,8 +103,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
               variant="body1"
               className="font-semibold"
               style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
-              <strong>Departure Time:</strong> {departureTime} — Scheduled time
-              for departure.
+              <strong>Departure Time:</strong> {formattedDepartureDate} —
+              Scheduled time for departure.
             </Typography>
           </Box>
 
@@ -105,8 +114,18 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
               variant="body1"
               className="font-semibold"
               style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
-              <strong>Arrival Time:</strong> {arrivalTime} — Expected time of
-              arrival at the destination.
+              <strong>Arrival Time:</strong> {formattedArrivalDate} — Expected
+              time of arrival at the destination.
+            </Typography>
+          </Box>
+          <Box display="flex" alignItems="center" className="text-gray-700">
+            <AdjustIcon style={{ marginRight: 8, color: blue[600] }} />
+
+            <Typography
+              variant="body1"
+              className="font-semibold"
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Status:</strong> {status} — Current status of the route.
             </Typography>
           </Box>
         </Box>
