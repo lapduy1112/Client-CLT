@@ -24,6 +24,8 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
 import { useRouter } from 'next/navigation';
+import SliderCard from './SliderCard';
+import IconImage from '../../public/images/logo-no-background.png';
 export const HomeSlider = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -71,17 +73,11 @@ export const HomeSlider = () => {
           >
             <div className="flex items-center">
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Button>
-                  <Image
-                    src="/images/cargo-ship.svg"
-                    alt="Logo"
-                    width={40}
-                    height={40}
-                    className="mr-2"
-                  />
-                  <Typography variant="h6" className="font-bold text-black">
-                    SSMS Logistics
-                  </Typography>
+                <Button sx={{ padding: 0 }}>
+                  <Image src={IconImage} alt="Logo" width={40} height={54} />
+                  {/* <Typography variant="h6" className="font-bold text-black">
+                    Ocean Wave
+                  </Typography> */}
                 </Button>
               </Box>
             </div>
@@ -174,9 +170,21 @@ export const HomeSlider = () => {
           </div>
           <div className="w-1/5"></div>
         </div>
-        <div className="flex absolute top-80 right-[-4rem] overflow-hidden">
-          <div className="w-[28rem] h-[28rem] rounded-full flex justify-center items-center border-white border-solid border-2 border-opacity-25">
-            <div className="w-56 h-56 rounded-full border-white border-solid border-2 flex justify-center items-center overflow-hidden border-opacity-50">
+        <div className="absolute top-80 right-[-4rem]">
+          <div className="w-[28rem] h-[28rem] rounded-full flex justify-center items-center border-white border-solid border-2 border-opacity-25 relative">
+            <div className="w-3 h-3 absolute left-[27%] top-[5%] bg-gradient-to-r from-white to-[#FFFFFFB3] rounded-full -translate-x-1/2"></div>
+            <div className="absolute left-[calc(27%-4.5rem)] top-[1%] bg-gradient-to-r from-white to-[#FFFFFFB3] rounded-lg text-black text-sm font-bold px-3 py-1">
+              01/ Sea
+            </div>
+            <div className="w-3 h-3 absolute left-0 bg-gradient-to-r from-white to-[#FFFFFFB3] rounded-full top-1/2 -translate-x-1/2"></div>
+            <div className="absolute left-[calc(0%-4.5rem)] top-1/2 bg-gradient-to-r from-white to-[#FFFFFFB3] rounded-lg text-black text-sm font-bold px-3 py-1">
+              02/ Air
+            </div>
+            <div className="w-3 h-3 absolute left-[29%] bg-gradient-to-r from-white to-[#FFFFFFB3] rounded-full top-[95%] -translate-x-1/2"></div>
+            <div className="absolute left-[calc(27%-5rem)] top-[95%] bg-gradient-to-r from-white to-[#FFFFFFB3] rounded-lg text-black text-sm font-bold px-3 py-1">
+              03/ Truck
+            </div>
+            <div className="w-60 h-60 rounded-full border-white border-solid border-2 flex justify-center items-center overflow-hidden border-opacity-50">
               <Image
                 src={conatiner2Img}
                 alt=""
@@ -185,7 +193,17 @@ export const HomeSlider = () => {
             </div>
           </div>
         </div>
-        <div className=""></div>
+        <div className="absolute top-1/2 left-20 -translate-y-1/2">
+          <SliderCard />
+        </div>
+        <div className="absolute left-20 bottom-10">
+          <h1 className="text-white text-8xl font-mono">OCEAN WAVE</h1>
+        </div>
+        <div className="absolute right-10 bottom-10 w-64">
+          <h6 className="text-white tracking-widest">
+            Seamless logistics solutions for efficient cargo transportation
+          </h6>
+        </div>
       </Container>
     </div>
   );

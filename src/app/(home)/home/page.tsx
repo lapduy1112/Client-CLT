@@ -5,16 +5,17 @@ import { Stats } from '@/components/Stats';
 import About from '@/components/About';
 import AboutUs from '@/components/AboutUs';
 import { HomeSlider } from '@/components/HomeSlider';
+import HomePageLayout from '../HomePageLayout';
 
 const Home = () => {
   return (
-    <MainLayout>
+    <HomePageLayout>
       <HomeSlider />
       {/* <HomeCarousel /> */}
       <Stats />
       <About />
       <AboutUs />
-    </MainLayout>
+    </HomePageLayout>
   );
 };
 
