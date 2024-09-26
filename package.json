@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.16.1",
     "@mui/material": "^5.16.0",
+    "axios": "^1.7.7",
     "formik": "^2.4.6",
     "leaflet": "^1.9.4",
     "next": "14.2.5",

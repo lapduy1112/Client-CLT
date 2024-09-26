@@ -81,21 +81,8 @@ export default function ProfilePage() {
                 className="font-semibold text-gray-700">
                 <strong>Role:</strong> {mockUserProfile.role}
               </Typography>
-              <Typography
-                variant="body1"
-                className="font-semibold text-gray-700">
-                <strong>Password:</strong> {mockUserProfile.password}
-              </Typography>
-              <Box display="flex" alignItems="center">
-                <Typography
-                  variant="body1"
-                  className="font-semibold text-gray-700 mr-2">
-                  <strong>Verified:</strong> {isVerified ? "Yes" : "No"}
-                </Typography>
-              </Box>
             </Box>
 
-            {/* Nút chỉnh sửa */}
             <Button
               variant="contained"
               color="primary"
