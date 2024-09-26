@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import type { Metadata } from "next";
+
 interface MainLayoutProps {
   children: ReactNode;
 }
