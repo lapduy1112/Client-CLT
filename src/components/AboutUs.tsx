@@ -9,7 +9,15 @@ const AboutUs = () => {
   ];
   return (
     <div className="bg-gradient-to-r from-[#010101] to-[#092A3D] py-10">
-      <Container maxWidth="xl" className="flex flex-row justify-between">
+      <Container
+        maxWidth="xl"
+        // className="flex flex-row justify-between"
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
         <div className="flex flex-col w-4/12 gap-y-6">
           <button className="rounded-2xl border-2 text-lg max-w-28 text-white italic">
             About Us

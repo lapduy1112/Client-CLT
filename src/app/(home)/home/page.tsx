@@ -1,17 +1,15 @@
 import React from 'react';
-import MainLayout from '../MainLayout';
-import HomeCarousel from '@/components/HomeCarousel';
 import { Stats } from '@/components/Stats';
 import About from '@/components/About';
 import AboutUs from '@/components/AboutUs';
 import { HomeSlider } from '@/components/HomeSlider';
 import HomePageLayout from '../HomePageLayout';
-
+import { AnotherHomeCarousel } from '@/components/AnotherHomeCarousel';
 const Home = () => {
   return (
     <HomePageLayout>
       <HomeSlider />
-      {/* <HomeCarousel /> */}
+      <AnotherHomeCarousel />
       <Stats />
       <About />
       <AboutUs />

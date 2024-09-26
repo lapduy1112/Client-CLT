@@ -56,7 +56,15 @@ export const HomeSlider = () => {
     <div className="bg-gradient-to-r from-[#010101] to-[#092A3D]">
       <Container
         maxWidth="xl"
-        className="flex flex-row justify-between pt-4 relative bg-cover"
+        sx={{
+          display: 'flex',
+          position: 'relative',
+          paddingTop: '1rem',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          backgroundSize: 'cover',
+        }}
+        // className="flex flex-row justify-between pt-4 relative bg-cover"
       >
         <Image
           src={containerImg}
@@ -65,7 +73,15 @@ export const HomeSlider = () => {
         ></Image>
         <AppBar
           position="absolute"
-          className="bg-white top-7 w-[94%] left-1/2 transform -translate-x-1/2 rounded-3xl"
+          sx={{
+            top: '1.75rem',
+            left: '50%',
+            borderRadius: '1.5rem',
+            backgroundColor: '#ffffff',
+            width: '94%',
+            transform: 'translate(-50%,0)',
+          }}
+          // className="bg-white top-7 w-[94%] left-1/2 transform -translate-x-1/2 rounded-3xl"
         >
           <Toolbar
             variant="dense"
@@ -74,7 +90,7 @@ export const HomeSlider = () => {
             <div className="flex items-center">
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Button sx={{ padding: 0 }}>
-                  <Image src={IconImage} alt="Logo" width={40} height={54} />
+                  <Image src={IconImage} alt="Logo" height={36} />
                   {/* <Typography variant="h6" className="font-bold text-black">
                     Ocean Wave
                   </Typography> */}
@@ -146,20 +162,32 @@ export const HomeSlider = () => {
               logistics services for seamless cargo transportation.
             </p>
             <div className="flex gap-x-2">
-              <IconButton className="bg-white text-black">
+              <IconButton
+                className="bg-white text-black"
+                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+              >
                 <PublicIcon />
               </IconButton>
-              <IconButton className="bg-white text-black">
+              <IconButton
+                className="bg-white text-black"
+                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+              >
                 <LocalShippingOutlinedIcon />
               </IconButton>
-              <IconButton className="bg-white text-black">
+              <IconButton
+                className="bg-white text-black"
+                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+              >
                 <ConnectingAirportsIcon />
               </IconButton>
             </div>
           </div>
           <div className="w-1/4 flex flex-col gap-y-1">
             <div className="flex justify-end">
-              <IconButton className="bg-white text-black">
+              <IconButton
+                className="bg-white text-black"
+                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+              >
                 <TravelExploreOutlinedIcon />
               </IconButton>
             </div>
