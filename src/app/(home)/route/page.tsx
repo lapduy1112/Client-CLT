@@ -65,7 +65,6 @@ export default function RoutePage() {
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(event.target.value);
     console.log(`Sắp xếp theo: ${event.target.value}`);
-    // Thực hiện sắp xếp ở đây nếu cần
   };
 
   if (loading) {
