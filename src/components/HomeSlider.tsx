@@ -100,32 +100,52 @@ export const HomeSlider = () => {
             <Box className="flex items-center">
               <Link href="/home" passHref>
                 <Button
-                  color="inherit"
                   className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
                 >
                   Home
                 </Button>
               </Link>
               <Link href="/services" passHref>
                 <Button
-                  color="inherit"
                   className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
                 >
                   Services
                 </Button>
               </Link>
               <Link href="/route" passHref>
                 <Button
-                  color="inherit"
                   className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
                 >
                   Route
                 </Button>
               </Link>
               <Link href="/port" passHref>
                 <Button
-                  color="inherit"
                   className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
                 >
                   Port
                 </Button>
