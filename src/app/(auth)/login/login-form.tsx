@@ -9,7 +9,12 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useRouter } from 'next/navigation';
-import login from './login';
+import { useMutation } from '@tanstack/react-query';
+import { login } from './login';
+import { ToastContainer, toast } from 'react-toastify';
+import { getErrorMessage } from '@/libs/common/utils/error';
+import 'react-toastify/dist/ReactToastify.css';
+import axios, { AxiosError } from 'axios';
 export default function LoginForm() {
   const router = useRouter();
   const handleSignUpClick = () => {
@@ -25,7 +30,23 @@ export default function LoginForm() {
       .required('Email is required'),
     password: Yup.string().required('Password is required'),
   });
-
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      console.log('Data', data);
+      router.push('/');
+    },
+    onError: (error: Error | AxiosError) => {
+      console.log('Error', error);
+      if (axios.isAxiosError(error)) {
+        toast.error(getErrorMessage(error?.response?.data));
+        formik.setFieldError('email', getErrorMessage(error?.response?.data));
+      } else {
+        toast.error(getErrorMessage(error));
+        formik.setFieldError('email', getErrorMessage(error));
+      }
+    },
+  });
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -34,10 +55,10 @@ export default function LoginForm() {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       console.log('Form values', values);
-      const formData = new FormData();
-      formData.append('email', values.email);
-      formData.append('password', values.password);
-      await login({ error: '' }, formData);
+      mutation.mutate({
+        email: values.email,
+        password: values.password,
+      });
       // Replace with your form submission logic (e.g., API call)
     },
   });
@@ -56,6 +77,7 @@ export default function LoginForm() {
 
   return (
     <div className="max-w-md w-full p-6">
+      <ToastContainer />
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
         SSMS
       </h1>
@@ -159,6 +181,7 @@ export default function LoginForm() {
             sx={{
               '& .MuiOutlinedInput-root': { borderRadius: '25px' },
             }}
+            disabled={mutation.isPending}
           />
         </div>
         <div className="w-full">
@@ -191,6 +214,7 @@ export default function LoginForm() {
                 </InputAdornment>
               ),
             }}
+            disabled={mutation.isPending}
           />
         </div>
         <div className="my-4 text-lg text-right w-full">
@@ -206,6 +230,7 @@ export default function LoginForm() {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
             type="submit"
+            disabled={mutation.isPending}
           >
             Sign In
           </button>
