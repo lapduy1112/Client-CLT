@@ -6,7 +6,7 @@ import RouteInfo from "@/components/RouteInfo";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import { CircularProgress, Box, Button } from "@mui/material";
 interface Port {
   address: string;
   lat: number;
@@ -55,7 +55,13 @@ export default function RouteDetailPage() {
   if (loading) {
     return (
       <MainLayout>
-        <div>Loading...</div>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh">
+          <CircularProgress size={60} />
+        </Box>
       </MainLayout>
     );
   }
@@ -94,12 +100,26 @@ export default function RouteDetailPage() {
               departureDate={routeDetail.departureDate}
               arrivalDate={routeDetail.arrivalDate}
             />
-            {/* <button onClick={handleBack} className="mr-2">
-              Back
-            </button>
-            <button onClick={handleBooking}>Book Now</button> */}
+            <div className="flex justify-center mt-4">
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{
+                  backgroundColor: "#007BFF",
+                  padding: "12px 24px",
+                  fontSize: "1rem",
+                  borderRadius: "8px",
+                  "&:hover": {
+                    backgroundColor: "#0056b3",
+                  },
+                }}>
+                Booking
+              </Button>
+            </div>
           </div>
-          <div className="container mx-auto">
+
+          <div className="container mx-auto pt-5">
             <MapLeaflet
               startPort={[routeDetail.startPort.lat, routeDetail.startPort.lon]}
               endPort={[routeDetail.endPort.lat, routeDetail.endPort.lon]}

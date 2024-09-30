@@ -32,4 +32,29 @@ export const searchRoutes = async (searchQuery: string) => {
     throw error;
   }
 };
+export const getPorts = async () => {
+  try {
+    const response = await api.get("/port");
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching ports:", error);
+    throw error;
+  }
+};
+export const searchPorts = async (searchQuery: string) => {
+  try {
+    const response = await api.get("/port", {
+      params: {
+        search: searchQuery,
+        limit: 10,
+        page: 1,
+      },
+    });
+    console.log(response.data.data);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error searching Ports:", error);
+    throw error;
+  }
+};
 export default api;

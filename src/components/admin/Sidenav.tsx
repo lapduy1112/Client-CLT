@@ -13,7 +13,7 @@ const SideNav = () => {
         <Link href="/admin/usermanage">User Management</Link>
         <Link href="/admin/portmanage">Port Management</Link>
         <Link href="/admin/routemanage">Route Management</Link>
-        <Link href="/admin/permission">Permission</Link>
+        <Link href="/admin/bookingmanage">Booking Management</Link>
         <Link href="/admin/settings">Settings</Link>
       </nav>
       <button className="mt-auto bg-purple-700 py-2 px-4 rounded-lg">
