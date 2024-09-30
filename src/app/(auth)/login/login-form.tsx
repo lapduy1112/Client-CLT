@@ -15,7 +15,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import { getErrorMessage } from '@/libs/common/utils/error';
 import 'react-toastify/dist/ReactToastify.css';
 import axios, { AxiosError } from 'axios';
+import { useStore } from '@/providers/ZustandProvider';
+import { UserInterface } from '@/libs/common/interfaces/user.interface';
+import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
 export default function LoginForm() {
+  const setUser = useStore((state) => state.setUser);
   const router = useRouter();
   const handleSignUpClick = () => {
     router.push('/register');
@@ -33,7 +37,14 @@ export default function LoginForm() {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      console.log('Data', data);
+      const permission: PermissionInterface[] = data.role
+        .permission as PermissionInterface[];
+      const user: UserInterface = {
+        ...data,
+        role: data.role.role,
+        permission: permission,
+      };
+      setUser(user);
       router.push('/');
     },
     onError: (error: Error | AxiosError) => {

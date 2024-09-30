@@ -26,7 +26,9 @@ import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined
 import { useRouter } from 'next/navigation';
 import SliderCard from './SliderCard';
 import IconImage from '../../public/images/logo-no-background.png';
+import { useStore } from '@/providers/ZustandProvider';
 export const HomeSlider = () => {
+  const user = useStore((state) => state.user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -151,7 +153,52 @@ export const HomeSlider = () => {
                 </Button>
               </Link>
             </Box>
-            <div className="flex items-center">
+            {user ? (
+              <div className="flex items-center">
+                <IconButton color="default" onClick={handleProfileClick}>
+                  <Avatar
+                    alt={user?.username}
+                    src={user?.profileImage}
+                    sx={{ width: 24, height: 24 }}
+                  />
+                  {/* <PersonIcon /> */}
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                >
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                  <MenuItem onClick={handleHistory}>History</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </div>
+            ) : (
+              <Link href="/login" passHref>
+                <Button
+                  className="text-white mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#ffffff',
+                    backgroundColor: '#000000',
+                    textTransform: 'none',
+                  }}
+                >
+                  Login
+                </Button>
+              </Link>
+            )}
+            {/* <div className="flex items-center">
               <IconButton color="default" onClick={handleProfileClick}>
                 <PersonIcon />
               </IconButton>
@@ -172,7 +219,7 @@ export const HomeSlider = () => {
                 <MenuItem onClick={handleHistory}>History</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
-            </div>
+            </div> */}
           </Toolbar>
         </AppBar>
         <div className="flex w-full absolute top-36 justify-around left-1/2 transform -translate-x-1/2">

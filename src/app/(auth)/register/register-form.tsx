@@ -15,6 +15,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios, { AxiosError } from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { register } from './register';
+import { useStore } from '@/providers/ZustandProvider';
+import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
+import { UserInterface } from '@/libs/common/interfaces/user.interface';
 const validationSchema = Yup.object({
   fullName: Yup.string().required('Full Name is required'),
   email: Yup.string()
@@ -31,13 +34,21 @@ const validationSchema = Yup.object({
     .required('Confirm Password is required'),
 });
 export default function RegisterForm() {
+  const setUser = useStore((state) => state.setUser);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
   const mutation = useMutation({
     mutationFn: register,
     onSuccess: (data) => {
-      console.log('Data', data);
+            const permission: PermissionInterface[] = data.role
+              .permission as PermissionInterface[];
+            const user: UserInterface = {
+              ...data,
+              role: data.role.role,
+              permission: permission,
+            };
+            setUser(user);
       router.push('/');
     },
     onError: (error: Error | AxiosError) => {
@@ -65,7 +76,8 @@ export default function RegisterForm() {
         username: values.fullName,
         email: values.email,
         password: values.password,
-        confirmPassword: values.confirmPassword});
+        confirmPassword: values.confirmPassword,
+      });
     },
   });
 
@@ -89,6 +101,7 @@ export default function RegisterForm() {
 
   return (
     <div className="max-w-md w-full p-6">
+      <ToastContainer />
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
         SSMS
       </h1>
