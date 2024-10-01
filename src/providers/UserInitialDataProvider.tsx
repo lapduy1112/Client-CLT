@@ -6,13 +6,17 @@ import { useQuery } from '@tanstack/react-query';
 import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
 import { UserInterface } from '@/libs/common/interfaces/user.interface';
 import { useEffect } from 'react';
-
+import { UserStoreProvider } from './ZustandContextProvider';
+import LoadingSkeleton from '@/app/loading';
+import React from 'react';
 function UserInitialDataProvider({ children }: React.PropsWithChildren) {
+  console.log('UserInitialDataProvider');
   const setUser = useStore((state) => state.setUser);
   const deleteUser = useStore((state) => state.deleteUser);
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['user'],
     queryFn: getUser,
+    retry: false,
   });
   useEffect(() => {
     if (data) {
@@ -33,7 +37,34 @@ function UserInitialDataProvider({ children }: React.PropsWithChildren) {
     }
   }, [error]);
 
-  return <div>{children}</div>;
+  return <>{isPending ? <LoadingSkeleton /> : <div>{children}</div>}</>;
 }
+// function UserInitialDataProvider({ children }: React.PropsWithChildren) {
+//   console.log('UserInitialDataProvider');
+//   const { isPending, isError, data, error } = useQuery({
+//     queryKey: ['user'],
+//     queryFn: getUser,
+//     retry: false,
+//   });
+//   console.log(data);
+//   useEffect(() => {
+//     if (error && (error as any).status && (error as any).status === 401) {
+//       sessionStorage.removeItem('user');
+//     }
+//   }, [error]);
 
+//   return (
+//     <UserStoreProvider
+//       initialUser={
+//         {
+//           ...data,
+//           role: data.role.role,
+//           permission: data.role.permission as PermissionInterface[],
+//         } as UserInterface
+//       }
+//     >
+//       {children}
+//     </UserStoreProvider>
+//   );
+// }
 export default UserInitialDataProvider;

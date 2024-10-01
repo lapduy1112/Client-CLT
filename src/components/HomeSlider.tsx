@@ -29,6 +29,7 @@ import IconImage from '../../public/images/logo-no-background.png';
 import { useStore } from '@/providers/ZustandProvider';
 export const HomeSlider = () => {
   const user = useStore((state) => state.user);
+  console.log(user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -72,6 +73,7 @@ export const HomeSlider = () => {
           src={containerImg}
           alt=""
           className="w-full object-cover rounded-3xl opacity-80"
+          priority
         ></Image>
         <AppBar
           position="absolute"
