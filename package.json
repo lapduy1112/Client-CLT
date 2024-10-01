@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 2999",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 2999",
     "lint": "next lint"
   },
   "dependencies": {
@@ -13,6 +13,8 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.16.1",
     "@mui/material": "^5.16.0",
+    "@tanstack/react-query": "^5.56.2",
+    "@tanstack/react-query-devtools": "^5.58.0",
     "axios": "^1.7.7",
     "formik": "^2.4.6",
     "leaflet": "^1.9.4",
@@ -24,7 +26,12 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.24.1",
     "react-toastify": "^10.0.5",
+<<<<<<< HEAD
     "yup": "^1.4.0"
+=======
+    "yup": "^1.4.0",
+    "zustand": "^5.0.0-rc.2"
+>>>>>>> edd2a4a446fff0dab3049056196159ecf89424a3
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.12",

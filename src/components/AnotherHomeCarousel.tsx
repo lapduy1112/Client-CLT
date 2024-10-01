@@ -75,9 +75,7 @@ export const AnotherHomeCarousel = () => {
                 solutions tailored to their needs.
               </h1>
               <div className="flex justify-start gap-x-4">
-                <Avatar className="border-white border-2 border-solid">
-                  H
-                </Avatar>
+                <Avatar className="">H</Avatar>
                 <Avatar>N</Avatar>
                 <Avatar sx={{ bgcolor: 'purple' }}>OP</Avatar>
                 <div className="text-xs my-auto">
