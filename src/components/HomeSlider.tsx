@@ -1,14 +1,14 @@
-'use client';
-import containerImg from '../../public/images/container_6.jpg';
-import conatiner2Img from '../../public/images/container_5.jpg';
-import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import Box from '@mui/material/Box';
-import Image from 'next/image';
-import PersonIcon from '@mui/icons-material/Person';
-import Link from 'next/link';
+"use client";
+import containerImg from "../../public/images/container_6.jpg";
+import conatiner2Img from "../../public/images/container_5.jpg";
+import React, { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import Box from "@mui/material/Box";
+import Image from "next/image";
+import PersonIcon from "@mui/icons-material/Person";
+import Link from "next/link";
 import {
   Avatar,
   Menu,
@@ -27,6 +27,8 @@ import { useRouter } from 'next/navigation';
 import SliderCard from './SliderCard';
 import IconImage from '../../public/images/logo-no-background.png';
 import { useStore } from '@/providers/ZustandProvider';
+
+
 export const HomeSlider = () => {
   const user = useStore((state) => state.user);
   console.log(user);
@@ -42,17 +44,18 @@ export const HomeSlider = () => {
   };
 
   const handleProfile = () => {
-    console.log('Profile clicked');
+    console.log("Profile clicked");
     router.push(`/profile`);
     handleClose();
   };
   const handleHistory = () => {
-    console.log('History clicked');
+    console.log("History clicked");
+    router.push(`/history`);
     handleClose();
   };
 
   const handleLogout = () => {
-    console.log('Logout clicked');
+    console.log("Logout clicked");
     handleClose();
   };
   return (
@@ -60,39 +63,40 @@ export const HomeSlider = () => {
       <Container
         maxWidth="xl"
         sx={{
-          display: 'flex',
-          position: 'relative',
-          paddingTop: '1rem',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          backgroundSize: 'cover',
+          display: "flex",
+          position: "relative",
+          paddingTop: "1rem",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          backgroundSize: "cover",
         }}
         // className="flex flex-row justify-between pt-4 relative bg-cover"
       >
         <Image
           src={containerImg}
           alt=""
+
           className="w-full object-cover rounded-3xl opacity-80"
           priority
         ></Image>
+
         <AppBar
           position="absolute"
           sx={{
-            top: '1.75rem',
-            left: '50%',
-            borderRadius: '1.5rem',
-            backgroundColor: '#ffffff',
-            width: '94%',
-            transform: 'translate(-50%,0)',
+            top: "1.75rem",
+            left: "50%",
+            borderRadius: "1.5rem",
+            backgroundColor: "#ffffff",
+            width: "94%",
+            transform: "translate(-50%,0)",
           }}
           // className="bg-white top-7 w-[94%] left-1/2 transform -translate-x-1/2 rounded-3xl"
         >
           <Toolbar
             variant="dense"
-            className="flex justify-between items-center max-w-screen-2xl container mx-auto"
-          >
+            className="flex justify-between items-center max-w-screen-2xl container mx-auto">
             <div className="flex items-center">
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Button sx={{ padding: 0 }}>
                   <Image src={IconImage} alt="Logo" height={36} />
                   {/* <Typography variant="h6" className="font-bold text-black">
@@ -104,6 +108,7 @@ export const HomeSlider = () => {
             <Box className="flex items-center">
               <Link href="/home" passHref>
                 <Button
+
                   className="text-black mx-2 font-semibold"
                   sx={{
                     marginLeft: '0.5rem',
@@ -125,6 +130,7 @@ export const HomeSlider = () => {
                     color: '#000000',
                   }}
                 >
+
                   Services
                 </Button>
               </Link>
@@ -209,14 +215,13 @@ export const HomeSlider = () => {
                 open={open}
                 onClose={handleClose}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
+                  vertical: "bottom",
+                  horizontal: "right",
                 }}
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
+                  vertical: "top",
+                  horizontal: "right",
+                }}>
                 <MenuItem onClick={handleProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleHistory}>History</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
@@ -233,20 +238,17 @@ export const HomeSlider = () => {
             <div className="flex gap-x-2">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <PublicIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <LocalShippingOutlinedIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <ConnectingAirportsIcon />
               </IconButton>
             </div>
@@ -255,8 +257,7 @@ export const HomeSlider = () => {
             <div className="flex justify-end">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <TravelExploreOutlinedIcon />
               </IconButton>
             </div>
@@ -285,8 +286,7 @@ export const HomeSlider = () => {
               <Image
                 src={conatiner2Img}
                 alt=""
-                className="rounded-full object-cover h-52 w-52"
-              ></Image>
+                className="rounded-full object-cover h-52 w-52"></Image>
             </div>
           </div>
         </div>
