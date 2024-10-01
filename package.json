@@ -26,12 +26,8 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.24.1",
     "react-toastify": "^10.0.5",
-<<<<<<< HEAD
-    "yup": "^1.4.0"
-=======
     "yup": "^1.4.0",
     "zustand": "^5.0.0-rc.2"
->>>>>>> edd2a4a446fff0dab3049056196159ecf89424a3
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.12",
