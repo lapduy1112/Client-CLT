@@ -18,15 +18,20 @@ import {
   Button,
   AppBar,
   Container,
-} from "@mui/material";
-import PublicIcon from "@mui/icons-material/Public";
-import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
-import ConnectingAirportsIcon from "@mui/icons-material/ConnectingAirports";
-import TravelExploreOutlinedIcon from "@mui/icons-material/TravelExploreOutlined";
-import { useRouter } from "next/navigation";
-import SliderCard from "./SliderCard";
-import IconImage from "../../public/images/logo-no-background.png";
+} from '@mui/material';
+import PublicIcon from '@mui/icons-material/Public';
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
+import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
+import { useRouter } from 'next/navigation';
+import SliderCard from './SliderCard';
+import IconImage from '../../public/images/logo-no-background.png';
+import { useStore } from '@/providers/ZustandProvider';
+
+
 export const HomeSlider = () => {
+  const user = useStore((state) => state.user);
+  console.log(user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -70,7 +75,11 @@ export const HomeSlider = () => {
         <Image
           src={containerImg}
           alt=""
-          className="w-full object-cover rounded-3xl opacity-80"></Image>
+
+          className="w-full object-cover rounded-3xl opacity-80"
+          priority
+        ></Image>
+
         <AppBar
           position="absolute"
           sx={{
@@ -99,34 +108,105 @@ export const HomeSlider = () => {
             <Box className="flex items-center">
               <Link href="/home" passHref>
                 <Button
-                  color="inherit"
-                  className="text-black mx-2 font-semibold">
+
+                  className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
+                >
                   Home
                 </Button>
               </Link>
               <Link href="/services" passHref>
                 <Button
-                  color="inherit"
-                  className="text-black mx-2 font-semibold">
+                  className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
+                >
+
                   Services
                 </Button>
               </Link>
               <Link href="/route" passHref>
                 <Button
-                  color="inherit"
-                  className="text-black mx-2 font-semibold">
+                  className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
+                >
                   Route
                 </Button>
               </Link>
               <Link href="/port" passHref>
                 <Button
-                  color="inherit"
-                  className="text-black mx-2 font-semibold">
+                  className="text-black mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#000000',
+                  }}
+                >
                   Port
                 </Button>
               </Link>
             </Box>
-            <div className="flex items-center">
+            {user ? (
+              <div className="flex items-center">
+                <IconButton color="default" onClick={handleProfileClick}>
+                  <Avatar
+                    alt={user?.username}
+                    src={user?.profileImage}
+                    sx={{ width: 24, height: 24 }}
+                  />
+                  {/* <PersonIcon /> */}
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                >
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                  <MenuItem onClick={handleHistory}>History</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </div>
+            ) : (
+              <Link href="/login" passHref>
+                <Button
+                  className="text-white mx-2 font-semibold"
+                  sx={{
+                    marginLeft: '0.5rem',
+                    marginRight: '0.5rem',
+                    fontWeight: 600,
+                    color: '#ffffff',
+                    backgroundColor: '#000000',
+                    textTransform: 'none',
+                  }}
+                >
+                  Login
+                </Button>
+              </Link>
+            )}
+            {/* <div className="flex items-center">
               <IconButton color="default" onClick={handleProfileClick}>
                 <PersonIcon />
               </IconButton>
@@ -146,7 +226,7 @@ export const HomeSlider = () => {
                 <MenuItem onClick={handleHistory}>History</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
-            </div>
+            </div> */}
           </Toolbar>
         </AppBar>
         <div className="flex w-full absolute top-36 justify-around left-1/2 transform -translate-x-1/2">
