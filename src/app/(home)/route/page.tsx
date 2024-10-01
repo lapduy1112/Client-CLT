@@ -2,7 +2,7 @@
 import Link from "next/link";
 import MainLayout from "../MainLayout";
 import React, { useState, useEffect } from "react";
-import { Typography, Box, Grid, Paper } from "@mui/material";
+import { Typography, Box, Grid, Paper, CircularProgress } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getRoutes, searchRoutes } from "@/services/api";
 
@@ -70,7 +70,13 @@ export default function RoutePage() {
   if (loading) {
     return (
       <MainLayout>
-        <div>Loading...</div>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh">
+          <CircularProgress size={60} />
+        </Box>
       </MainLayout>
     );
   }

@@ -7,6 +7,7 @@ import {
   CardContent,
   Divider,
   CircularProgress,
+  Grid,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
@@ -106,104 +107,112 @@ export default function PortPage() {
           </div>
         </div>
 
-        {filteredPorts.map((port, index) => (
-          <Card
-            key={index}
-            style={{
-              backgroundColor: blue[50],
-              borderRadius: "16px",
-              boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
-              padding: "16px",
-              marginBottom: "20px",
-              fontFamily: "'Roboto', sans-serif",
-            }}>
-            <CardContent>
-              <Typography
-                variant="h5"
-                color="primary"
-                gutterBottom
-                style={{ fontWeight: "bold", marginBottom: 16 }}>
-                Port of {port.address}
-              </Typography>
-              <Divider />
-              <Box mt={3} className="space-y-4">
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  className="text-gray-700">
-                  <LocationOnIcon
-                    style={{ marginRight: 8, color: blue[600] }}
-                  />
-                  <Typography
-                    variant="body1"
-                    className="font-semibold"
-                    style={{
-                      fontSize: "1.1rem",
-                      fontWeight: 500,
-                      color: grey[800],
-                    }}>
-                    <strong>Address:</strong> {port.address}, Viet Nam
-                  </Typography>
-                </Box>
+        {filteredPorts.length > 0 ? (
+          filteredPorts.map((port, index) => (
+            <Card
+              key={index}
+              style={{
+                backgroundColor: blue[50],
+                borderRadius: "16px",
+                boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
+                padding: "16px",
+                marginBottom: "20px",
+                fontFamily: "'Roboto', sans-serif",
+              }}>
+              <CardContent>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  gutterBottom
+                  style={{ fontWeight: "bold", marginBottom: 16 }}>
+                  Port of {port.address}
+                </Typography>
+                <Divider />
+                <Box mt={3} className="space-y-4">
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    className="text-gray-700">
+                    <LocationOnIcon
+                      style={{ marginRight: 8, color: blue[600] }}
+                    />
+                    <Typography
+                      variant="body1"
+                      className="font-semibold"
+                      style={{
+                        fontSize: "1.1rem",
+                        fontWeight: 500,
+                        color: grey[800],
+                      }}>
+                      <strong>Address:</strong> {port.address}, Viet Nam
+                    </Typography>
+                  </Box>
 
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  className="text-gray-700">
-                  <MyLocationIcon
-                    style={{ marginRight: 8, color: blue[600] }}
-                  />
-                  <Typography
-                    variant="body1"
-                    className="font-semibold"
-                    style={{
-                      fontSize: "1.1rem",
-                      fontWeight: 500,
-                      color: grey[800],
-                    }}>
-                    <strong>Longitude:</strong> {port.lon}
-                  </Typography>
-                </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    className="text-gray-700">
+                    <MyLocationIcon
+                      style={{ marginRight: 8, color: blue[600] }}
+                    />
+                    <Typography
+                      variant="body1"
+                      className="font-semibold"
+                      style={{
+                        fontSize: "1.1rem",
+                        fontWeight: 500,
+                        color: grey[800],
+                      }}>
+                      <strong>Longitude:</strong> {port.lon}
+                    </Typography>
+                  </Box>
 
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  className="text-gray-700">
-                  <MyLocationIcon
-                    style={{ marginRight: 8, color: blue[600] }}
-                  />
-                  <Typography
-                    variant="body1"
-                    className="font-semibold"
-                    style={{
-                      fontSize: "1.1rem",
-                      fontWeight: 500,
-                      color: grey[800],
-                    }}>
-                    <strong>Latitude:</strong> {port.lat}
-                  </Typography>
-                </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    className="text-gray-700">
+                    <MyLocationIcon
+                      style={{ marginRight: 8, color: blue[600] }}
+                    />
+                    <Typography
+                      variant="body1"
+                      className="font-semibold"
+                      style={{
+                        fontSize: "1.1rem",
+                        fontWeight: 500,
+                        color: grey[800],
+                      }}>
+                      <strong>Latitude:</strong> {port.lat}
+                    </Typography>
+                  </Box>
 
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  className="text-gray-700">
-                  <PublicIcon style={{ marginRight: 8, color: blue[600] }} />
-                  <Typography
-                    variant="body1"
-                    className="font-semibold"
-                    style={{
-                      fontSize: "1.1rem",
-                      fontWeight: 500,
-                      color: green[500],
-                    }}>
-                    <strong>Status:</strong> Active
-                  </Typography>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    className="text-gray-700">
+                    <PublicIcon style={{ marginRight: 8, color: blue[600] }} />
+                    <Typography
+                      variant="body1"
+                      className="font-semibold"
+                      style={{
+                        fontSize: "1.1rem",
+                        fontWeight: 500,
+                        color: green[500],
+                      }}>
+                      <strong>Status:</strong> Active
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <Typography variant="h6" align="center">
+              No ports found.
+            </Typography>
+          </Grid>
+        )}
       </Box>
     </MainLayout>
   );

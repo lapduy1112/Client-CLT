@@ -21,7 +21,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import MainLayout from "../MainLayout";
 import AddPort from "@/components/admin/AddPort";
-import { getPorts } from "@/services/api";
+import { getPorts, searchPorts } from "@/services/api";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function PortManagePage() {
   const [open, setOpen] = useState(false);
@@ -30,7 +33,8 @@ export default function PortManagePage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
-
+  const router = useRouter();
+  const searchParams = useSearchParams();
   useEffect(() => {
     const fetchPorts = async () => {
       try {
@@ -55,20 +59,35 @@ export default function PortManagePage() {
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchQuery(value);
-    filterPorts(value);
+    setSearchQuery(event.target.value);
   };
 
-  const filterPorts = (search: string) => {
-    const filtered = ports.filter((port) =>
-      Object.values(port).some((field) =>
-        String(field).toLowerCase().includes(search.toLowerCase())
-      )
-    );
-    setFilteredPorts(filtered);
+  const handleKeyDown = async (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      router.push(`/admin/portmanage?search=${searchQuery}`);
+    }
   };
+  useEffect(() => {
+    const fetchSearchedPorts = async () => {
+      const searchParam = searchParams.get("search") || "";
+      if (searchParam) {
+        try {
+          const fetchedPorts = await searchPorts(searchParam);
+          setFilteredPorts(fetchedPorts || []);
+          console.log(fetchedPorts);
+        } catch (error) {
+          console.error("Error fetching searched Ports:", error);
+          setFilteredPorts([]);
+        }
+      } else {
+        setFilteredPorts(ports);
+      }
+    };
 
+    fetchSearchedPorts();
+  }, [searchParams, ports]);
   if (loading) {
     return (
       <MainLayout>
@@ -103,6 +122,7 @@ export default function PortManagePage() {
           className="w-1/4"
           value={searchQuery}
           onChange={handleSearchChange}
+          onKeyDown={handleKeyDown}
           InputProps={{
             endAdornment: <SearchIcon />,
           }}
@@ -154,6 +174,7 @@ export default function PortManagePage() {
       </div>
 
       <AddPort open={open} onClose={handleClose} />
+      <ToastContainer />
     </MainLayout>
   );
 }

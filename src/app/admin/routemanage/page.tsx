@@ -21,25 +21,46 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import MainLayout from "../MainLayout";
 import AddRoute from "@/components/admin/AddRoute";
-import { getRoutes } from "@/services/api";
+import { getRoutes, getPorts, searchRoutes } from "@/services/api";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+interface Route {
+  startPort: {
+    address: string;
+  };
+  endPort: {
+    address: string;
+  };
+  distance: number;
+  departureDate: string;
+  arrivalDate: string;
+  status: string;
+}
 export default function RouteManagePage() {
-  const [routes, setRoutes] = useState<any[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]);
+  const [ports, setPorts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredRoutes, setFilteredRoutes] = useState<any[]>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const fetchRoutes = async () => {
+    const fetchData = async () => {
       try {
         const fetchedRoutes = await getRoutes();
-
-        const processedRoutes = fetchedRoutes.map((route) => ({
+        const fetchedPorts = await getPorts();
+        const processedRoutes = fetchedRoutes.map((route: Route) => ({
           ...route,
           departureDate: route.departureDate.split("T")[0],
           arrivalDate: route.arrivalDate.split("T")[0],
         }));
-
         setRoutes(processedRoutes);
+        setFilteredRoutes(processedRoutes);
+        setPorts(fetchedPorts);
         console.log(processedRoutes);
         setLoading(false);
       } catch (error) {
@@ -48,9 +69,39 @@ export default function RouteManagePage() {
       }
     };
 
-    fetchRoutes();
+    fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchSearchedRoutes = async () => {
+      const searchParam = searchParams.get("search") || "";
+      if (searchParam) {
+        try {
+          const fetchedRoutes = await searchRoutes(searchParam);
+          setFilteredRoutes(fetchedRoutes || []);
+          console.log(fetchedRoutes);
+        } catch (error) {
+          console.error("Error fetching searched routes:", error);
+          setFilteredRoutes([]);
+        }
+      } else {
+        setFilteredRoutes(routes);
+      }
+    };
+
+    fetchSearchedRoutes();
+  }, [searchParams, routes]);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleKeyDown = async (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      router.push(`/admin/routemanage?search=${searchQuery}`);
+    }
+  };
   if (loading) {
     return (
       <MainLayout>
@@ -91,6 +142,8 @@ export default function RouteManagePage() {
           variant="outlined"
           label="Search list..."
           className="w-1/4"
+          onChange={handleSearchChange}
+          onKeyDown={handleKeyDown}
           InputProps={{
             endAdornment: <SearchIcon />,
           }}
@@ -112,7 +165,7 @@ export default function RouteManagePage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {routes.map((item, index) => (
+            {filteredRoutes.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.startPort.address}</TableCell>
@@ -139,7 +192,8 @@ export default function RouteManagePage() {
         <p>Display 10 items</p>
         <Pagination count={10} color="primary" />
       </div>
-      <AddRoute open={open} onClose={handleClose} />
+      <AddRoute open={open} onClose={handleClose} ports={ports} />
+      <ToastContainer />
     </MainLayout>
   );
 }
