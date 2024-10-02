@@ -7,6 +7,9 @@ import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CircularProgress, Box, Button } from "@mui/material";
+import { useStore } from "@/providers/ZustandProvider";
+import { createBooking } from "@/services/api";
+import { toast } from "react-toastify";
 interface Port {
   address: string;
   lat: number;
@@ -24,12 +27,13 @@ interface RouteDetail {
 }
 
 export default function RouteDetailPage() {
+  const user = useStore((state) => state.user);
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const [routeDetail, setRouteDetail] = useState<RouteDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  // console.log(user);
   useEffect(() => {
     const fetchRouteDetail = async () => {
       if (id) {
@@ -82,8 +86,24 @@ export default function RouteDetailPage() {
     router.back();
   };
 
-  const handleBooking = () => {
-    router.push("/booking");
+  const handleBooking = async () => {
+    if (!user || !user.id) {
+      toast.error("User not found or not logged in.");
+      return;
+    }
+        if (!user || !user.isVerified) {
+      toast.error("You must verify your email.");
+      return;
+    }
+    try {
+      await createBooking(id, user.id);
+      toast.success("Booking created successfully!");
+      // router.push("/history");
+    } catch (error) {
+      console.log(error);
+
+      // toast.error("Failed to create booking.");
+    }
   };
 
   return (
@@ -105,6 +125,7 @@ export default function RouteDetailPage() {
                 variant="contained"
                 color="primary"
                 size="large"
+                onClick={handleBooking}
                 sx={{
                   backgroundColor: "#007BFF",
                   padding: "12px 24px",

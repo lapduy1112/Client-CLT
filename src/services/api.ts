@@ -86,4 +86,18 @@ export const addRoute = async (newRoute: {
     throw error;
   }
 };
+
+export const createBooking = async (routeId: string, userId: string) => {
+  try {
+    const response = await api.post("/booking", {
+      routeId,
+      userId,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    throw error;
+  }
+};
 export default api;
