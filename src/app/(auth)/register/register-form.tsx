@@ -9,9 +9,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/libs/common/utils/error';
-import 'react-toastify/dist/ReactToastify.css';
 import axios, { AxiosError } from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { register } from './register';
@@ -41,14 +40,14 @@ export default function RegisterForm() {
   const mutation = useMutation({
     mutationFn: register,
     onSuccess: (data) => {
-            const permission: PermissionInterface[] = data.role
-              .permission as PermissionInterface[];
-            const user: UserInterface = {
-              ...data,
-              role: data.role.role,
-              permission: permission,
-            };
-            setUser(user);
+      const permission: PermissionInterface[] = data.role
+        .permission as PermissionInterface[];
+      const user: UserInterface = {
+        ...data,
+        role: data.role.role,
+        permission: permission,
+      };
+      setUser(user);
       router.push('/');
     },
     onError: (error: Error | AxiosError) => {
@@ -101,7 +100,6 @@ export default function RegisterForm() {
 
   return (
     <div className="max-w-md w-full p-6">
-      <ToastContainer />
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
         SSMS
       </h1>

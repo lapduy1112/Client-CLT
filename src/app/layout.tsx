@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import ReactQueryProvider from '@/providers/ReactQueryProvider';
 import UserInitialDataProvider from '@/providers/UserInitialDataProvider';
+import { NotificationProvider } from '@/providers/NotificationProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ReactQueryProvider>
-          <UserInitialDataProvider>{children}</UserInitialDataProvider>
+          <NotificationProvider>
+            <UserInitialDataProvider>{children}</UserInitialDataProvider>
+          </NotificationProvider>
         </ReactQueryProvider>
       </body>
     </html>

@@ -11,9 +11,8 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { login } from './login';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/libs/common/utils/error';
-import 'react-toastify/dist/ReactToastify.css';
 import axios, { AxiosError } from 'axios';
 import { useStore } from '@/providers/ZustandProvider';
 import { UserInterface } from '@/libs/common/interfaces/user.interface';
@@ -88,7 +87,6 @@ export default function LoginForm() {
 
   return (
     <div className="max-w-md w-full p-6">
-      <ToastContainer />
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
         SSMS
       </h1>
