@@ -48,7 +48,8 @@ const Header = () => {
   return (
     <AppBar
       position="static"
-      className="bg-gradient-to-r from-blue-500 to-teal-400">
+      className="bg-gradient-to-r from-blue-500 to-teal-400"
+    >
       <Toolbar className="flex justify-between items-center max-w-screen-2xl container mx-auto">
         <div className="flex items-center">
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -70,28 +71,32 @@ const Header = () => {
           <Link href="/home" passHref>
             <Button
               color="inherit"
-              className="text-slate-200 mx-2 font-semibold hover:text-white">
+              className="text-slate-200 mx-2 font-semibold hover:text-white"
+            >
               Home
             </Button>
           </Link>
           <Link href="/services" passHref>
             <Button
               color="inherit"
-              className="text-slate-200 mx-2 font-semibold hover:text-white">
+              className="text-slate-200 mx-2 font-semibold hover:text-white"
+            >
               Services
             </Button>
           </Link>
           <Link href="/route" passHref>
             <Button
               color="inherit"
-              className="text-slate-200 mx-2 font-semibold hover:text-white">
+              className="text-slate-200 mx-2 font-semibold hover:text-white"
+            >
               Route
             </Button>
           </Link>
           <Link href="/port" passHref>
             <Button
               color="inherit"
-              className="text-slate-200 mx-2 font-semibold hover:text-white">
+              className="text-slate-200 mx-2 font-semibold hover:text-white"
+            >
               Port
             </Button>
           </Link>
@@ -112,7 +117,8 @@ const Header = () => {
             transformOrigin={{
               vertical: "top",
               horizontal: "right",
-            }}>
+            }}
+          >
             <MenuItem onClick={handleProfile}>Profile</MenuItem>
             <MenuItem onClick={handleHistory}>History</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>

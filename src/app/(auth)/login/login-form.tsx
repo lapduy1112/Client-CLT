@@ -1,38 +1,37 @@
-'use client';
-import { useFormik } from 'formik';
-import { useState } from 'react';
-import * as Yup from 'yup';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import GoogleIcon from '@mui/icons-material/Google';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
-import { login } from './login';
-import { ToastContainer, toast } from 'react-toastify';
-import { getErrorMessage } from '@/libs/common/utils/error';
-import 'react-toastify/dist/ReactToastify.css';
-import axios, { AxiosError } from 'axios';
-import { useStore } from '@/providers/ZustandProvider';
-import { UserInterface } from '@/libs/common/interfaces/user.interface';
-import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
+"use client";
+import { useFormik } from "formik";
+import { useState } from "react";
+import * as Yup from "yup";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import GoogleIcon from "@mui/icons-material/Google";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "./login";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/libs/common/utils/error";
+import axios, { AxiosError } from "axios";
+import { useStore } from "@/providers/ZustandProvider";
+import { UserInterface } from "@/libs/common/interfaces/user.interface";
+import { PermissionInterface } from "@/libs/common/interfaces/permission.interface";
 export default function LoginForm() {
   const setUser = useStore((state) => state.setUser);
   const router = useRouter();
   const handleSignUpClick = () => {
-    router.push('/register');
+    router.push("/register");
   };
   const handleForgotClick = () => {
-    router.push('/forgot');
+    router.push("/forgot");
   };
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string().required('Password is required'),
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
   });
   const mutation = useMutation({
     mutationFn: login,
@@ -45,27 +44,27 @@ export default function LoginForm() {
         permission: permission,
       };
       setUser(user);
-      router.push('/');
+      router.push("/");
     },
     onError: (error: Error | AxiosError) => {
-      console.log('Error', error);
+      console.log("Error", error);
       if (axios.isAxiosError(error)) {
         toast.error(getErrorMessage(error?.response?.data));
-        formik.setFieldError('email', getErrorMessage(error?.response?.data));
+        formik.setFieldError("email", getErrorMessage(error?.response?.data));
       } else {
         toast.error(getErrorMessage(error));
-        formik.setFieldError('email', getErrorMessage(error));
+        formik.setFieldError("email", getErrorMessage(error));
       }
     },
   });
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log('Form values', values);
+      console.log("Form values", values);
       mutation.mutate({
         email: values.email,
         password: values.password,
@@ -81,14 +80,13 @@ export default function LoginForm() {
   };
 
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ): void => {
     event.preventDefault();
   };
 
   return (
     <div className="max-w-md w-full p-6">
-      <ToastContainer />
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
         SSMS
       </h1>
@@ -123,8 +121,8 @@ export default function LoginForm() {
                 fill="#f14336"
                 d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
               />
-            </svg>{' '}
-            Google{' '}
+            </svg>{" "}
+            Google{" "}
           </button>
         </div>
         <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
@@ -190,7 +188,7 @@ export default function LoginForm() {
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
             sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '25px' },
+              "& .MuiOutlinedInput-root": { borderRadius: "25px" },
             }}
             disabled={mutation.isPending}
           />
@@ -202,14 +200,14 @@ export default function LoginForm() {
             name="password"
             label="Password"
             variant="outlined"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
             sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '25px' },
+              "& .MuiOutlinedInput-root": { borderRadius: "25px" },
             }}
             InputProps={{
               endAdornment: (
@@ -249,7 +247,7 @@ export default function LoginForm() {
       </form>
       <div className="mt-4 text-lg text-gray-600 text-center">
         <p>
-          Don&apos;t have account?{' '}
+          Don&apos;t have account?{" "}
           <a
             href="#"
             className="text-blue-500 hover:underline"

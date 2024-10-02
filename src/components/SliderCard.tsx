@@ -1,8 +1,8 @@
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import Image from 'next/image';
-import containerImg from '../../public/images/container_4.jpg';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import * as React from "react";
+import Card from "@mui/material/Card";
+import Image from "next/image";
+import containerImg from "../../public/images/container_4.jpg";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 // export default function MediaControlCard() {
 //   const theme = useTheme();
 
@@ -54,7 +54,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 export default function SliderCard() {
   return (
     <Card
-      sx={{ display: 'flex' }}
+      sx={{ display: "flex" }}
       className="justify-space max-w-72 gap-x-2 rounded-2xl"
     >
       <div className="w-3/5">
@@ -65,7 +65,7 @@ export default function SliderCard() {
         ></Image>
       </div>
       <div className="w-2/5 text-left align-middle font-semibold text-sm my-auto">
-        Complete control of your{' '}
+        Complete control of your{" "}
         <span className="italic text-slate-500 font-bold">shipments</span>
         <ArrowForwardIcon className="text-3xl pl-3" />
       </div>

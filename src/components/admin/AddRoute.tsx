@@ -56,7 +56,8 @@ const AddRoute: React.FC<AddRouteProps> = ({ open, onClose, ports }) => {
           <Select
             value={startPort}
             onChange={(e) => setStartPort(e.target.value as string)}
-            label="Start Port">
+            label="Start Port"
+          >
             {ports.map((port) => (
               <MenuItem key={port.id} value={port.id}>
                 {port.address}
@@ -69,7 +70,8 @@ const AddRoute: React.FC<AddRouteProps> = ({ open, onClose, ports }) => {
           <Select
             value={endPort}
             onChange={(e) => setEndPort(e.target.value as string)}
-            label="End Port">
+            label="End Port"
+          >
             {ports.map((port) => (
               <MenuItem key={port.id} value={port.id}>
                 {port.address}

@@ -18,23 +18,43 @@ import {
   Button,
   AppBar,
   Container,
-} from '@mui/material';
-import PublicIcon from '@mui/icons-material/Public';
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
-import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
-import { useRouter } from 'next/navigation';
-import SliderCard from './SliderCard';
-import IconImage from '../../public/images/logo-no-background.png';
-import { useStore } from '@/providers/ZustandProvider';
-
-
+} from "@mui/material";
+import PublicIcon from "@mui/icons-material/Public";
+import Divider from "@mui/material/Divider";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import ConnectingAirportsIcon from "@mui/icons-material/ConnectingAirports";
+import TravelExploreOutlinedIcon from "@mui/icons-material/TravelExploreOutlined";
+import { useRouter } from "next/navigation";
+import SliderCard from "./SliderCard";
+import IconImage from "../../public/images/logo-no-background.png";
+import { useStore } from "@/providers/ZustandProvider";
+import { logOut } from "@/libs/common/utils/logOut";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/libs/common/utils/error";
+import axios, { AxiosError } from "axios";
 export const HomeSlider = () => {
   const user = useStore((state) => state.user);
-  console.log(user);
+  const deleteUser = useStore((state) => state.deleteUser);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
+  const mutation = useMutation({
+    mutationFn: logOut,
+    onSuccess: () => {
+      deleteUser();
+      toast.success("Logged out successfully");
+      router.push("/login");
+    },
+    onError: (error: Error | AxiosError) => {
+      console.log("Error", error);
+      if (axios.isAxiosError(error)) {
+        toast.error(getErrorMessage(error?.response?.data));
+      } else {
+        toast.error(getErrorMessage(error));
+      }
+    },
+  });
   const handleProfileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -54,8 +74,9 @@ export const HomeSlider = () => {
     handleClose();
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("Logout clicked");
+    mutation.mutate();
     handleClose();
   };
   return (
@@ -75,7 +96,6 @@ export const HomeSlider = () => {
         <Image
           src={containerImg}
           alt=""
-
           className="w-full object-cover rounded-3xl opacity-80"
           priority
         ></Image>
@@ -94,7 +114,8 @@ export const HomeSlider = () => {
         >
           <Toolbar
             variant="dense"
-            className="flex justify-between items-center max-w-screen-2xl container mx-auto">
+            className="flex justify-between items-center max-w-screen-2xl container mx-auto"
+          >
             <div className="flex items-center">
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Button sx={{ padding: 0 }}>
@@ -108,13 +129,12 @@ export const HomeSlider = () => {
             <Box className="flex items-center">
               <Link href="/home" passHref>
                 <Button
-
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
                   Home
@@ -124,13 +144,12 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
-
                   Services
                 </Button>
               </Link>
@@ -138,10 +157,10 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
                   Route
@@ -151,10 +170,10 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
                   Port
@@ -163,11 +182,15 @@ export const HomeSlider = () => {
             </Box>
             {user ? (
               <div className="flex items-center">
-                <IconButton color="default" onClick={handleProfileClick}>
+                <IconButton
+                  color="default"
+                  onClick={handleProfileClick}
+                  sx={{ padding: 0 }}
+                >
                   <Avatar
                     alt={user?.username}
                     src={user?.profileImage}
-                    sx={{ width: 24, height: 24 }}
+                    sx={{ width: 32, height: 32 }}
                   />
                   {/* <PersonIcon /> */}
                 </IconButton>
@@ -176,15 +199,34 @@ export const HomeSlider = () => {
                   open={open}
                   onClose={handleClose}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
+                    vertical: "bottom",
+                    horizontal: "right",
                   }}
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                 >
-                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                  <MenuItem
+                    className="flex flex-row gap-x-4"
+                    onClick={handleProfile}
+                  >
+                    <div className="">
+                      {" "}
+                      <Avatar
+                        alt={user?.username}
+                        src={user?.profileImage}
+                        sx={{ width: 48, height: 48 }}
+                      />
+                    </div>
+                    <div className="">
+                      <h3 className="font-semibold">
+                        {user?.username || "Unknown User"}
+                      </h3>
+                      <h4>{user?.email || "Unknown Email"}</h4>
+                    </div>
+                  </MenuItem>
+                  <Divider />
                   <MenuItem onClick={handleHistory}>History</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
@@ -194,12 +236,12 @@ export const HomeSlider = () => {
                 <Button
                   className="text-white mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#ffffff',
-                    backgroundColor: '#000000',
-                    textTransform: 'none',
+                    color: "#ffffff",
+                    backgroundColor: "#000000",
+                    textTransform: "none",
                   }}
                 >
                   Login
@@ -238,17 +280,20 @@ export const HomeSlider = () => {
             <div className="flex gap-x-2">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
+              >
                 <PublicIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
+              >
                 <LocalShippingOutlinedIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
+              >
                 <ConnectingAirportsIcon />
               </IconButton>
             </div>
@@ -257,7 +302,8 @@ export const HomeSlider = () => {
             <div className="flex justify-end">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
+              >
                 <TravelExploreOutlinedIcon />
               </IconButton>
             </div>
@@ -286,7 +332,8 @@ export const HomeSlider = () => {
               <Image
                 src={conatiner2Img}
                 alt=""
-                className="rounded-full object-cover h-52 w-52"></Image>
+                className="rounded-full object-cover h-52 w-52"
+              ></Image>
             </div>
           </div>
         </div>

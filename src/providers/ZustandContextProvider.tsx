@@ -1,7 +1,7 @@
-import { createContext, useState, ReactNode, useContext } from 'react';
-import { createStore, StoreApi, useStore } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { UserInterface } from '@/libs/common/interfaces/user.interface';
+import { createContext, useState, ReactNode, useContext } from "react";
+import { createStore, StoreApi, useStore } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { UserInterface } from "@/libs/common/interfaces/user.interface";
 type UserStore = {
   user: UserInterface | null;
   setUser: (user: UserInterface) => void;
@@ -26,11 +26,11 @@ export const UserStoreProvider = ({
           deleteUser: () => set({ user: null }),
         }),
         {
-          name: 'user-storage', // name of the item in the storage (must be unique)
+          name: "user-storage", // name of the item in the storage (must be unique)
           storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
-        }
-      )
-    )
+        },
+      ),
+    ),
   );
 
   return (
@@ -42,7 +42,7 @@ export const UserStoreProvider = ({
 const useUserStore = (selector: any) => {
   const store = useContext(BearStoreContext);
   if (!store) {
-    throw new Error('Missing UserStoreProvider');
+    throw new Error("Missing UserStoreProvider");
   }
   return useStore(store, selector);
 };
