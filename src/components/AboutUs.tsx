@@ -1,11 +1,11 @@
-'use client';
-import { Container } from '@mui/material';
-import { Stats_2 } from './Stats';
+"use client";
+import { Container } from "@mui/material";
+import { Stats_2 } from "./Stats";
 const AboutUs = () => {
   const stats = [
-    { id: 1, name: 'Transactions every 24 hours', value: '44 million' },
-    { id: 2, name: 'Assets under holding', value: '$119 trillion' },
-    { id: 3, name: 'New users annually', value: '46,000' },
+    { id: 1, name: "Transactions every 24 hours", value: "44 million" },
+    { id: 2, name: "Assets under holding", value: "$119 trillion" },
+    { id: 3, name: "New users annually", value: "46,000" },
   ];
   return (
     <div className="bg-gradient-to-r from-[#010101] to-[#092A3D] py-10">
@@ -13,9 +13,9 @@ const AboutUs = () => {
         maxWidth="xl"
         // className="flex flex-row justify-between"
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
       >
         <div className="flex flex-col w-4/12 gap-y-6">

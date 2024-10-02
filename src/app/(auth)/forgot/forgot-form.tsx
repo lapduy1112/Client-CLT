@@ -1,10 +1,10 @@
-'use client';
-import TextField from '@mui/material/TextField';
-import { useRouter } from 'next/navigation';
+"use client";
+import TextField from "@mui/material/TextField";
+import { useRouter } from "next/navigation";
 export default function ForgotForm() {
   const router = useRouter();
   const handleSignInClick = () => {
-    router.push('/login');
+    router.push("/login");
   };
   return (
     <div className="max-w-md w-full p-6">
@@ -19,7 +19,7 @@ export default function ForgotForm() {
             label="Email"
             variant="outlined"
             sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '25px' },
+              "& .MuiOutlinedInput-root": { borderRadius: "25px" },
             }}
           />
         </div>
@@ -34,7 +34,7 @@ export default function ForgotForm() {
       </form>
       <div className="flex items-center justify-center w-full">
         <p className="mr-2 mb-2">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <button
             className="text-blue-500 hover:text-blue-700 focus:outline-none"
             onClick={handleSignInClick}

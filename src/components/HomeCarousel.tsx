@@ -22,7 +22,7 @@ const HomeCarousel = () => {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) =>
-      prevActiveStep === 0 ? maxSteps - 1 : prevActiveStep - 1
+      prevActiveStep === 0 ? maxSteps - 1 : prevActiveStep - 1,
     );
   };
 
@@ -41,7 +41,8 @@ const HomeCarousel = () => {
           color: "white",
           textAlign: "center",
           padding: "20px",
-        }}>
+        }}
+      >
         <Box sx={{ maxWidth: "600px" }}></Box>
       </Box>
 
@@ -62,7 +63,8 @@ const HomeCarousel = () => {
           <Button
             size="small"
             onClick={handleNext}
-            sx={{ color: "white", marginLeft: "auto" }}>
+            sx={{ color: "white", marginLeft: "auto" }}
+          >
             Next
             <KeyboardArrowRight />
           </Button>

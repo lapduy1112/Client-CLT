@@ -1,25 +1,10 @@
 import axios from "axios";
 import { BE_API_URL } from "@/libs/common/constants/api";
-export function register({
-  username,
-  email,
-  password,
-  confirmPassword,
-}: {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}) {
+export function logOut() {
   return axios
     .post(
-      `${BE_API_URL}/auth/local/signup`,
-      {
-        username,
-        email,
-        password,
-        confirmPassword,
-      },
+      `${BE_API_URL}/auth/logout`,
+      {},
       {
         withCredentials: true,
         headers: {

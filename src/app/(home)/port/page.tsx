@@ -44,7 +44,7 @@ export default function PortPage() {
     setSearchQuery(event.target.value);
   };
   const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
+    event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === "Enter") {
       router.push(`/port?search=${searchQuery}`);
@@ -77,7 +77,8 @@ export default function PortPage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh">
+          height="100vh"
+        >
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -118,13 +119,15 @@ export default function PortPage() {
                 padding: "16px",
                 marginBottom: "20px",
                 fontFamily: "'Roboto', sans-serif",
-              }}>
+              }}
+            >
               <CardContent>
                 <Typography
                   variant="h5"
                   color="primary"
                   gutterBottom
-                  style={{ fontWeight: "bold", marginBottom: 16 }}>
+                  style={{ fontWeight: "bold", marginBottom: 16 }}
+                >
                   Port of {port.address}
                 </Typography>
                 <Divider />
@@ -132,7 +135,8 @@ export default function PortPage() {
                   <Box
                     display="flex"
                     alignItems="center"
-                    className="text-gray-700">
+                    className="text-gray-700"
+                  >
                     <LocationOnIcon
                       style={{ marginRight: 8, color: blue[600] }}
                     />
@@ -143,7 +147,8 @@ export default function PortPage() {
                         fontSize: "1.1rem",
                         fontWeight: 500,
                         color: grey[800],
-                      }}>
+                      }}
+                    >
                       <strong>Address:</strong> {port.address}, Viet Nam
                     </Typography>
                   </Box>
@@ -151,7 +156,8 @@ export default function PortPage() {
                   <Box
                     display="flex"
                     alignItems="center"
-                    className="text-gray-700">
+                    className="text-gray-700"
+                  >
                     <MyLocationIcon
                       style={{ marginRight: 8, color: blue[600] }}
                     />
@@ -162,7 +168,8 @@ export default function PortPage() {
                         fontSize: "1.1rem",
                         fontWeight: 500,
                         color: grey[800],
-                      }}>
+                      }}
+                    >
                       <strong>Longitude:</strong> {port.lon}
                     </Typography>
                   </Box>
@@ -170,7 +177,8 @@ export default function PortPage() {
                   <Box
                     display="flex"
                     alignItems="center"
-                    className="text-gray-700">
+                    className="text-gray-700"
+                  >
                     <MyLocationIcon
                       style={{ marginRight: 8, color: blue[600] }}
                     />
@@ -181,7 +189,8 @@ export default function PortPage() {
                         fontSize: "1.1rem",
                         fontWeight: 500,
                         color: grey[800],
-                      }}>
+                      }}
+                    >
                       <strong>Latitude:</strong> {port.lat}
                     </Typography>
                   </Box>
@@ -189,7 +198,8 @@ export default function PortPage() {
                   <Box
                     display="flex"
                     alignItems="center"
-                    className="text-gray-700">
+                    className="text-gray-700"
+                  >
                     <PublicIcon style={{ marginRight: 8, color: blue[600] }} />
                     <Typography
                       variant="body1"
@@ -198,7 +208,8 @@ export default function PortPage() {
                         fontSize: "1.1rem",
                         fontWeight: 500,
                         color: green[500],
-                      }}>
+                      }}
+                    >
                       <strong>Status:</strong> Active
                     </Typography>
                   </Box>

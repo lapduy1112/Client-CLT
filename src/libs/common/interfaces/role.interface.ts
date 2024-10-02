@@ -1,4 +1,4 @@
-import { PermissionInterface } from './permission.interface';
+import { PermissionInterface } from "./permission.interface";
 export interface RoleInterface {
   id: string;
   role: string;

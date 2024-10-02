@@ -1,11 +1,11 @@
-'use client';
+"use client";
 // src/components/Footer.tsx
-import React from 'react';
-import { Box, Typography, Link, IconButton } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import React from "react";
+import { Box, Typography, Link, IconButton } from "@mui/material";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 const Footer = () => {
   return (
@@ -20,7 +20,7 @@ const Footer = () => {
               Address: 123 Street, New York, USA
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Phone:{' '}
+              Phone:{" "}
               <a
                 href="tel:+01234567890"
                 className="text-blue-400 hover:underline"
@@ -29,7 +29,7 @@ const Footer = () => {
               </a>
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Email:{' '}
+              Email:{" "}
               <a
                 href="mailto:info@example.com"
                 className="text-blue-400 hover:underline"
@@ -111,8 +111,8 @@ const Footer = () => {
           <Typography variant="body2">
             <Link href="#" color="inherit" underline="hover">
               Privacy Policy
-            </Link>{' '}
-            |{' '}
+            </Link>{" "}
+            |{" "}
             <Link href="#" color="inherit" underline="hover">
               Terms of Service
             </Link>
