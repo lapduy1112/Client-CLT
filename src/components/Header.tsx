@@ -1,11 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
+
 import Box from "@mui/material/Box";
 import Image from "next/image";
-import PersonIcon from "@mui/icons-material/Person";
 import Link from "next/link";
 import {
   Avatar,
@@ -17,7 +15,10 @@ import {
   AppBar,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { useStore } from "@/providers/ZustandProvider";
+
 const Header = () => {
+  const user = useStore((state) => state.user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -96,7 +97,50 @@ const Header = () => {
             </Button>
           </Link>
         </Box>
-        <div className="flex items-center">
+        {user ? (
+          <div className="flex items-center">
+            <IconButton color="default" onClick={handleProfileClick}>
+              <Avatar
+                alt={user?.username}
+                src={user?.profileImage}
+                sx={{ width: 24, height: 24 }}
+              />
+              {/* <PersonIcon /> */}
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}>
+              <MenuItem onClick={handleProfile}>Profile</MenuItem>
+              <MenuItem onClick={handleHistory}>History</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
+        ) : (
+          <Link href="/login" passHref>
+            <Button
+              className="text-white mx-2 font-semibold"
+              sx={{
+                marginLeft: "0.5rem",
+                marginRight: "0.5rem",
+                fontWeight: 600,
+                color: "#ffffff",
+                backgroundColor: "#000000",
+                textTransform: "none",
+              }}>
+              Login
+            </Button>
+          </Link>
+        )}
+        {/* <div className="flex items-center">
           <IconButton color="inherit" onClick={handleProfileClick}>
             <PersonIcon />
           </IconButton>
@@ -117,7 +161,7 @@ const Header = () => {
             <MenuItem onClick={handleHistory}>History</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
-        </div>
+        </div> */}
       </Toolbar>
     </AppBar>
   );

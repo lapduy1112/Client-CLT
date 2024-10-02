@@ -11,23 +11,18 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
-
-const mockUserProfile = {
-  name: "Lap Duy",
-  email: "lapduy1112@gmail.com",
-  role: "User",
-  password: "1234567",
-  isVerified: true,
-  avatarUrl: "/path/to/profile-picture.jpg",
-};
+import { useRouter } from "next/navigation";
+import { useStore } from "@/providers/ZustandProvider";
 
 export default function ProfilePage() {
-  const [isVerified, setIsVerified] = useState(mockUserProfile.isVerified);
-
+  // const [isVerified, setIsVerified] = useState(mockUserProfile.isVerified);
+  const user = useStore((state) => state.user);
+  console.log(user);
+  const router = useRouter();
   const handleVerificationChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setIsVerified(event.target.checked);
+    // setIsVerified(event.target.checked);
   };
 
   return (
@@ -45,14 +40,14 @@ export default function ProfilePage() {
                   marginRight: 2,
                   border: "4px solid #1976d2",
                 }}
-                src={mockUserProfile.avatarUrl}
+                src={user?.profileImage}
               />
               <Box>
                 <Typography variant="h4" component="div" gutterBottom>
-                  {mockUserProfile.name}
+                  {user?.username}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
-                  {mockUserProfile.email}
+                  {user?.email}
                 </Typography>
               </Box>
             </Box>
@@ -69,17 +64,17 @@ export default function ProfilePage() {
               <Typography
                 variant="body1"
                 className="font-semibold text-gray-700">
-                <strong>Name:</strong> {mockUserProfile.name}
+                <strong>Name:</strong> {user?.username}
               </Typography>
               <Typography
                 variant="body1"
                 className="font-semibold text-gray-700">
-                <strong>Email:</strong> {mockUserProfile.email}
+                <strong>Email:</strong> {user?.email}
               </Typography>
               <Typography
                 variant="body1"
                 className="font-semibold text-gray-700">
-                <strong>Role:</strong> {mockUserProfile.role}
+                <strong>Role:</strong> {user?.role}
               </Typography>
             </Box>
 

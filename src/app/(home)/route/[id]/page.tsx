@@ -35,7 +35,7 @@ export default function RouteDetailPage() {
       if (id) {
         try {
           const response = await axios.get(
-            `http://localhost:3001/routes/${id}`
+            `http://localhost:3000/api/v1/route-api/routes/${id}`
           );
 
           setRouteDetail(response.data);

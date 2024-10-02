@@ -18,20 +18,19 @@ import {
   Button,
   AppBar,
   Container,
-} from '@mui/material';
-import PublicIcon from '@mui/icons-material/Public';
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
-import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
-import { useRouter } from 'next/navigation';
-import SliderCard from './SliderCard';
-import IconImage from '../../public/images/logo-no-background.png';
-import { useStore } from '@/providers/ZustandProvider';
-
+} from "@mui/material";
+import PublicIcon from "@mui/icons-material/Public";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import ConnectingAirportsIcon from "@mui/icons-material/ConnectingAirports";
+import TravelExploreOutlinedIcon from "@mui/icons-material/TravelExploreOutlined";
+import { useRouter } from "next/navigation";
+import SliderCard from "./SliderCard";
+import IconImage from "../../public/images/logo-no-background.png";
+import { useStore } from "@/providers/ZustandProvider";
 
 export const HomeSlider = () => {
   const user = useStore((state) => state.user);
-  console.log(user);
+  console.log("user", user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -75,10 +74,8 @@ export const HomeSlider = () => {
         <Image
           src={containerImg}
           alt=""
-
           className="w-full object-cover rounded-3xl opacity-80"
-          priority
-        ></Image>
+          priority></Image>
 
         <AppBar
           position="absolute"
@@ -108,15 +105,13 @@ export const HomeSlider = () => {
             <Box className="flex items-center">
               <Link href="/home" passHref>
                 <Button
-
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
-                  }}
-                >
+                    color: "#000000",
+                  }}>
                   Home
                 </Button>
               </Link>
@@ -124,13 +119,11 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
-                  }}
-                >
-
+                    color: "#000000",
+                  }}>
                   Services
                 </Button>
               </Link>
@@ -138,12 +131,11 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
-                  }}
-                >
+                    color: "#000000",
+                  }}>
                   Route
                 </Button>
               </Link>
@@ -151,12 +143,11 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
-                  }}
-                >
+                    color: "#000000",
+                  }}>
                   Port
                 </Button>
               </Link>
@@ -176,14 +167,13 @@ export const HomeSlider = () => {
                   open={open}
                   onClose={handleClose}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
+                    vertical: "bottom",
+                    horizontal: "right",
                   }}
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                >
+                    vertical: "top",
+                    horizontal: "right",
+                  }}>
                   <MenuItem onClick={handleProfile}>Profile</MenuItem>
                   <MenuItem onClick={handleHistory}>History</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
@@ -194,14 +184,13 @@ export const HomeSlider = () => {
                 <Button
                   className="text-white mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#ffffff',
-                    backgroundColor: '#000000',
-                    textTransform: 'none',
-                  }}
-                >
+                    color: "#ffffff",
+                    backgroundColor: "#000000",
+                    textTransform: "none",
+                  }}>
                   Login
                 </Button>
               </Link>
