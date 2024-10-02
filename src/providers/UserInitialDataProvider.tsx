@@ -17,9 +17,15 @@ function UserInitialDataProvider({ children }: React.PropsWithChildren) {
     queryKey: ['user'],
     queryFn: getUser,
     retry: false,
+    retryOnMount: false,
+    staleTime: 1000 * 60 * 60 * 1,
+    gcTime: 1000 * 60 * 60 * 1,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
   useEffect(() => {
     if (data) {
+      console.log('data', data);
       const permission: PermissionInterface[] = data.role
         .permission as PermissionInterface[];
       const user: UserInterface = {
@@ -27,7 +33,6 @@ function UserInitialDataProvider({ children }: React.PropsWithChildren) {
         role: data.role.role,
         permission: permission,
       };
-      setUser(user);
       setUser(user);
     }
   }, [data]);
