@@ -1,8 +1,8 @@
 export const Stats = () => {
   const stats = [
-    { id: 1, name: 'Transactions every 24 hours', value: '44 million' },
-    { id: 2, name: 'Assets under holding', value: '$119 trillion' },
-    { id: 3, name: 'New users annually', value: '46,000' },
+    { id: 1, name: "Transactions every 24 hours", value: "44 million" },
+    { id: 2, name: "Assets under holding", value: "$119 trillion" },
+    { id: 3, name: "New users annually", value: "46,000" },
   ];
   return (
     <div className="bg-white py-24 sm:py-32">
@@ -28,18 +28,18 @@ export const Stats_2 = () => {
   const stats = [
     {
       id: 1,
-      name: 'CUSTOMERS',
-      value: '480K',
+      name: "CUSTOMERS",
+      value: "480K",
     },
     {
       id: 2,
-      name: 'WORKERS',
-      value: '110K',
+      name: "WORKERS",
+      value: "110K",
     },
     {
       id: 3,
-      name: 'FLEETS',
-      value: '1200',
+      name: "FLEETS",
+      value: "1200",
     },
   ];
   return (

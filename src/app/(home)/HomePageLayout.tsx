@@ -1,6 +1,6 @@
-'use client';
-import React, { ReactNode } from 'react';
-import Footer from '../../components/Footer';
+"use client";
+import React, { ReactNode } from "react";
+import Footer from "../../components/Footer";
 
 interface MainLayoutProps {
   children: ReactNode;

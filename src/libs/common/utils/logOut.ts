@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { BE_API_URL } from '@/libs/common/constants/api';
+import axios from "axios";
+import { BE_API_URL } from "@/libs/common/constants/api";
 export function logOut() {
   return axios
     .post(
@@ -8,10 +8,10 @@ export function logOut() {
       {
         withCredentials: true,
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
-      }
+      },
     )
     .then((res) => res.data);
 }

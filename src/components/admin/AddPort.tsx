@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -7,28 +7,28 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-} from '@mui/material';
-import { addPort } from '@/services/api';
-import { toast } from 'react-toastify';
+} from "@mui/material";
+import { addPort } from "@/services/api";
+import { toast } from "react-toastify";
 interface AddPortProps {
   open: boolean;
   onClose: () => void;
 }
 
 const AddPort: React.FC<AddPortProps> = ({ open, onClose }) => {
-  const [portName, setPortName] = useState<string>('');
+  const [portName, setPortName] = useState<string>("");
   const handleAddPort = async () => {
     if (!portName) {
-      toast.error('Port name is required');
+      toast.error("Port name is required");
       return;
     }
     try {
       const response = await addPort({ address: portName });
-      console.log('Port added successfully:', response);
-      setPortName('');
+      console.log("Port added successfully:", response);
+      setPortName("");
       onClose();
     } catch (error) {
-      console.error('Error adding port:', error);
+      console.error("Error adding port:", error);
     }
   };
   return (

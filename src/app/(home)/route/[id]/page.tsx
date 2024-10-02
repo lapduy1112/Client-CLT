@@ -35,7 +35,7 @@ export default function RouteDetailPage() {
       if (id) {
         try {
           const response = await axios.get(
-            `http://localhost:3001/routes/${id}`
+            `http://localhost:3001/routes/${id}`,
           );
 
           setRouteDetail(response.data);
@@ -59,7 +59,8 @@ export default function RouteDetailPage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh">
+          height="100vh"
+        >
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -113,7 +114,8 @@ export default function RouteDetailPage() {
                   "&:hover": {
                     backgroundColor: "#0056b3",
                   },
-                }}>
+                }}
+              >
                 Booking
               </Button>
             </div>

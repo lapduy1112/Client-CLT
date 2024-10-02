@@ -25,7 +25,7 @@ export default function ProfilePage() {
   const [isVerified, setIsVerified] = useState(mockUserProfile.isVerified);
 
   const handleVerificationChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setIsVerified(event.target.checked);
   };
@@ -35,7 +35,8 @@ export default function ProfilePage() {
       <div className="flex items-center justify-center min-h-screen p-6 bg-gray-100">
         <Card
           sx={{ maxWidth: 600, borderRadius: 2, boxShadow: 3 }}
-          className="w-full">
+          className="w-full"
+        >
           <CardContent>
             <Box className="flex items-center mb-6">
               <Avatar
@@ -61,24 +62,28 @@ export default function ProfilePage() {
               variant="h6"
               component="div"
               gutterBottom
-              color="primary">
+              color="primary"
+            >
               Profile Details
             </Typography>
 
             <Box mt={2} className="space-y-2">
               <Typography
                 variant="body1"
-                className="font-semibold text-gray-700">
+                className="font-semibold text-gray-700"
+              >
                 <strong>Name:</strong> {mockUserProfile.name}
               </Typography>
               <Typography
                 variant="body1"
-                className="font-semibold text-gray-700">
+                className="font-semibold text-gray-700"
+              >
                 <strong>Email:</strong> {mockUserProfile.email}
               </Typography>
               <Typography
                 variant="body1"
-                className="font-semibold text-gray-700">
+                className="font-semibold text-gray-700"
+              >
                 <strong>Role:</strong> {mockUserProfile.role}
               </Typography>
             </Box>
@@ -87,7 +92,8 @@ export default function ProfilePage() {
               variant="contained"
               color="primary"
               style={{ marginTop: 16, textTransform: "none" }}
-              sx={{ borderRadius: 2, padding: "8px 16px" }}>
+              sx={{ borderRadius: 2, padding: "8px 16px" }}
+            >
               Edit Profile
             </Button>
           </CardContent>

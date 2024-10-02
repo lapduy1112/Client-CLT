@@ -5,7 +5,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import RoomIcon from "@mui/icons-material/Room";
 import WavesIcon from "@mui/icons-material/Waves";
 import { blue, grey } from "@mui/material/colors";
-import AdjustIcon from '@mui/icons-material/Adjust';
+import AdjustIcon from "@mui/icons-material/Adjust";
 interface RouteDetailProps {
   from: string;
   to: string;
@@ -39,7 +39,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
         boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
         padding: "24px",
         fontFamily: "'Roboto', sans-serif",
-      }}>
+      }}
+    >
       <CardContent>
         <Box display="flex" alignItems="center" mb={3}>
           <WavesIcon
@@ -49,7 +50,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             variant="h4"
             color="primary"
             gutterBottom
-            style={{ fontWeight: "bold" }}>
+            style={{ fontWeight: "bold" }}
+          >
             Route Information
           </Typography>
         </Box>
@@ -60,7 +62,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
+            >
               <strong>From:</strong> {from} — Departure port.
             </Typography>
           </Box>
@@ -70,7 +73,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
+            >
               <strong>To:</strong> {to} — Destination port.
             </Typography>
           </Box>
@@ -80,7 +84,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
+            >
               <strong>Distance:</strong> {distance} km — Total distance of the
               route.
             </Typography>
@@ -91,7 +96,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
+            >
               <strong>Travel Time:</strong> {travelTime} days — Estimated time
               for the journey.
             </Typography>
@@ -102,7 +108,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
+            >
               <strong>Departure Time:</strong> {formattedDepartureDate} —
               Scheduled time for departure.
             </Typography>
@@ -113,7 +120,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
+            >
               <strong>Arrival Time:</strong> {formattedArrivalDate} — Expected
               time of arrival at the destination.
             </Typography>
@@ -124,7 +132,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
+            >
               <strong>Status:</strong> {status} — Current status of the route.
             </Typography>
           </Box>

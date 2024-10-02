@@ -1,14 +1,14 @@
-'use client';
-import containerImg from '../../public/images/container_6.jpg';
-import conatiner2Img from '../../public/images/container_5.jpg';
-import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import Box from '@mui/material/Box';
-import Image from 'next/image';
-import PersonIcon from '@mui/icons-material/Person';
-import Link from 'next/link';
+"use client";
+import containerImg from "../../public/images/container_6.jpg";
+import conatiner2Img from "../../public/images/container_5.jpg";
+import React, { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import Box from "@mui/material/Box";
+import Image from "next/image";
+import PersonIcon from "@mui/icons-material/Person";
+import Link from "next/link";
 import {
   Avatar,
   Menu,
@@ -18,21 +18,21 @@ import {
   Button,
   AppBar,
   Container,
-} from '@mui/material';
-import PublicIcon from '@mui/icons-material/Public';
-import Divider from '@mui/material/Divider';
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
-import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined';
-import { useRouter } from 'next/navigation';
-import SliderCard from './SliderCard';
-import IconImage from '../../public/images/logo-no-background.png';
-import { useStore } from '@/providers/ZustandProvider';
-import { logOut } from '@/libs/common/utils/logOut';
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
-import { getErrorMessage } from '@/libs/common/utils/error';
-import axios, { AxiosError } from 'axios';
+} from "@mui/material";
+import PublicIcon from "@mui/icons-material/Public";
+import Divider from "@mui/material/Divider";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import ConnectingAirportsIcon from "@mui/icons-material/ConnectingAirports";
+import TravelExploreOutlinedIcon from "@mui/icons-material/TravelExploreOutlined";
+import { useRouter } from "next/navigation";
+import SliderCard from "./SliderCard";
+import IconImage from "../../public/images/logo-no-background.png";
+import { useStore } from "@/providers/ZustandProvider";
+import { logOut } from "@/libs/common/utils/logOut";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/libs/common/utils/error";
+import axios, { AxiosError } from "axios";
 export const HomeSlider = () => {
   const user = useStore((state) => state.user);
   const deleteUser = useStore((state) => state.deleteUser);
@@ -43,11 +43,11 @@ export const HomeSlider = () => {
     mutationFn: logOut,
     onSuccess: () => {
       deleteUser();
-      toast.success('Logged out successfully');
-      router.push('/login');
+      toast.success("Logged out successfully");
+      router.push("/login");
     },
     onError: (error: Error | AxiosError) => {
-      console.log('Error', error);
+      console.log("Error", error);
       if (axios.isAxiosError(error)) {
         toast.error(getErrorMessage(error?.response?.data));
       } else {
@@ -64,18 +64,18 @@ export const HomeSlider = () => {
   };
 
   const handleProfile = () => {
-    console.log('Profile clicked');
+    console.log("Profile clicked");
     router.push(`/profile`);
     handleClose();
   };
   const handleHistory = () => {
-    console.log('History clicked');
+    console.log("History clicked");
     router.push(`/history`);
     handleClose();
   };
 
   const handleLogout = async () => {
-    console.log('Logout clicked');
+    console.log("Logout clicked");
     mutation.mutate();
     handleClose();
   };
@@ -84,12 +84,12 @@ export const HomeSlider = () => {
       <Container
         maxWidth="xl"
         sx={{
-          display: 'flex',
-          position: 'relative',
-          paddingTop: '1rem',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          backgroundSize: 'cover',
+          display: "flex",
+          position: "relative",
+          paddingTop: "1rem",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          backgroundSize: "cover",
         }}
         // className="flex flex-row justify-between pt-4 relative bg-cover"
       >
@@ -103,12 +103,12 @@ export const HomeSlider = () => {
         <AppBar
           position="absolute"
           sx={{
-            top: '1.75rem',
-            left: '50%',
-            borderRadius: '1.5rem',
-            backgroundColor: '#ffffff',
-            width: '94%',
-            transform: 'translate(-50%,0)',
+            top: "1.75rem",
+            left: "50%",
+            borderRadius: "1.5rem",
+            backgroundColor: "#ffffff",
+            width: "94%",
+            transform: "translate(-50%,0)",
           }}
           // className="bg-white top-7 w-[94%] left-1/2 transform -translate-x-1/2 rounded-3xl"
         >
@@ -117,7 +117,7 @@ export const HomeSlider = () => {
             className="flex justify-between items-center max-w-screen-2xl container mx-auto"
           >
             <div className="flex items-center">
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Button sx={{ padding: 0 }}>
                   <Image src={IconImage} alt="Logo" height={36} />
                   {/* <Typography variant="h6" className="font-bold text-black">
@@ -131,10 +131,10 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
                   Home
@@ -144,10 +144,10 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
                   Services
@@ -157,10 +157,10 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
                   Route
@@ -170,10 +170,10 @@ export const HomeSlider = () => {
                 <Button
                   className="text-black mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#000000',
+                    color: "#000000",
                   }}
                 >
                   Port
@@ -199,12 +199,12 @@ export const HomeSlider = () => {
                   open={open}
                   onClose={handleClose}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
+                    vertical: "bottom",
+                    horizontal: "right",
                   }}
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                 >
                   <MenuItem
@@ -212,7 +212,7 @@ export const HomeSlider = () => {
                     onClick={handleProfile}
                   >
                     <div className="">
-                      {' '}
+                      {" "}
                       <Avatar
                         alt={user?.username}
                         src={user?.profileImage}
@@ -221,9 +221,9 @@ export const HomeSlider = () => {
                     </div>
                     <div className="">
                       <h3 className="font-semibold">
-                        {user?.username || 'Unknown User'}
+                        {user?.username || "Unknown User"}
                       </h3>
-                      <h4>{user?.email || 'Unknown Email'}</h4>
+                      <h4>{user?.email || "Unknown Email"}</h4>
                     </div>
                   </MenuItem>
                   <Divider />
@@ -236,12 +236,12 @@ export const HomeSlider = () => {
                 <Button
                   className="text-white mx-2 font-semibold"
                   sx={{
-                    marginLeft: '0.5rem',
-                    marginRight: '0.5rem',
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem",
                     fontWeight: 600,
-                    color: '#ffffff',
-                    backgroundColor: '#000000',
-                    textTransform: 'none',
+                    color: "#ffffff",
+                    backgroundColor: "#000000",
+                    textTransform: "none",
                   }}
                 >
                   Login
@@ -280,19 +280,19 @@ export const HomeSlider = () => {
             <div className="flex gap-x-2">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
               >
                 <PublicIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
               >
                 <LocalShippingOutlinedIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
               >
                 <ConnectingAirportsIcon />
               </IconButton>
@@ -302,7 +302,7 @@ export const HomeSlider = () => {
             <div className="flex justify-end">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: '#000000', backgroundColor: '#ffffff' }}
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
               >
                 <TravelExploreOutlinedIcon />
               </IconButton>

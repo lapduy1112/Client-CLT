@@ -1,5 +1,5 @@
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export function NotificationProvider({ children }: React.PropsWithChildren) {
   return (
     <div>

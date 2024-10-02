@@ -96,7 +96,7 @@ export default function RouteManagePage() {
   };
 
   const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
+    event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === "Enter") {
       router.push(`/admin/routemanage?search=${searchQuery}`);
@@ -109,7 +109,8 @@ export default function RouteManagePage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh">
+          height="100vh"
+        >
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -132,7 +133,8 @@ export default function RouteManagePage() {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={handleClickOpen}>
+          onClick={handleClickOpen}
+        >
           Add new
         </Button>
       </div>

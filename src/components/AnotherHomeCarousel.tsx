@@ -1,30 +1,30 @@
-import { Container } from '@mui/material';
-import CustomCard from './CustomCard';
-import image from '../../public/images/container_4.jpg';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
-import IconButton from '@mui/material/IconButton';
-import AbstractIcon from '../../public/images/abstract.svg';
-import Image from 'next/image';
-import Avatar from '@mui/material/Avatar';
+import { Container } from "@mui/material";
+import CustomCard from "./CustomCard";
+import image from "../../public/images/container_4.jpg";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+import IconButton from "@mui/material/IconButton";
+import AbstractIcon from "../../public/images/abstract.svg";
+import Image from "next/image";
+import Avatar from "@mui/material/Avatar";
 export const AnotherHomeCarousel = () => {
   const items = [
-    '../../public/images/carousel1.jpg',
-    '../../public/images/carousel2.jpg',
-    '../../public/images/container_4.jpg',
+    "../../public/images/carousel1.jpg",
+    "../../public/images/carousel2.jpg",
+    "../../public/images/container_4.jpg",
   ];
   return (
     <div className="bg-gradient-to-r from-[#010101] to-[#092A3D] py-10">
       <Container
         maxWidth="xl"
         sx={{
-          display: 'flex',
-          position: 'relative',
-          paddingTop: '1rem',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          backgroundSize: 'cover',
+          display: "flex",
+          position: "relative",
+          paddingTop: "1rem",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          backgroundSize: "cover",
         }}
       >
         <div className="w-1/2">
@@ -44,18 +44,18 @@ export const AnotherHomeCarousel = () => {
             </div>
             <div className="flex mr-4">
               <div className="">
-                <IconButton className="text-white" sx={{ padding: '0px' }}>
+                <IconButton className="text-white" sx={{ padding: "0px" }}>
                   <ArrowBackIosIcon />
                 </IconButton>
-                <IconButton className="text-white" sx={{ padding: '2px' }}>
-                  <RemoveOutlinedIcon sx={{ width: '32px', height: '32px' }} />
+                <IconButton className="text-white" sx={{ padding: "2px" }}>
+                  <RemoveOutlinedIcon sx={{ width: "32px", height: "32px" }} />
                 </IconButton>
               </div>
               <div className="">
-                <IconButton className="text-white" sx={{ padding: '2px' }}>
-                  <RemoveOutlinedIcon sx={{ width: '32px', height: '32px' }} />
+                <IconButton className="text-white" sx={{ padding: "2px" }}>
+                  <RemoveOutlinedIcon sx={{ width: "32px", height: "32px" }} />
                 </IconButton>
-                <IconButton className="text-white" sx={{ padding: '0px' }}>
+                <IconButton className="text-white" sx={{ padding: "0px" }}>
                   <ArrowForwardIosIcon />
                 </IconButton>
               </div>
@@ -77,7 +77,7 @@ export const AnotherHomeCarousel = () => {
               <div className="flex justify-start gap-x-4">
                 <Avatar className="">H</Avatar>
                 <Avatar>N</Avatar>
-                <Avatar sx={{ bgcolor: 'purple' }}>OP</Avatar>
+                <Avatar sx={{ bgcolor: "purple" }}>OP</Avatar>
                 <div className="text-xs my-auto">
                   <h1>12k+ happy</h1>
                   <h1>clients</h1>

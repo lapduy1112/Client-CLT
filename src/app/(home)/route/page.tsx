@@ -35,7 +35,7 @@ export default function RoutePage() {
   };
 
   const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
+    event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === "Enter") {
       router.push(`/route?search=${searchQuery}`);
@@ -74,7 +74,8 @@ export default function RoutePage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh">
+          height="100vh"
+        >
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -108,7 +109,8 @@ export default function RoutePage() {
               <select
                 value={sortOption}
                 onChange={handleSortChange}
-                className="appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                className="appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              >
                 <option value="">SORT</option>
                 <option value="latestRoute">Latest Route</option>
                 <option value="availableRoute">Available Route</option>
@@ -122,7 +124,8 @@ export default function RoutePage() {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -147,15 +150,16 @@ export default function RoutePage() {
                         route.status === "Completed"
                           ? "#c8e6c9"
                           : route.status === "Transit"
-                          ? "#ffe082"
-                          : "#ffccbc",
+                            ? "#ffe082"
+                            : "#ffccbc",
                       border:
                         route.status === "Completed"
                           ? "1px solid green"
                           : route.status === "Transit"
-                          ? "1px solid orange"
-                          : "1px solid red",
-                    }}>
+                            ? "1px solid orange"
+                            : "1px solid red",
+                    }}
+                  >
                     <Typography variant="h5" color="primary" gutterBottom>
                       {route.id.substring(0, 4).toUpperCase()} -{" "}
                       {route.status.toUpperCase()}
@@ -165,7 +169,8 @@ export default function RoutePage() {
                         display="flex"
                         flexDirection="column"
                         alignItems="center"
-                        mr={2}>
+                        mr={2}
+                      >
                         <Box
                           width={10}
                           height={10}

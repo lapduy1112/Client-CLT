@@ -63,7 +63,7 @@ export default function PortManagePage() {
   };
 
   const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
+    event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === "Enter") {
       router.push(`/admin/portmanage?search=${searchQuery}`);
@@ -95,7 +95,8 @@ export default function PortManagePage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh">
+          height="100vh"
+        >
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -110,7 +111,8 @@ export default function PortManagePage() {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={handleClickOpen}>
+          onClick={handleClickOpen}
+        >
           Add new
         </Button>
       </div>
