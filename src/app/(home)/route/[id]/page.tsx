@@ -91,8 +91,12 @@ export default function RouteDetailPage() {
       toast.error("User not found or not logged in.");
       return;
     }
-        if (!user || !user.isVerified) {
+    if (!user || !user.isVerified) {
       toast.error("You must verify your email.");
+      return;
+    }
+    if (routeDetail.status !== "Available") {
+      toast.error("This route is not available for booking.");
       return;
     }
     try {

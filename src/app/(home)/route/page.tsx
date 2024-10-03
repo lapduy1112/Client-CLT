@@ -15,6 +15,7 @@ export default function RoutePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Fetch all routes on component mount
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
@@ -30,18 +31,20 @@ export default function RoutePage() {
     fetchRoutes();
   }, []);
 
+  // Search logic
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
   const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>,
+    event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
       router.push(`/route?search=${searchQuery}`);
     }
   };
 
+  // Fetch routes based on search query
   useEffect(() => {
     const fetchSearchedRoutes = async () => {
       const searchParam = searchParams.get("search") || "";
@@ -49,7 +52,6 @@ export default function RoutePage() {
         try {
           const fetchedRoutes = await searchRoutes(searchParam);
           setFilteredRoutes(fetchedRoutes || []);
-          console.log(fetchedRoutes);
         } catch (error) {
           console.error("Error fetching searched routes:", error);
           setFilteredRoutes([]);
@@ -62,9 +64,26 @@ export default function RoutePage() {
     fetchSearchedRoutes();
   }, [searchParams, routes]);
 
+  // Function to handle sort change and filter routes
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOption(event.target.value);
-    console.log(`Sắp xếp theo: ${event.target.value}`);
+    const selectedOption = event.target.value;
+    setSortOption(selectedOption);
+
+    // Filter routes based on selected sort option
+    if (selectedOption) {
+      const filtered = routes.filter((route) => {
+        if (selectedOption === "availableRoute")
+          return route.status === "Available";
+        if (selectedOption === "transitRoute")
+          return route.status === "Transit";
+        if (selectedOption === "completeRoute")
+          return route.status === "Completed";
+        return true; // Default case, if no option selected
+      });
+      setFilteredRoutes(filtered);
+    } else {
+      setFilteredRoutes(routes); // Show all routes if no filter is selected
+    }
   };
 
   if (loading) {
@@ -74,8 +93,7 @@ export default function RoutePage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh"
-        >
+          height="100vh">
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -109,23 +127,18 @@ export default function RoutePage() {
               <select
                 value={sortOption}
                 onChange={handleSortChange}
-                className="appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              >
+                className="appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="">SORT</option>
-                <option value="latestRoute">Latest Route</option>
                 <option value="availableRoute">Available Route</option>
-                <option value="startPort">Start Port</option>
-                <option value="endPort">End Port</option>
-                <option value="priceLowToHigh">Price: Low to High</option>
-                <option value="priceHighToLow">Price: High to Low</option>
+                <option value="transitRoute">Transit Route</option>
+                <option value="completeRoute">Complete Route</option>
               </select>
               <svg
                 className="w-5 h-5 text-gray-700"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -150,16 +163,15 @@ export default function RoutePage() {
                         route.status === "Completed"
                           ? "#c8e6c9"
                           : route.status === "Transit"
-                            ? "#ffe082"
-                            : "#ffccbc",
+                          ? "#ffe082"
+                          : "#ffccbc",
                       border:
                         route.status === "Completed"
                           ? "1px solid green"
                           : route.status === "Transit"
-                            ? "1px solid orange"
-                            : "1px solid red",
-                    }}
-                  >
+                          ? "1px solid orange"
+                          : "1px solid red",
+                    }}>
                     <Typography variant="h5" color="primary" gutterBottom>
                       {route.id.substring(0, 4).toUpperCase()} -{" "}
                       {route.status.toUpperCase()}
@@ -169,8 +181,7 @@ export default function RoutePage() {
                         display="flex"
                         flexDirection="column"
                         alignItems="center"
-                        mr={2}
-                      >
+                        mr={2}>
                         <Box
                           width={10}
                           height={10}

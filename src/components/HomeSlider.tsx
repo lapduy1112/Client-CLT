@@ -44,7 +44,7 @@ export const HomeSlider = () => {
     onSuccess: () => {
       deleteUser();
       toast.success("Logged out successfully");
-      router.push("/login");
+      router.push("/home");
     },
     onError: (error: Error | AxiosError) => {
       console.log("Error", error);
@@ -218,6 +218,7 @@ export const HomeSlider = () => {
                     </div>
                   </MenuItem>
                   <Divider />
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
                   <MenuItem onClick={handleHistory}>History</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>

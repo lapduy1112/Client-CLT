@@ -6,33 +6,36 @@ import {
   Typography,
   Avatar,
   Button,
-  FormControlLabel,
-  Switch,
+  Box,
 } from "@mui/material";
-import { Box } from "@mui/system";
-import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/providers/ZustandProvider";
 
 export default function ProfilePage() {
-  // const [isVerified, setIsVerified] = useState(mockUserProfile.isVerified);
   const user = useStore((state) => state.user);
-  console.log(user);
   const router = useRouter();
-  const handleVerificationChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    // setIsVerified(event.target.checked);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login"); 
+    }
+  }, [user, router]);
+
+  const handleVerifyEmail = () => {
+    toast.success("Send verify to your email success");
   };
 
   return (
     <MainLayout>
       <div className="flex items-center justify-center min-h-screen p-6 bg-gray-100">
         <Card
-          sx={{ maxWidth: 600, borderRadius: 2, boxShadow: 3 }}
+          sx={{ maxWidth: 600, borderRadius: 2, boxShadow: 3, padding: 4 }}
           className="w-full">
           <CardContent>
-            <Box className="flex items-center mb-6">
+            <Box className="flex items-center mb-4">
               <Avatar
                 sx={{
                   width: 100,
@@ -51,12 +54,12 @@ export default function ProfilePage() {
                 </Typography>
               </Box>
             </Box>
-
             <Typography
               variant="h6"
               component="div"
               gutterBottom
-              color="primary">
+              color="primary"
+              textAlign="center">
               Profile Details
             </Typography>
 
@@ -78,16 +81,35 @@ export default function ProfilePage() {
               </Typography>
             </Box>
 
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginTop: 16, textTransform: "none" }}
-              sx={{ borderRadius: 2, padding: "8px 16px" }}>
-              Edit Profile
-            </Button>
+            <Box mt={4} className="flex justify-between">
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  borderRadius: 2,
+                  padding: "10px 20px",
+                  flexGrow: 1,
+                  marginRight: 1,
+                }}
+                onClick={handleVerifyEmail}>
+                Verify Email
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                sx={{
+                  borderRadius: 2,
+                  padding: "10px 20px",
+                  flexGrow: 1,
+                  marginLeft: 1,
+                }}>
+                Edit Profile
+              </Button>
+            </Box>
           </CardContent>
         </Card>
       </div>
+      <ToastContainer />
     </MainLayout>
   );
 }
