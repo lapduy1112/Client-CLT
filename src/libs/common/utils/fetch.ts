@@ -1,34 +1,66 @@
-import { cookies } from "next/headers";
-import { API_URL } from "../constants/api";
-import { getErrorMessage } from "./error";
-
-export const getHeaders = () => ({
-  Cookie: cookies().toString(),
+import axios from 'axios';
+import { BE_API_URL } from '@/libs/common/constants/api';
+import { EErrorMessage } from '../constants/error';
+const BASE_URL = BE_API_URL || 'http://localhost:3000';
+const customAxiosWithCredentials = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
+  },
 });
-
-export const post = async (path: string, data: FormData | object) => {
-  const body = data instanceof FormData ? Object.fromEntries(data) : data;
-  const res = await fetch(`${API_URL}/${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...getHeaders() },
-    body: JSON.stringify(body),
-  });
-  const parsedRes = await res.json();
-  if (!res.ok) {
-    return { error: getErrorMessage(parsedRes) };
+export const generateRefreshToken = async () => {
+  try {
+    axios.post(
+      `${BASE_URL}/auth/refresh`,
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  } catch (error) {
+    throw error;
   }
-  return { error: "", data: parsedRes };
 };
+customAxiosWithCredentials.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async function (error) {
+    const originalRequest = error.config;
+    console.log('Error', error.response);
 
-export const get = async <T>(
-  path: string,
-  tags?: string[],
-  params?: URLSearchParams,
-) => {
-  const url = params ? `${API_URL}/${path}?` + params : `${API_URL}/${path}`;
-  const res = await fetch(url, {
-    headers: { ...getHeaders() },
-    next: { tags },
-  });
-  return res.json() as T;
-};
+    if (
+      error.response.status === 401 &&
+      error.response.data.message == EErrorMessage.TOKEN_INVALID &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      try {
+        await axios.post(
+          `${BASE_URL}/auth/refresh`,
+          {},
+          {
+            withCredentials: true,
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        return customAxiosWithCredentials(originalRequest);
+      } catch (refreshError) {
+        console.log('Refresh error', refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+export function getUser() {
+  return customAxiosWithCredentials.get(`/auth/getMe`).then((res) => res.data);
+}
