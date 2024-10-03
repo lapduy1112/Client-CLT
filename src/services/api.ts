@@ -1,3 +1,4 @@
+import { BE_API_URL } from "@/libs/common/constants/api";
 import axios from "axios";
 import { toast } from "react-toastify";
 const api = axios.create({
@@ -7,6 +8,16 @@ const api = axios.create({
   },
 });
 
+export const getUsers = async () => {
+  try {
+    const response = await axios.get(`${BE_API_URL}/users`);
+    console.log(response.data.users);
+    return response.data.users;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
+};
 export const getRoutes = async () => {
   try {
     const response = await api.get("/routes");

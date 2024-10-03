@@ -34,7 +34,7 @@ const Header = () => {
     onSuccess: () => {
       deleteUser();
       toast.success("Logged out successfully");
-      router.push("/home");
+      router.push("/login");
     },
     onError: (error: Error | AxiosError) => {
       console.log("Error", error);
