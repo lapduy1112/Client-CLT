@@ -1,5 +1,6 @@
 import { PermissionInterface } from "./permission.interface";
 export interface UserInterface {
+  token: any;
   id: string;
   username: string;
   email: string;

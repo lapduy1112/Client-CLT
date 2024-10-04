@@ -6,11 +6,7 @@ type UserStore = {
   setUser: (user: UserInterface) => void;
   deleteUser: () => void;
 };
-// export const useOldStore = create<UserStore>((set) => ({
-//   user: null,
-//   setUser: (user: UserInterface) => set({ user: user }),
-//   deleteUser: () => set({ user: null }),
-// }));
+
 export const useStore = create<UserStore>()(
   persist(
     (set) => ({

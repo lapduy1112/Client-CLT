@@ -97,8 +97,7 @@ export const HomeSlider = () => {
           src={containerImg}
           alt=""
           className="w-full object-cover rounded-3xl opacity-80"
-          priority
-        ></Image>
+          priority></Image>
 
         <AppBar
           position="absolute"
@@ -114,8 +113,7 @@ export const HomeSlider = () => {
         >
           <Toolbar
             variant="dense"
-            className="flex justify-between items-center max-w-screen-2xl container mx-auto"
-          >
+            className="flex justify-between items-center max-w-screen-2xl container mx-auto">
             <div className="flex items-center">
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Button sx={{ padding: 0 }}>
@@ -135,8 +133,7 @@ export const HomeSlider = () => {
                     marginRight: "0.5rem",
                     fontWeight: 600,
                     color: "#000000",
-                  }}
-                >
+                  }}>
                   Home
                 </Button>
               </Link>
@@ -148,8 +145,7 @@ export const HomeSlider = () => {
                     marginRight: "0.5rem",
                     fontWeight: 600,
                     color: "#000000",
-                  }}
-                >
+                  }}>
                   Services
                 </Button>
               </Link>
@@ -161,8 +157,7 @@ export const HomeSlider = () => {
                     marginRight: "0.5rem",
                     fontWeight: 600,
                     color: "#000000",
-                  }}
-                >
+                  }}>
                   Route
                 </Button>
               </Link>
@@ -174,8 +169,7 @@ export const HomeSlider = () => {
                     marginRight: "0.5rem",
                     fontWeight: 600,
                     color: "#000000",
-                  }}
-                >
+                  }}>
                   Port
                 </Button>
               </Link>
@@ -185,8 +179,7 @@ export const HomeSlider = () => {
                 <IconButton
                   color="default"
                   onClick={handleProfileClick}
-                  sx={{ padding: 0 }}
-                >
+                  sx={{ padding: 0 }}>
                   <Avatar
                     alt={user?.username}
                     src={user?.profileImage}
@@ -205,12 +198,10 @@ export const HomeSlider = () => {
                   transformOrigin={{
                     vertical: "top",
                     horizontal: "right",
-                  }}
-                >
+                  }}>
                   <MenuItem
                     className="flex flex-row gap-x-4"
-                    onClick={handleProfile}
-                  >
+                    onClick={handleProfile}>
                     <div className="">
                       {" "}
                       <Avatar
@@ -227,6 +218,7 @@ export const HomeSlider = () => {
                     </div>
                   </MenuItem>
                   <Divider />
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
                   <MenuItem onClick={handleHistory}>History</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
@@ -242,8 +234,7 @@ export const HomeSlider = () => {
                     color: "#ffffff",
                     backgroundColor: "#000000",
                     textTransform: "none",
-                  }}
-                >
+                  }}>
                   Login
                 </Button>
               </Link>
@@ -280,20 +271,17 @@ export const HomeSlider = () => {
             <div className="flex gap-x-2">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <PublicIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <LocalShippingOutlinedIcon />
               </IconButton>
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <ConnectingAirportsIcon />
               </IconButton>
             </div>
@@ -302,8 +290,7 @@ export const HomeSlider = () => {
             <div className="flex justify-end">
               <IconButton
                 className="bg-white text-black"
-                sx={{ color: "#000000", backgroundColor: "#ffffff" }}
-              >
+                sx={{ color: "#000000", backgroundColor: "#ffffff" }}>
                 <TravelExploreOutlinedIcon />
               </IconButton>
             </div>
@@ -332,8 +319,7 @@ export const HomeSlider = () => {
               <Image
                 src={conatiner2Img}
                 alt=""
-                className="rounded-full object-cover h-52 w-52"
-              ></Image>
+                className="rounded-full object-cover h-52 w-52"></Image>
             </div>
           </div>
         </div>

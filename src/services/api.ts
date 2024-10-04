@@ -1,12 +1,23 @@
+import { BE_API_URL } from "@/libs/common/constants/api";
 import axios from "axios";
 import { toast } from "react-toastify";
 const api = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: "http://localhost:3000/api/v1/route-api",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+export const getUsers = async () => {
+  try {
+    const response = await axios.get(`${BE_API_URL}/users`);
+    console.log(response.data.users);
+    return response.data.users;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
+};
 export const getRoutes = async () => {
   try {
     const response = await api.get("/routes");
@@ -83,6 +94,20 @@ export const addRoute = async (newRoute: {
   } catch (error) {
     toast.error("Failed to create route.");
     console.error("Error adding new route:", error);
+    throw error;
+  }
+};
+
+export const createBooking = async (routeId: string, userId: string) => {
+  try {
+    const response = await api.post("/booking", {
+      routeId,
+      userId,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating booking:", error);
     throw error;
   }
 };
