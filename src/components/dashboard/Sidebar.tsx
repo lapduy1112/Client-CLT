@@ -30,6 +30,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { useState } from 'react';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '@/libs/common/utils/handleSideBar';
@@ -171,6 +172,14 @@ export default function Sidebar({ tab }: { tab?: string }) {
             </ListItemButton>
           </ListItem>
 
+          <ListItem>
+            <ListItemButton>
+              <AdminPanelSettingsIcon />
+              <ListItemContent>
+                <Typography level="title-sm">User Management</Typography>
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
           <ListItem>
             <ListItemButton
               role="menuitem"
