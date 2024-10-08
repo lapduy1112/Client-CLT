@@ -25,26 +25,17 @@ import { getRoutes, getPorts, searchRoutes } from "@/services/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Route } from "@/libs/common/interfaces/route.interface";
 
-interface Route {
-  startPort: {
-    address: string;
-  };
-  endPort: {
-    address: string;
-  };
-  distance: number;
-  departureDate: string;
-  arrivalDate: string;
-  status: string;
-}
 export default function RouteManagePage() {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ports, setPorts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredRoutes, setFilteredRoutes] = useState<any[]>([]);
+  const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+  const [page, setPage] = useState(1);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -61,7 +52,6 @@ export default function RouteManagePage() {
         setRoutes(processedRoutes);
         setFilteredRoutes(processedRoutes);
         setPorts(fetchedPorts);
-        console.log(processedRoutes);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching routes:", error);
@@ -73,13 +63,18 @@ export default function RouteManagePage() {
   }, []);
 
   useEffect(() => {
-    const fetchSearchedRoutes = async () => {
+    const searchRoutesByQuery = async () => {
       const searchParam = searchParams.get("search") || "";
+      setSearchQuery(searchParam);
       if (searchParam) {
         try {
           const fetchedRoutes = await searchRoutes(searchParam);
-          setFilteredRoutes(fetchedRoutes || []);
-          console.log(fetchedRoutes);
+          const processedRoutes = fetchedRoutes.map((route: Route) => ({
+            ...route,
+            departureDate: route.departureDate.split("T")[0],
+            arrivalDate: route.arrivalDate.split("T")[0],
+          }));
+          setFilteredRoutes(processedRoutes);
         } catch (error) {
           console.error("Error fetching searched routes:", error);
           setFilteredRoutes([]);
@@ -89,19 +84,24 @@ export default function RouteManagePage() {
       }
     };
 
-    fetchSearchedRoutes();
+    searchRoutesByQuery();
   }, [searchParams, routes]);
+
+  const handleAddRoute = (newRoute: Route) => {
+    setRoutes((prevRoutes) => [newRoute, ...prevRoutes]);
+    setFilteredRoutes((prevRoutes) => [newRoute, ...prevRoutes]);
+  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       router.push(`/admin/routemanage?search=${searchQuery}`);
     }
   };
+
   if (loading) {
     return (
       <MainLayout>
@@ -109,8 +109,7 @@ export default function RouteManagePage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh"
-        >
+          height="100vh">
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -133,8 +132,7 @@ export default function RouteManagePage() {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={handleClickOpen}
-        >
+          onClick={handleClickOpen}>
           Add new
         </Button>
       </div>
@@ -144,6 +142,7 @@ export default function RouteManagePage() {
           variant="outlined"
           label="Search list..."
           className="w-1/4"
+          value={searchQuery}
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
           InputProps={{
@@ -167,35 +166,47 @@ export default function RouteManagePage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredRoutes.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.startPort.address}</TableCell>
-                <TableCell>{item.endPort.address}</TableCell>
-                <TableCell>{item.distance}</TableCell>
-                <TableCell>{item.arrivalDate}</TableCell>{" "}
-                <TableCell>{item.departureDate}</TableCell>{" "}
-                <TableCell>{item.status}</TableCell>
-                <TableCell>
-                  <IconButton color="primary">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton color="secondary">
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {filteredRoutes
+              .slice((page - 1) * 10, page * 10)
+              .map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.startPort.address}</TableCell>
+                  <TableCell>{item.endPort.address}</TableCell>
+                  <TableCell>{item.distance}</TableCell>
+                  <TableCell>{item.arrivalDate}</TableCell>
+                  <TableCell>{item.departureDate}</TableCell>
+                  <TableCell>{item.status}</TableCell>
+                  <TableCell>
+                    <IconButton color="primary">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton color="secondary">
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
 
       <div className="flex justify-between items-center mt-6">
         <p>Display 10 items</p>
-        <Pagination count={10} color="primary" />
+        <Pagination
+          count={Math.ceil(filteredRoutes.length / 10)}
+          page={page}
+          onChange={(event, value) => setPage(value)}
+          color="primary"
+        />
       </div>
-      <AddRoute open={open} onClose={handleClose} ports={ports} />
-      <ToastContainer />
+
+      <AddRoute
+        open={open}
+        onClose={handleClose}
+        ports={ports}
+        onAddRoute={handleAddRoute}
+      />
     </MainLayout>
   );
 }

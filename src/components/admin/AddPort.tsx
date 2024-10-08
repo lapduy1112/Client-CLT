@@ -10,27 +10,34 @@ import {
 } from "@mui/material";
 import { addPort } from "@/services/api";
 import { toast } from "react-toastify";
+
 interface AddPortProps {
   open: boolean;
   onClose: () => void;
+  onPortAdded: (newPort: any) => void;
 }
 
-const AddPort: React.FC<AddPortProps> = ({ open, onClose }) => {
+const AddPort: React.FC<AddPortProps> = ({ open, onClose, onPortAdded }) => {
   const [portName, setPortName] = useState<string>("");
+
   const handleAddPort = async () => {
     if (!portName) {
-      toast.error("Port name is required");
+      toast.error("Please insert Port name");
       return;
     }
     try {
       const response = await addPort({ address: portName });
-      console.log("Port added successfully:", response);
+      console.log("Add success:", response);
+
+      onPortAdded(response);
       setPortName("");
       onClose();
     } catch (error) {
-      console.error("Error adding port:", error);
+      console.error("Error:", error);
+      toast.error("Error adding port");
     }
   };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Add New Port</DialogTitle>
@@ -39,7 +46,7 @@ const AddPort: React.FC<AddPortProps> = ({ open, onClose }) => {
           autoFocus
           margin="dense"
           id="address"
-          label="Port Name"
+          label="Tên Cổng"
           type="text"
           fullWidth
           variant="outlined"
