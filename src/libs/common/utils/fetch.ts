@@ -2,6 +2,7 @@ import axios from 'axios';
 import { BE_API_URL } from '@/libs/common/constants/api';
 import { EErrorMessage } from '../constants/error';
 import { SearchUserQueryInterface } from '../interfaces/search_user_query.interface';
+import { UserUpdateInterface } from '../interfaces/update-user.interface';
 const BASE_URL = BE_API_URL || 'http://localhost:3000';
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
@@ -92,4 +93,12 @@ export function deleteUser(id: string) {
   return customAxiosWithCredentials
     .delete(`/users/${id}`)
     .then((res) => res.data);
+}
+export function updateUser(data: UserUpdateInterface) {
+  return customAxiosWithCredentials
+    .patch(`/users`, data)
+    .then((res) => res.data);
+}
+export function getUserById(id: string) {
+  return customAxiosWithCredentials.get(`/users/${id}`).then((res) => res.data);
 }

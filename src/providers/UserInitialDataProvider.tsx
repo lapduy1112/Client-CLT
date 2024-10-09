@@ -14,7 +14,7 @@ function UserInitialDataProvider({ children }: React.PropsWithChildren) {
   const setUser = useStore((state) => state.setUser);
   const deleteUser = useStore((state) => state.deleteUser);
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['user'],
+    queryKey: ['user', { id: '0' }],
     queryFn: getUser,
     retry: false,
     retryOnMount: false,

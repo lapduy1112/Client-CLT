@@ -37,6 +37,7 @@ import { useQuery } from '@tanstack/react-query';
 import { searchUsers } from '@/libs/common/utils/fetch';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import DeleteUserModal from '../modal/DeleteModal';
+import UpdateUserModal from '../modal/UpdateModal';
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -63,11 +64,13 @@ function getComparator<Key extends keyof any>(
 
 function RowMenu({
   dataId,
-  setOpen,
+  setOpenDelete,
+  setOpenUpdate,
   setId,
 }: {
   dataId: string;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
@@ -79,12 +82,18 @@ function RowMenu({
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Edit</MenuItem>
+        <MenuItem
+          onClick={() => {
+            setId(dataId), setOpenUpdate(true);
+          }}
+        >
+          Edit
+        </MenuItem>
         <Divider />
         <MenuItem
           color="danger"
           onClick={() => {
-            setId(dataId), setOpen(true);
+            setId(dataId), setOpenDelete(true);
           }}
         >
           Delete
@@ -96,6 +105,7 @@ function RowMenu({
 export default function UserTable() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
   const [selectedId, setselectedId] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const searchParams = useSearchParams();
@@ -122,7 +132,6 @@ export default function UserTable() {
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
-  console.log(data);
   function handleSearch(key: string, term: string) {
     const params = new URLSearchParams(searchParams);
     if (term) {
@@ -380,7 +389,8 @@ export default function UserTable() {
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                       <RowMenu
                         dataId={(row.id as string) || ''}
-                        setOpen={setOpenDeleteModal}
+                        setOpenDelete={setOpenDeleteModal}
+                        setOpenUpdate={setOpenUpdateModal}
                         setId={setselectedId}
                       />
                     </Box>
@@ -468,6 +478,12 @@ export default function UserTable() {
       <DeleteUserModal
         open={openDeleteModal}
         setOpen={setOpenDeleteModal}
+        id={selectedId}
+        setSelectedId={setselectedId}
+      />
+      <UpdateUserModal
+        open={openUpdateModal}
+        setOpen={setOpenUpdateModal}
         id={selectedId}
         setSelectedId={setselectedId}
       />
