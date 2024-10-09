@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { BE_API_URL } from '@/libs/common/constants/api';
 import { EErrorMessage } from '../constants/error';
+import { SearchUserQueryInterface } from '../interfaces/search_user_query.interface';
 const BASE_URL = BE_API_URL || 'http://localhost:3000';
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
@@ -63,4 +64,32 @@ customAxiosWithCredentials.interceptors.response.use(
 );
 export function getUser() {
   return customAxiosWithCredentials.get(`/auth/getMe`).then((res) => res.data);
+}
+export function searchUsers(query?: SearchUserQueryInterface) {
+  if (query) {
+    let searchQuery = `/users?`;
+    searchQuery = query.searchTerm
+      ? `${searchQuery}searchTerm=${query.searchTerm}&`
+      : searchQuery;
+    searchQuery = query.page
+      ? `${searchQuery}page=${query.page}&`
+      : searchQuery;
+    searchQuery = query.sort
+      ? `${searchQuery}sort=${query.sort}&`
+      : searchQuery;
+    searchQuery = query.isVerified
+      ? `${searchQuery}isVerified=${query.isVerified}&`
+      : searchQuery;
+    searchQuery = query.role
+      ? `${searchQuery}role_role=${query.role}&`
+      : searchQuery;
+    searchQuery = searchQuery.slice(0, -1);
+    return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
+  }
+  return customAxiosWithCredentials.get(`/users`).then((res) => res.data);
+}
+export function deleteUser(id: string) {
+  return customAxiosWithCredentials
+    .delete(`/users/${id}`)
+    .then((res) => res.data);
 }

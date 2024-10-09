@@ -33,190 +33,10 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-
-const rows = [
-  {
-    id: 'INV-1234',
-    date: 'Feb 3, 2023',
-    status: 'Refunded',
-    customer: {
-      initial: 'O',
-      name: 'Olivia Ryhe',
-      email: 'olivia@email.com',
-    },
-  },
-  {
-    id: 'INV-1233',
-    date: 'Feb 3, 2023',
-    status: 'Paid',
-    customer: {
-      initial: 'S',
-      name: 'Steve Hampton',
-      email: 'steve.hamp@email.com',
-    },
-  },
-  {
-    id: 'INV-1232',
-    date: 'Feb 3, 2023',
-    status: 'Refunded',
-    customer: {
-      initial: 'C',
-      name: 'Ciaran Murray',
-      email: 'ciaran.murray@email.com',
-    },
-  },
-  {
-    id: 'INV-1231',
-    date: 'Feb 3, 2023',
-    status: 'Refunded',
-    customer: {
-      initial: 'M',
-      name: 'Maria Macdonald',
-      email: 'maria.mc@email.com',
-    },
-  },
-  {
-    id: 'INV-1230',
-    date: 'Feb 3, 2023',
-    status: 'Cancelled',
-    customer: {
-      initial: 'C',
-      name: 'Charles Fulton',
-      email: 'fulton@email.com',
-    },
-  },
-  {
-    id: 'INV-1229',
-    date: 'Feb 3, 2023',
-    status: 'Cancelled',
-    customer: {
-      initial: 'J',
-      name: 'Jay Hooper',
-      email: 'hooper@email.com',
-    },
-  },
-  {
-    id: 'INV-1228',
-    date: 'Feb 3, 2023',
-    status: 'Refunded',
-    customer: {
-      initial: 'K',
-      name: 'Krystal Stevens',
-      email: 'k.stevens@email.com',
-    },
-  },
-  {
-    id: 'INV-1227',
-    date: 'Feb 3, 2023',
-    status: 'Paid',
-    customer: {
-      initial: 'S',
-      name: 'Sachin Flynn',
-      email: 's.flyn@email.com',
-    },
-  },
-  {
-    id: 'INV-1226',
-    date: 'Feb 3, 2023',
-    status: 'Cancelled',
-    customer: {
-      initial: 'B',
-      name: 'Bradley Rosales',
-      email: 'brad123@email.com',
-    },
-  },
-  {
-    id: 'INV-1225',
-    date: 'Feb 3, 2023',
-    status: 'Paid',
-    customer: {
-      initial: 'O',
-      name: 'Olivia Ryhe',
-      email: 'olivia@email.com',
-    },
-  },
-  {
-    id: 'INV-1224',
-    date: 'Feb 3, 2023',
-    status: 'Cancelled',
-    customer: {
-      initial: 'S',
-      name: 'Steve Hampton',
-      email: 'steve.hamp@email.com',
-    },
-  },
-  {
-    id: 'INV-1223',
-    date: 'Feb 3, 2023',
-    status: 'Paid',
-    customer: {
-      initial: 'C',
-      name: 'Ciaran Murray',
-      email: 'ciaran.murray@email.com',
-    },
-  },
-  {
-    id: 'INV-1221',
-    date: 'Feb 3, 2023',
-    status: 'Refunded',
-    customer: {
-      initial: 'M',
-      name: 'Maria Macdonald',
-      email: 'maria.mc@email.com',
-    },
-  },
-  {
-    id: 'INV-1220',
-    date: 'Feb 3, 2023',
-    status: 'Paid',
-    customer: {
-      initial: 'C',
-      name: 'Charles Fulton',
-      email: 'fulton@email.com',
-    },
-  },
-  {
-    id: 'INV-1219',
-    date: 'Feb 3, 2023',
-    status: 'Cancelled',
-    customer: {
-      initial: 'J',
-      name: 'Jay Hooper',
-      email: 'hooper@email.com',
-    },
-  },
-  {
-    id: 'INV-1218',
-    date: 'Feb 3, 2023',
-    status: 'Cancelled',
-    customer: {
-      initial: 'K',
-      name: 'Krystal Stevens',
-      email: 'k.stevens@email.com',
-    },
-  },
-  {
-    id: 'INV-1217',
-    date: 'Feb 3, 2023',
-    status: 'Paid',
-    customer: {
-      initial: 'S',
-      name: 'Sachin Flynn',
-      email: 's.flyn@email.com',
-    },
-  },
-  {
-    id: 'INV-1216',
-    date: 'Feb 3, 2023',
-    status: 'Cancelled',
-    customer: {
-      initial: 'B',
-      name: 'Bradley Rosales',
-      email: 'brad123@email.com',
-    },
-  },
-];
-
+import { useQuery } from '@tanstack/react-query';
+import { searchUsers } from '@/libs/common/utils/fetch';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import DeleteUserModal from '../modal/DeleteModal';
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -241,7 +61,15 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function RowMenu() {
+function RowMenu({
+  dataId,
+  setOpen,
+  setId,
+}: {
+  dataId: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setId: React.Dispatch<React.SetStateAction<string>>;
+}) {
   return (
     <Dropdown>
       <MenuButton
@@ -252,18 +80,58 @@ function RowMenu() {
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
         <MenuItem>Edit</MenuItem>
-        <MenuItem>Rename</MenuItem>
-        <MenuItem>Move</MenuItem>
         <Divider />
-        <MenuItem color="danger">Delete</MenuItem>
+        <MenuItem
+          color="danger"
+          onClick={() => {
+            setId(dataId), setOpen(true);
+          }}
+        >
+          Delete
+        </MenuItem>
       </Menu>
     </Dropdown>
   );
 }
 export default function UserTable() {
   const [order, setOrder] = React.useState<Order>('desc');
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+  const [selectedId, setselectedId] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+  const sort = searchParams.get('sort');
+  const role = searchParams.get('role');
+  const isVerified = searchParams.get('isVerified');
+  const searchTerm = searchParams.get('searchTerm');
+  const page = searchParams.get('page');
+  const { isPending, isError, data, error, isSuccess } = useQuery({
+    queryKey: ['users', { sort, role, isVerified, searchTerm, page }],
+    queryFn: () =>
+      searchUsers({
+        searchTerm: searchTerm || undefined,
+        sort: sort || undefined,
+        role: role || undefined,
+        isVerified: isVerified || undefined,
+        page: Number(page) || undefined,
+      }),
+    retry: false,
+    retryOnMount: false,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+  console.log(data);
+  function handleSearch(key: string, term: string) {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set(key, term);
+    } else {
+      params.delete(key);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
@@ -271,19 +139,32 @@ export default function UserTable() {
         <Select
           size="sm"
           slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-          defaultValue="createdAt"
+          defaultValue={sort || 'createdAt'}
+          id="sort"
+          onChange={(event, newValue) => {
+            handleSearch('sort', newValue || ''), handleSearch('page', '1');
+          }}
         >
           <Option value="createdAt">Created date</Option>
           <Option value="updatedAt">Updated date</Option>
-          <Option value="suername">Username</Option>
+          <Option value="username">Username</Option>
           <Option value="email">Email</Option>
-          <Option value="role">Role</Option>
+          <Option value="role.role">Role</Option>
         </Select>
       </FormControl>
       <FormControl size="sm">
         <FormLabel>Role</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
+        <Select
+          size="sm"
+          placeholder="All"
+          defaultValue={role || ''}
+          id="role"
+          onChange={(event, newValue) => {
+            handleSearch('role', newValue || '');
+            handleSearch('page', '1');
+          }}
+        >
+          <Option value="">All</Option>
           <Option value="user">User</Option>
           <Option value="admin">Admin</Option>
           <Option value="sysadmin">SysAdmin</Option>
@@ -291,10 +172,19 @@ export default function UserTable() {
       </FormControl>
       <FormControl size="sm">
         <FormLabel>Verified</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="yes">Yes</Option>
-          <Option value="no">No</Option>
+        <Select
+          size="sm"
+          placeholder="All"
+          defaultValue={isVerified || ''}
+          id="isVerified"
+          onChange={(event, newValue) => {
+            handleSearch('isVerified', newValue || '');
+            handleSearch('page', '1');
+          }}
+        >
+          <Option value="">All</Option>
+          <Option value="True">Yes</Option>
+          <Option value="False">No</Option>
         </Select>
       </FormControl>
     </React.Fragment>
@@ -348,14 +238,29 @@ export default function UserTable() {
           },
         }}
       >
-        <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for users</FormLabel>
-          <Input
-            size="sm"
-            placeholder="Search"
-            startDecorator={<SearchIcon />}
-          />
-        </FormControl>
+        <form
+          className="flex-1"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const form = event.target as HTMLFormElement;
+            handleSearch(
+              'searchTerm',
+              (form.elements.namedItem('search') as HTMLInputElement).value ||
+                ''
+            );
+          }}
+        >
+          <FormControl sx={{ flex: 1 }} size="sm">
+            <FormLabel>Search for users</FormLabel>
+            <Input
+              id="searchTerm"
+              name="search"
+              size="sm"
+              placeholder="Search"
+              startDecorator={<SearchIcon />}
+            />
+          </FormControl>
+        </form>
         {renderFilters()}
       </Box>
       <Sheet
@@ -370,146 +275,121 @@ export default function UserTable() {
           minHeight: 0,
         }}
       >
-        <Table
-          aria-labelledby="tableTitle"
-          stickyHeader
-          hoverRow
-          sx={{
-            '--TableCell-headBackground':
-              'var(--joy-palette-background-level1)',
-            '--Table-headerUnderlineThickness': '1px',
-            '--TableRow-hoverBackground':
-              'var(--joy-palette-background-level1)',
-            '--TableCell-paddingY': '4px',
-            '--TableCell-paddingX': '8px',
-          }}
-        >
-          <thead>
-            <tr>
-              <th
-                style={{ width: 48, textAlign: 'center', padding: '12px 6px' }}
-              >
-                <Checkbox
-                  size="sm"
-                  indeterminate={
-                    selected.length > 0 && selected.length !== rows.length
-                  }
-                  checked={selected.length === rows.length}
-                  onChange={(event) => {
-                    setSelected(
-                      event.target.checked ? rows.map((row) => row.id) : []
-                    );
+        {isSuccess && (
+          <Table
+            aria-labelledby="tableTitle"
+            stickyHeader
+            hoverRow
+            sx={{
+              '--TableCell-headBackground':
+                'var(--joy-palette-background-level1)',
+              '--Table-headerUnderlineThickness': '1px',
+              '--TableRow-hoverBackground':
+                'var(--joy-palette-background-level1)',
+              '--TableCell-paddingY': '4px',
+              '--TableCell-paddingX': '8px',
+            }}
+          >
+            <thead>
+              <tr>
+                <th
+                  style={{
+                    width: 24,
+                    textAlign: 'center',
+                    padding: '12px 6px',
                   }}
-                  color={
-                    selected.length > 0 || selected.length === rows.length
-                      ? 'primary'
-                      : undefined
-                  }
-                  sx={{ verticalAlign: 'text-bottom' }}
-                />
-              </th>
-              <th style={{ width: 120, padding: '12px 6px' }}>
-                <Link
-                  underline="none"
-                  color="primary"
-                  component="button"
-                  onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
-                  endDecorator={<ArrowDropDownIcon />}
-                  sx={[
-                    {
-                      fontWeight: 'lg',
-                      '& svg': {
-                        transition: '0.2s',
-                        transform:
-                          order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
+                ></th>
+                <th style={{ width: 180, padding: '12px 6px' }}>
+                  <Link
+                    underline="none"
+                    color="primary"
+                    component="button"
+                    onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
+                    endDecorator={<ArrowDropDownIcon />}
+                    sx={[
+                      {
+                        fontWeight: 'lg',
+                        '& svg': {
+                          transition: '0.2s',
+                          transform:
+                            order === 'desc'
+                              ? 'rotate(0deg)'
+                              : 'rotate(180deg)',
+                        },
                       },
-                    },
-                    order === 'desc'
-                      ? { '& svg': { transform: 'rotate(0deg)' } }
-                      : { '& svg': { transform: 'rotate(180deg)' } },
-                  ]}
-                >
-                  Invoice
-                </Link>
-              </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Date</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-              <th style={{ width: 240, padding: '12px 6px' }}>Customer</th>
-              <th style={{ width: 140, padding: '12px 6px' }}> </th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...rows].sort(getComparator(order, 'id')).map((row) => (
-              <tr key={row.id}>
-                <td style={{ textAlign: 'center', width: 120 }}>
-                  <Checkbox
-                    size="sm"
-                    checked={selected.includes(row.id)}
-                    color={selected.includes(row.id) ? 'primary' : undefined}
-                    onChange={(event) => {
-                      setSelected((ids) =>
-                        event.target.checked
-                          ? ids.concat(row.id)
-                          : ids.filter((itemId) => itemId !== row.id)
-                      );
-                    }}
-                    slotProps={{ checkbox: { sx: { textAlign: 'left' } } }}
-                    sx={{ verticalAlign: 'text-bottom' }}
-                  />
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.id}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.date}</Typography>
-                </td>
-                <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    startDecorator={
-                      {
-                        Paid: <CheckRoundedIcon />,
-                        Refunded: <AutorenewRoundedIcon />,
-                        Cancelled: <BlockIcon />,
-                      }[row.status]
-                    }
-                    color={
-                      {
-                        Paid: 'success',
-                        Refunded: 'neutral',
-                        Cancelled: 'danger',
-                      }[row.status] as ColorPaletteProp
-                    }
+                      order === 'desc'
+                        ? { '& svg': { transform: 'rotate(0deg)' } }
+                        : { '& svg': { transform: 'rotate(180deg)' } },
+                    ]}
                   >
-                    {row.status}
-                  </Chip>
-                </td>
-                <td>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <Avatar size="sm">{row.customer.initial}</Avatar>
-                    <div>
-                      <Typography level="body-xs">
-                        {row.customer.name}
-                      </Typography>
-                      <Typography level="body-xs">
-                        {row.customer.email}
-                      </Typography>
-                    </div>
-                  </Box>
-                </td>
-                <td>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <Link level="body-xs" component="button">
-                      Download
-                    </Link>
-                    <RowMenu />
-                  </Box>
-                </td>
+                    Id
+                  </Link>
+                </th>
+                <th style={{ width: 180, padding: '12px 6px' }}>Email</th>
+                <th style={{ width: 140, padding: '12px 6px' }}>Username</th>
+                <th style={{ width: 80, padding: '12px 6px' }}>IsVerfied</th>
+                <th style={{ width: 140, padding: '12px 6px' }}>CreatedAt</th>
+                <th style={{ width: 140, padding: '12px 6px' }}>UpdatedAt</th>
+                <th style={{ width: 80, padding: '12px 6px' }}>Role</th>
+                <th style={{ width: 140, padding: '12px 6px' }}> </th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {[...data.users].sort(getComparator(order, 'id')).map((row) => (
+                <tr key={row.id}>
+                  <td style={{ textAlign: 'center', width: 120 }}></td>
+                  <td>
+                    <Typography level="body-xs">{row.id}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.email}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.username}</Typography>
+                  </td>
+                  <td>
+                    <Chip
+                      variant="soft"
+                      size="sm"
+                      startDecorator={
+                        {
+                          true: <CheckRoundedIcon />,
+                          false: <BlockIcon />,
+                        }[String(row.isVerified)]
+                      }
+                      color={
+                        {
+                          true: 'success',
+                          false: 'danger',
+                        }[String(row.isVerified)] as ColorPaletteProp
+                      }
+                    >
+                      {row.isVerified.toString()}
+                    </Chip>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.createdAt}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.updatedAt}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">{row.role.role}</Typography>
+                  </td>
+                  <td>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <RowMenu
+                        dataId={(row.id as string) || ''}
+                        setOpen={setOpenDeleteModal}
+                        setId={setselectedId}
+                      />
+                    </Box>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Sheet>
       <Box
         className="Pagination-laptopUp"
@@ -528,11 +408,13 @@ export default function UserTable() {
           variant="outlined"
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
+          disabled={Number(page) === 1 || !page}
+          onClick={() => handleSearch('page', String(Number(page) - 1))}
         >
           Previous
         </Button>
 
-        <Box sx={{ flex: 1 }} />
+        {/* <Box sx={{ flex: 1 }} />
         {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
           <IconButton
             key={page}
@@ -542,17 +424,53 @@ export default function UserTable() {
           >
             {page}
           </IconButton>
-        ))}
-        <Box sx={{ flex: 1 }} />
+        ))} */}
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Input
+            className="max-w-20"
+            placeholder="Page"
+            value={page || 1}
+            onChange={(event) => handleSearch('page', event.target.value)}
+            endDecorator={
+              <Button variant="soft" color="neutral" disabled>
+                /
+                {data && data.totalCount && data.pageSize
+                  ? Math.ceil(data.totalCount / data.pageSize)
+                  : 1}
+              </Button>
+            }
+          />
+        </Box>
         <Button
           size="sm"
           variant="outlined"
           color="neutral"
           endDecorator={<KeyboardArrowRightIcon />}
+          disabled={
+            !data ||
+            data.totalCount < data.pageSize ||
+            data.pageNumber * data.pageSize >= data.totalCount
+          }
+          onClick={() =>
+            handleSearch('page', String(Number(data.pageNumber) + 1))
+          }
         >
           Next
         </Button>
       </Box>
+      <DeleteUserModal
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        id={selectedId}
+        setSelectedId={setselectedId}
+      />
     </React.Fragment>
   );
 }
