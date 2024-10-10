@@ -1,5 +1,5 @@
 import { BE_API_URL } from "@/libs/common/constants/api";
-import { PortsResponse } from "@/services/interface";
+import { PortsResponse, RouteResponse } from "@/services/interface";
 import axios from "axios";
 import { toast } from "react-toastify";
 const api = axios.create({
@@ -19,10 +19,23 @@ export const getUsers = async () => {
     throw error;
   }
 };
-export const getRoutes = async () => {
+export const getRoutes = async (
+  page: number = 1,
+  limit: number = 9,
+  sortBy: string = "createdAt",
+  sortOrder: string = "DESC"
+): Promise<RouteResponse> => {
   try {
-    const response = await api.get("/routes");
-    return response.data.data;
+    const response = await api.get("/routes", {
+      params: {
+        page,
+        limit,
+        sortBy,
+        sortOrder,
+      },
+    });
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching routes:", error);
     throw error;
@@ -46,7 +59,7 @@ export const searchRoutes = async (searchQuery: string) => {
 };
 export const getPorts = async (
   page: number = 1,
-  limit: number = 10,
+  limit: number = 4,
   sortBy: string = "createdAt",
   sortOrder: string = "DESC"
 ): Promise<PortsResponse> => {
@@ -59,6 +72,7 @@ export const getPorts = async (
         sortOrder,
       },
     });
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching ports:", error);

@@ -5,7 +5,6 @@ import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -21,9 +20,8 @@ export default function Pagination({
   onPreviousPage,
   onPageChange,
 }: PaginationProps) {
-  // Ensure totalPages is at least 1 to prevent array errors
   const pages = Array.from(Array(Math.max(totalPages, 1)).keys());
-
+  // console.log(pages)
   return (
     <div>
       <Box

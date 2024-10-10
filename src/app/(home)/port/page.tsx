@@ -23,6 +23,10 @@ interface Port {
 interface PortsResponse {
   data: Port[];
   total: number;
+  currentPage: number;
+  nextPage: number | null;
+  prevPage: number | null;
+  lastPage: number;
 }
 
 export default function PortPage() {
@@ -51,9 +55,11 @@ export default function PortPage() {
           sortBy,
           sortOrder
         );
+        // console.log(fetchedPorts);
         setPorts(fetchedPorts.data);
         setFilteredPorts(fetchedPorts.data);
-        setTotalPages(Math.ceil(fetchedPorts.total / portsPerPage));
+        // setTotalPages(Math.ceil(fetchedPorts.total / portsPerPage));
+        setTotalPages(fetchedPorts.lastPage);
       } catch (error) {
         console.error("Error fetching Ports:", error);
       } finally {
@@ -64,7 +70,7 @@ export default function PortPage() {
   }, [currentPage, sortBy, sortOrder]);
 
   useEffect(() => {
-    const savedPage = localStorage.getItem("currentPage");
+    const savedPage = localStorage.getItem("currentPortPage");
     if (savedPage) {
       setCurrentPage(Number(savedPage));
     }
@@ -81,7 +87,11 @@ export default function PortPage() {
   };
 
   const handleSearch = () => {
-    router.push(`/port?search=${searchQuery}`);
+    if (searchQuery.trim() === "") {
+      router.push("/port");
+    } else {
+      router.push(`/port?search=${searchQuery}`);
+    }
   };
 
   useEffect(() => {
@@ -92,34 +102,50 @@ export default function PortPage() {
           const fetchedPorts: PortsResponse = await searchPorts(searchParam);
           setFilteredPorts(fetchedPorts.data);
           console.log(fetchedPorts.data);
-          setTotalPages(Math.ceil(fetchedPorts.total / portsPerPage));
+          // setTotalPages(Math.ceil(fetchedPorts.total / portsPerPage));
+          setTotalPages(fetchedPorts.lastPage);
         } catch (error) {
           console.error("Error fetching searched Ports:", error);
           setFilteredPorts([]);
         }
       } else {
-        setFilteredPorts(ports);
-        setTotalPages(Math.ceil(ports.length / portsPerPage));
+        try {
+          const fetchedPorts: PortsResponse = await getPorts(
+            currentPage,
+            portsPerPage,
+            sortBy,
+            sortOrder
+          );
+          setPorts(fetchedPorts.data);
+          setFilteredPorts(fetchedPorts.data);
+          console.log(fetchedPorts.data);
+          setTotalPages(fetchedPorts.lastPage);
+        } catch (error) {
+          console.error("Error fetching Ports:", error);
+        }
+        // setFilteredPorts(filteredPorts);
+        // console.log(filteredPorts);
+        // setTotalPages(fetchedPorts.lastPage);
       }
     };
     fetchSearchedPorts();
-  }, [searchParams, ports]);
+  }, [searchParams, currentPage, sortBy, sortOrder]);
 
   const handleCardClick = (lat: string, lon: string) => {
     setSelectedLatLon([parseFloat(lat), parseFloat(lon)]);
   };
 
-  const indexOfLastPort = currentPage * portsPerPage;
-  const indexOfFirstPort = indexOfLastPort - portsPerPage;
-  const currentPorts = Array.isArray(filteredPorts)
-    ? filteredPorts.slice(indexOfFirstPort, indexOfLastPort)
-    : [];
-  // console.log(currentPorts)
+  // const indexOfLastPort = currentPage * portsPerPage;
+  // const indexOfFirstPort = indexOfLastPort - portsPerPage;
+  // const currentPorts = Array.isArray(filteredPorts)
+  //   ? filteredPorts.slice(indexOfFirstPort, indexOfLastPort)
+  //   : [];
+  // console.log(totalPages);
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prevPage) => {
         const newPage = prevPage + 1;
-        localStorage.setItem("currentPage", newPage.toString());
+        localStorage.setItem("currentPortPage", newPage.toString());
         return newPage;
       });
     }
@@ -129,7 +155,7 @@ export default function PortPage() {
     if (currentPage > 1) {
       setCurrentPage((prevPage) => {
         const newPage = prevPage - 1;
-        localStorage.setItem("currentPage", newPage.toString());
+        localStorage.setItem("currentPortPage", newPage.toString());
         return newPage;
       });
     }
@@ -137,9 +163,10 @@ export default function PortPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    localStorage.setItem("currentPage", page.toString());
+    localStorage.setItem("currentPortPage", page.toString());
   };
   const handleSortChange = (sortBy: string, sortOrder: string) => {
+    setLoading(true);
     setSortBy(sortBy);
     setSortOrder(sortOrder);
     setCurrentPage(1);
@@ -198,8 +225,8 @@ export default function PortPage() {
           <Stack spacing={2} sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}>
             <OrderSelector onSortChange={handleSortChange} />
             <Stack spacing={2} sx={{ overflow: "auto" }}>
-              {currentPorts.length > 0 ? (
-                currentPorts.map((port, index) => (
+              {filteredPorts.length > 0 ? (
+                filteredPorts.map((port, index) => (
                   <RentalCard
                     key={index}
                     address={port.address}

@@ -5,32 +5,73 @@ import React, { useState, useEffect } from "react";
 import { Typography, Box, Grid, Paper, CircularProgress } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getRoutes, searchRoutes } from "@/services/api";
+import Pagination from "@/components/route/Pagination";
+import Search from "@/components/route/Search";
 
+interface Port {
+  id: string;
+  address: string;
+}
+interface Route {
+  id: string;
+  startPort: Port;
+  endPort: Port;
+  distance: number;
+  departureDate: Date;
+  arrivalDate: Date;
+  travelTime: number;
+  status: string;
+}
+interface RouteResponse {
+  data: Route[];
+  total: number;
+  currentPage: number;
+  nextPage: number | null;
+  prevPage: number | null;
+  lastPage: number;
+}
 export default function RoutePage() {
-  const [routes, setRoutes] = useState<any[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]);
+  const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [sortOption, setSortOption] = useState<string>("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState("DESC");
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredRoutes, setFilteredRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const routePerPage = 9;
   // Fetch all routes on component mount
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
-        const fetchedRoutes = await getRoutes();
-        setRoutes(fetchedRoutes);
-        setFilteredRoutes(fetchedRoutes);
-        setLoading(false);
+        // const fetchedRoutes = await getRoutes();
+        const fetchedRoutes: RouteResponse = await getRoutes(
+          currentPage,
+          routePerPage,
+          sortBy,
+          sortOrder
+        );
+        setRoutes(fetchedRoutes.data);
+        setFilteredRoutes(fetchedRoutes.data);
+        console.log(fetchedRoutes.data);
       } catch (error) {
         console.error("Error fetching routes:", error);
+        setLoading(false);
+      } finally {
         setLoading(false);
       }
     };
     fetchRoutes();
+  }, [currentPage, sortBy, sortOrder]);
+  useEffect(() => {
+    const savedPage = localStorage.getItem("currentRoutePage");
+    if (savedPage) {
+      setCurrentPage(Number(savedPage));
+    }
   }, []);
-
   // Search logic
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -57,35 +98,58 @@ export default function RoutePage() {
           setFilteredRoutes([]);
         }
       } else {
-        setFilteredRoutes(routes);
+        const fetchedRoutes: RouteResponse = await getRoutes(
+          currentPage,
+          routePerPage,
+          sortBy,
+          sortOrder
+        );
+        setRoutes(fetchedRoutes.data);
+        setFilteredRoutes(fetchedRoutes.data);
+        setTotalPages(fetchedRoutes.lastPage);
+        // setFilteredRoutes(routes);
       }
     };
 
     fetchSearchedRoutes();
-  }, [searchParams, routes]);
+  }, [searchParams, currentPage, sortBy, sortOrder]);
 
-  // Function to handle sort change and filter routes
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOption = event.target.value;
-    setSortOption(selectedOption);
-
-    // Filter routes based on selected sort option
-    if (selectedOption) {
-      const filtered = routes.filter((route) => {
-        if (selectedOption === "availableRoute")
-          return route.status === "Available";
-        if (selectedOption === "transitRoute")
-          return route.status === "Transit";
-        if (selectedOption === "completeRoute")
-          return route.status === "Completed";
-        return true; // Default case, if no option selected
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => {
+        const newPage = prevPage + 1;
+        localStorage.setItem("currentRoutePage", newPage.toString());
+        return newPage;
       });
-      setFilteredRoutes(filtered);
-    } else {
-      setFilteredRoutes(routes); // Show all routes if no filter is selected
     }
   };
 
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => {
+        const newPage = prevPage - 1;
+        localStorage.setItem("currentRoutePage", newPage.toString());
+        return newPage;
+      });
+    }
+  };
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    localStorage.setItem("currentRoutePage", page.toString());
+  };
+  const handleSearch = () => {
+    if (searchQuery.trim() === "") {
+      router.push("/port");
+    } else {
+      router.push(`/port?search=${searchQuery}`);
+    }
+  };
+  const handleSortChange = (sortBy: string, sortOrder: string) => {
+    setLoading(true);
+    setSortBy(sortBy);
+    setSortOrder(sortOrder);
+    setCurrentPage(1);
+  };
   if (loading) {
     return (
       <MainLayout>
@@ -102,7 +166,7 @@ export default function RoutePage() {
 
   return (
     <MainLayout>
-      <Box className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:max-w-7xl lg:px-8">
+      <Box className="mx-auto max-w-2xl px-4 py-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="flex items-center justify-between space-x-4">
           <div>
             <h2 className="text-4xl font-bold tracking-tight text-gray-900">
@@ -113,12 +177,11 @@ export default function RoutePage() {
               which fits your supply chain.
             </span>
             <div className="mt-4">
-              <input
-                type="text"
-                placeholder="Search routes..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              <Search
+                value={searchQuery}
                 onChange={handleSearchChange}
                 onKeyDown={handleKeyDown}
+                onSearch={handleSearch}
               />
             </div>
           </div>
@@ -126,7 +189,7 @@ export default function RoutePage() {
             <div className="flex items-center space-x-2">
               <select
                 value={sortOption}
-                onChange={handleSortChange}
+                // onChange={handleSortChange}
                 className="appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="">SORT</option>
                 <option value="availableRoute">Available Route</option>
@@ -149,7 +212,10 @@ export default function RoutePage() {
             </div>
           </div>
         </div>
-        <Grid container spacing={3} style={{ paddingTop: "16px" }}>
+        <Grid
+          container
+          spacing={3}
+          style={{ paddingTop: "16px", paddingBottom: "16px" }}>
           {Array.isArray(filteredRoutes) && filteredRoutes.length > 0 ? (
             filteredRoutes.map((route, index) => (
               <Grid item xs={12} sm={6} lg={4} key={index}>
@@ -219,6 +285,15 @@ export default function RoutePage() {
             </Grid>
           )}
         </Grid>
+        <Box mt={4}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onNextPage={handleNextPage}
+            onPreviousPage={handlePreviousPage}
+            onPageChange={handlePageChange}
+          />
+        </Box>
       </Box>
     </MainLayout>
   );

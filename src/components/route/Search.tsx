@@ -5,23 +5,21 @@ import Input from "@mui/joy/Input";
 import Stack from "@mui/joy/Stack";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Typography from "@mui/joy/Typography";
-
 type SearchProps = {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   onSearch: () => void;
 };
-
 export default function Search({
-  value,
+    value,
   onChange,
   onKeyDown,
   onSearch,
 }: SearchProps) {
   return (
     <div>
-      <Stack spacing={1} direction="row" sx={{ mb: 2 }}>
+        <Stack spacing={1} direction="row" sx={{ mb: 2 }}>
         <FormControl sx={{ flex: 1 }}>
           <Input
             placeholder="Search"

@@ -21,9 +21,8 @@ export default function Pagination({
   onPreviousPage,
   onPageChange,
 }: PaginationProps) {
-  // Ensure totalPages is at least 1 to prevent array errors
   const pages = Array.from(Array(Math.max(totalPages, 1)).keys());
-
+  // console.log(pages);
   return (
     <div>
       <Box
