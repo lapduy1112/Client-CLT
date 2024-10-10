@@ -5,13 +5,9 @@ import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import FormHelperText from '@mui/joy/FormHelperText';
 import Input from '@mui/joy/Input';
 import IconButton from '@mui/joy/IconButton';
-import Textarea from '@mui/joy/Textarea';
 import Stack from '@mui/joy/Stack';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
 import Typography from '@mui/joy/Typography';
 import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
@@ -25,12 +21,71 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import EditorToolbar from '@/components/dashboard/EditorToolbar';
 import { useEffect } from 'react';
 import { useStore } from '@/providers/ZustandProvider';
 import { redirect } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { updateUser } from '@/libs/common/utils/fetch';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/libs/common/utils/error';
+import axios, { AxiosError } from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
+import { FormHelperText } from '@mui/joy';
+import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
+import { UserInterface } from '@/libs/common/interfaces/user.interface';
+const validationSchema = Yup.object({
+  username: Yup.string().min(4, 'Username must be at least 4 characters'),
+});
 export default function MyProfile() {
   const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: updateUser,
+    onSuccess: (data) => {
+      console.log('data', data);
+      queryClient.setQueryData(['user', { id: 0 }], data);
+      const permission: PermissionInterface[] = data.role
+        .permission as PermissionInterface[];
+      const user: UserInterface = {
+        ...data,
+        role: data.role.role,
+        permission: permission,
+      };
+      setUser(user);
+      toast.success('User Updated successfully');
+    },
+    onError: (error: Error | AxiosError) => {
+      toast.error(getErrorMessage(error));
+      if (axios.isAxiosError(error)) {
+        toast.error(getErrorMessage(error?.response?.data));
+      } else {
+        toast.error(getErrorMessage(error));
+      }
+    },
+  });
+  const formik = useFormik({
+    initialValues: {
+      username: undefined,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log('values', values);
+      if (!user) {
+        toast.error('User not found');
+        return;
+      }
+      if (values.username === user.username || !values.username) {
+        return;
+      }
+      mutation.mutate({
+        id: user?.id,
+        username: values.username,
+      });
+    },
+  });
   useEffect(() => {
     if (!user) {
       redirect('/unauthorized');
@@ -77,43 +132,8 @@ export default function MyProfile() {
             My profile
           </Typography>
         </Box>
-        <Tabs defaultValue={0} sx={{ bgcolor: 'transparent' }}>
-          <TabList
-            tabFlex={1}
-            size="sm"
-            sx={{
-              pl: { xs: 0, md: 4 },
-              justifyContent: 'left',
-              [`&& .${tabClasses.root}`]: {
-                fontWeight: '600',
-                flex: 'initial',
-                color: 'text.tertiary',
-                [`&.${tabClasses.selected}`]: {
-                  bgcolor: 'transparent',
-                  color: 'text.primary',
-                  '&::after': {
-                    height: '2px',
-                    bgcolor: 'primary.500',
-                  },
-                },
-              },
-            }}
-          >
-            <Tab sx={{ borderRadius: '6px 6px 0 0' }} indicatorInset value={0}>
-              Settings
-            </Tab>
-            <Tab sx={{ borderRadius: '6px 6px 0 0' }} indicatorInset value={1}>
-              Team
-            </Tab>
-            <Tab sx={{ borderRadius: '6px 6px 0 0' }} indicatorInset value={2}>
-              Plan
-            </Tab>
-            <Tab sx={{ borderRadius: '6px 6px 0 0' }} indicatorInset value={3}>
-              Billing
-            </Tab>
-          </TabList>
-        </Tabs>
       </Box>
+      <Divider />
       <Stack
         spacing={4}
         sx={{
@@ -132,99 +152,118 @@ export default function MyProfile() {
             </Typography>
           </Box>
           <Divider />
-          <Stack
-            direction="row"
-            spacing={3}
-            sx={{ display: { xs: 'none', md: 'flex' }, my: 1 }}
-          >
-            <Stack direction="column" spacing={1}>
-              <AspectRatio
-                ratio="1"
-                maxHeight={200}
-                sx={{ flex: 1, minWidth: 120, borderRadius: '100%' }}
-              >
-                <img
-                  src={
-                    user?.profileImage ||
-                    'https://firebasestorage.googleapis.com/v0/b/mern-blog-project-28a14.appspot.com/o/profileImage.jpg?alt=media&token=4b00eeb1-6eb8-4c2d-9ba5-1c5fcf7e3d49'
-                  }
-                  srcSet={
-                    user?.profileImage ||
-                    'https://firebasestorage.googleapis.com/v0/b/mern-blog-project-28a14.appspot.com/o/profileImage.jpg?alt=media&token=4b00eeb1-6eb8-4c2d-9ba5-1c5fcf7e3d49'
-                  }
-                  loading="lazy"
-                  alt=""
-                />
-                {/* <Image
-                  src={
-                    user?.profileImage ||
-                    'https://firebasestorage.googleapis.com/v0/b/mern-blog-project-28a14.appspot.com/o/profileImage.jpg?alt=media&token=4b00eeb1-6eb8-4c2d-9ba5-1c5fcf7e3d49'
-                  }
-                  alt="Profile image"
-                  layout="fill"
-                  objectFit="contain"
-                ></Image> */}
-              </AspectRatio>
-              <IconButton
-                aria-label="upload new picture"
+          <form onSubmit={formik.handleSubmit} id="updatedUserForm">
+            <Stack
+              direction="row"
+              spacing={3}
+              sx={{ display: { xs: 'none', md: 'flex' }, my: 1 }}
+            >
+              <Stack direction="column" spacing={1}>
+                <AspectRatio
+                  ratio="1"
+                  maxHeight={200}
+                  sx={{ flex: 1, minWidth: 120, borderRadius: '100%' }}
+                >
+                  <img
+                    src={
+                      user?.profileImage ||
+                      'https://firebasestorage.googleapis.com/v0/b/mern-blog-project-28a14.appspot.com/o/profileImage.jpg?alt=media&token=4b00eeb1-6eb8-4c2d-9ba5-1c5fcf7e3d49'
+                    }
+                    srcSet={
+                      user?.profileImage ||
+                      'https://firebasestorage.googleapis.com/v0/b/mern-blog-project-28a14.appspot.com/o/profileImage.jpg?alt=media&token=4b00eeb1-6eb8-4c2d-9ba5-1c5fcf7e3d49'
+                    }
+                    loading="lazy"
+                    alt=""
+                  />
+                </AspectRatio>
+                <IconButton
+                  aria-label="upload new picture"
+                  size="sm"
+                  variant="outlined"
+                  color="neutral"
+                  sx={{
+                    bgcolor: 'background.body',
+                    position: 'absolute',
+                    zIndex: 2,
+                    borderRadius: '50%',
+                    left: 100,
+                    top: 170,
+                    boxShadow: 'sm',
+                  }}
+                >
+                  <EditRoundedIcon />
+                </IconButton>
+              </Stack>
+              <Stack spacing={2} sx={{ flexGrow: 1 }}>
+                <Stack spacing={1}>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl
+                    sx={{
+                      display: { sm: 'flex-column', md: 'flex-row' },
+                      gap: 2,
+                    }}
+                  >
+                    <Input
+                      size="sm"
+                      placeholder="Username"
+                      id="username"
+                      name="username"
+                      defaultValue={user?.username}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.username}
+                      error={
+                        formik.touched.username &&
+                        Boolean(formik.errors.username)
+                      }
+                    />
+                    {formik.touched.username &&
+                      Boolean(formik.errors.username) && (
+                        <FormHelperText>
+                          {formik.errors.username}
+                        </FormHelperText>
+                      )}
+                  </FormControl>
+                </Stack>
+                <Stack direction="row" spacing={2}>
+                  <FormControl>
+                    <FormLabel>Role</FormLabel>
+                    <Input size="sm" defaultValue={user?.role} disabled />
+                  </FormControl>
+                  <FormControl sx={{ flexGrow: 1 }}>
+                    <FormLabel>Email</FormLabel>
+                    <Input
+                      size="sm"
+                      type="email"
+                      startDecorator={<EmailRoundedIcon />}
+                      placeholder="email"
+                      defaultValue={user?.email}
+                      sx={{ flexGrow: 1 }}
+                      disabled
+                    />
+                  </FormControl>
+                </Stack>
+              </Stack>
+            </Stack>
+          </form>
+          <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+            <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
+              <Button
                 size="sm"
                 variant="outlined"
                 color="neutral"
-                sx={{
-                  bgcolor: 'background.body',
-                  position: 'absolute',
-                  zIndex: 2,
-                  borderRadius: '50%',
-                  left: 100,
-                  top: 170,
-                  boxShadow: 'sm',
-                }}
+                disabled={mutation.isPending}
               >
-                <EditRoundedIcon />
-              </IconButton>
-            </Stack>
-            <Stack spacing={2} sx={{ flexGrow: 1 }}>
-              <Stack spacing={1}>
-                <FormLabel>Name</FormLabel>
-                <FormControl
-                  sx={{
-                    display: { sm: 'flex-column', md: 'flex-row' },
-                    gap: 2,
-                  }}
-                >
-                  <Input
-                    size="sm"
-                    placeholder="Username"
-                    defaultValue={user?.username}
-                  />
-                </FormControl>
-              </Stack>
-              <Stack direction="row" spacing={2}>
-                <FormControl>
-                  <FormLabel>Role</FormLabel>
-                  <Input size="sm" defaultValue={user?.role} disabled />
-                </FormControl>
-                <FormControl sx={{ flexGrow: 1 }}>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    size="sm"
-                    type="email"
-                    startDecorator={<EmailRoundedIcon />}
-                    placeholder="email"
-                    defaultValue={user?.email}
-                    sx={{ flexGrow: 1 }}
-                    disabled
-                  />
-                </FormControl>
-              </Stack>
-            </Stack>
-          </Stack>
-          <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
-            <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral">
                 Cancel
               </Button>
-              <Button size="sm" variant="solid">
+              <Button
+                size="sm"
+                variant="solid"
+                form="updatedUserForm"
+                type="submit"
+                disabled={mutation.isPending}
+              >
                 Save
               </Button>
             </CardActions>

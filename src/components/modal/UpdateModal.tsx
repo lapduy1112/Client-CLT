@@ -4,12 +4,10 @@ import { useFormik } from 'formik';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import DialogTitle from '@mui/joy/DialogTitle';
-import DialogContent from '@mui/joy/DialogContent';
 import DialogActions from '@mui/joy/DialogActions';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
-import DeleteForever from '@mui/icons-material/DeleteForever';
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import FormHelperText from '@mui/joy/FormHelperText';
 import Stack from '@mui/material/Stack';
 import AspectRatio from '@mui/joy/AspectRatio';
 import IconButton from '@mui/joy/IconButton';
@@ -23,6 +21,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { getUserById, updateUser } from '@/libs/common/utils/fetch';
 import Option from '@mui/joy/Option';
+import { useSearchParams } from 'next/navigation';
+import { getErrorMessage } from '@/libs/common/utils/error';
+import axios, { AxiosError } from 'axios';
 const validationSchema = Yup.object({
   username: Yup.string().min(4, 'Username must be at least 4 characters'),
   isVerified: Yup.string(),
@@ -39,6 +40,12 @@ export default function UpdateUserModal({
   setSelectedId: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const sort = searchParams.get('sort');
+  const role = searchParams.get('role');
+  const isVerified = searchParams.get('isVerified');
+  const searchTerm = searchParams.get('searchTerm');
+  const page = searchParams.get('page');
   const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ['user', { id: id }],
     queryFn: () => getUserById(id),
@@ -52,12 +59,21 @@ export default function UpdateUserModal({
     mutationFn: updateUser,
     onSuccess: (data) => {
       queryClient.setQueryData(['user', { id: data.id }], data),
+        queryClient.invalidateQueries({
+          queryKey: ['users', { sort, role, isVerified, searchTerm, page }],
+        }),
         toast.success('User Updated successfully'),
-        setOpen(false);
-    },
-    onError: () => {
-      toast.error('Error Updating user');
+        setSelectedId('');
       setOpen(false);
+    },
+    onError: (error: Error | AxiosError) => {
+      setSelectedId('');
+      setOpen(false);
+      if (axios.isAxiosError(error)) {
+        toast.error(getErrorMessage(error?.response?.data));
+      } else {
+        toast.error(getErrorMessage(error));
+      }
     },
   });
   const formik = useFormik({
@@ -67,7 +83,11 @@ export default function UpdateUserModal({
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      mutation.mutate({
+        id: id,
+        username: values.username,
+        isVerified: values.isVerified,
+      });
     },
   });
   return (
@@ -82,7 +102,7 @@ export default function UpdateUserModal({
           <DialogTitle>Update User</DialogTitle>
           <Divider />
           {isSuccess && data && (
-            <form>
+            <form onSubmit={formik.handleSubmit} id="udpatedForm">
               <Stack
                 direction="row"
                 spacing={3}
@@ -135,29 +155,77 @@ export default function UpdateUserModal({
                   </IconButton>
                 </Stack>
                 <Stack spacing={2} sx={{ flexGrow: 1 }}>
+                  <Stack spacing={1}>
+                    <FormLabel>Id</FormLabel>
+                    <FormControl
+                      sx={{
+                        display: { sm: 'flex-column', md: 'flex-row' },
+                        gap: 2,
+                      }}
+                    >
+                      <Input
+                        size="sm"
+                        placeholder="Id"
+                        defaultValue={data?.id}
+                        disabled
+                      />
+                    </FormControl>
+                  </Stack>
                   <Stack direction="row" spacing={2}>
                     <FormControl>
                       <FormLabel>Name</FormLabel>
                       <Input
                         size="sm"
                         placeholder="Username"
+                        id="username"
+                        name="username"
                         defaultValue={data?.username}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.username}
+                        error={
+                          formik.touched.username &&
+                          Boolean(formik.errors.username)
+                        }
                       />
+                      {formik.touched.username &&
+                        Boolean(formik.errors.username) && (
+                          <FormHelperText>
+                            {formik.errors.username}
+                          </FormHelperText>
+                        )}
                     </FormControl>
                     <FormControl sx={{ flexGrow: 1 }}>
                       <FormLabel>isVerified</FormLabel>
                       <Select
                         size="sm"
-                        placeholder=""
                         defaultValue={data?.isVerified ? 'true' : 'false'}
                         id="isVerified"
+                        name="isVerified"
+                        onChange={(event, value) =>
+                          formik.setFieldValue('isVerified', value)
+                        }
+                        onBlur={formik.handleBlur}
+                        color={
+                          formik.touched.isVerified &&
+                          Boolean(formik.errors.isVerified)
+                            ? 'danger'
+                            : 'neutral'
+                        }
                       >
-                        <Option value="true">True</Option>
-                        <Option value="false">False</Option>
+                        <Option value="true" label="true">
+                          true
+                        </Option>
+                        <Option value="false" label="false">
+                          false
+                        </Option>
                       </Select>
+                      {formik.touched.isVerified &&
+                        Boolean(formik.errors.isVerified) && (
+                          <FormHelperText>
+                            {formik.errors.isVerified}
+                          </FormHelperText>
+                        )}
                     </FormControl>
                   </Stack>
                   <Stack direction="row" spacing={2}>
@@ -182,6 +250,24 @@ export default function UpdateUserModal({
                       />
                     </FormControl>
                   </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <FormControl>
+                      <FormLabel>CreatedAt</FormLabel>
+                      <Input
+                        size="sm"
+                        defaultValue={data?.createdAt}
+                        disabled
+                      />
+                    </FormControl>
+                    <FormControl sx={{ flexGrow: 1 }}>
+                      <FormLabel>UpdatedAt</FormLabel>
+                      <Input
+                        size="sm"
+                        defaultValue={data?.updatedAt}
+                        disabled
+                      />
+                    </FormControl>
+                  </Stack>
                 </Stack>
               </Stack>
             </form>
@@ -189,12 +275,12 @@ export default function UpdateUserModal({
 
           <DialogActions>
             <Button
+              form="udpatedForm"
               sx={{ backgroundColor: '#000000' }}
               variant="solid"
-              color="danger"
-              onClick={() => {
-                setSelectedId('');
-              }}
+              color="neutral"
+              type="submit"
+              disabled={isPending || mutation.isPending}
             >
               Update
             </Button>

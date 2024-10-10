@@ -3,3 +3,8 @@ export interface UserUpdateInterface {
   username?: string;
   isVerified?: string;
 }
+export interface UserUpdatePasswordInterface {
+  password: string;
+  newPassword: string;
+  confirmPassword: string;
+}

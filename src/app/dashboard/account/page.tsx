@@ -22,10 +22,14 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import InputAdornment from '@mui/material/InputAdornment';
 import FormHelperText from '@mui/joy/FormHelperText';
 import { useState } from 'react';
 import IconButton from '@mui/joy/IconButton';
+import { useMutation } from '@tanstack/react-query';
+import { updatePassword } from '@/libs/common/utils/fetch';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/libs/common/utils/error';
+import axios, { AxiosError } from 'axios';
 const validationSchema = Yup.object({
   currentPassword: Yup.string()
     .min(8, 'Password must be at least 8 characters')
@@ -45,6 +49,19 @@ export default function MyProfile() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const user = useStore((state) => state.user);
+  const mutation = useMutation({
+    mutationFn: updatePassword,
+    onSuccess: () => {
+      toast.success('Password Updated successfully');
+    },
+    onError: (error: Error | AxiosError) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(getErrorMessage(error?.response?.data));
+      } else {
+        toast.error(getErrorMessage(error));
+      }
+    },
+  });
   useEffect(() => {
     if (!user) {
       redirect('/unauthorized');
@@ -58,7 +75,12 @@ export default function MyProfile() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log('Form values', values);
+      mutation.mutate({
+        password: values.currentPassword,
+        newPassword: values.password,
+        confirmPassword: values.confirmPassword,
+      });
+      formik.resetForm();
     },
   });
   const handleClickShowPassword = (type: string): void => {
@@ -175,146 +197,167 @@ export default function MyProfile() {
             </Typography>
           </Box>
           <Divider />
-          <Stack
-            direction="row"
-            spacing={3}
-            sx={{ display: { xs: 'none', md: 'flex' }, my: 1 }}
-          >
-            <Stack spacing={2} sx={{ flexGrow: 1 }}>
-              <Stack spacing={1}>
-                <FormLabel>Current Password</FormLabel>
-                <FormControl
-                  sx={{
-                    display: { sm: 'flex-column', md: 'flex-row' },
-                    gap: 2,
-                  }}
-                  error={
-                    formik.touched.currentPassword &&
-                    Boolean(formik.errors.currentPassword)
-                  }
-                >
-                  <Input
-                    size="sm"
-                    id="currentPassword"
-                    name="currentPassword"
-                    type={showcurrentPassword ? 'text' : 'password'}
-                    value={formik.values.currentPassword}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    placeholder="Enter current password"
-                    endDecorator={
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => {
-                          handleClickShowPassword('current');
-                        }}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {showcurrentPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
+          <form onSubmit={formik.handleSubmit} id="updatePasswordForm">
+            <Stack
+              direction="row"
+              spacing={3}
+              sx={{ display: { xs: 'none', md: 'flex' }, my: 1 }}
+            >
+              <Stack spacing={2} sx={{ flexGrow: 1 }}>
+                <Stack spacing={1}>
+                  <FormLabel>Current Password</FormLabel>
+                  <FormControl
+                    sx={{
+                      display: { sm: 'flex-column', md: 'flex-row' },
+                      gap: 2,
+                    }}
+                    error={
+                      formik.touched.currentPassword &&
+                      Boolean(formik.errors.currentPassword)
                     }
-                  />
-                  {formik.touched.currentPassword &&
-                    Boolean(formik.errors.currentPassword) && (
-                      <FormHelperText>
-                        {formik.errors.currentPassword}
-                      </FormHelperText>
-                    )}
-                </FormControl>
-              </Stack>
-              <Stack spacing={1}>
-                <FormLabel>New Password</FormLabel>
-                <FormControl
-                  sx={{
-                    display: { sm: 'flex-column', md: 'flex-row' },
-                    gap: 2,
-                  }}
-                  error={
-                    formik.touched.password && Boolean(formik.errors.password)
-                  }
-                >
-                  <Input
-                    size="sm"
-                    id="password"
-                    name="password"
-                    placeholder="Enter new password"
-                    type={showPassword ? 'text' : 'password'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
-                    endDecorator={
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => {
-                          handleClickShowPassword('password');
-                        }}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
+                  >
+                    <Input
+                      size="sm"
+                      id="currentPassword"
+                      name="currentPassword"
+                      type={showcurrentPassword ? 'text' : 'password'}
+                      value={formik.values.currentPassword}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      placeholder="Enter current password"
+                      error={
+                        formik.touched.currentPassword &&
+                        Boolean(formik.errors.currentPassword)
+                      }
+                      endDecorator={
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => {
+                            handleClickShowPassword('current');
+                          }}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showcurrentPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      }
+                    />
+                    {formik.touched.currentPassword &&
+                      Boolean(formik.errors.currentPassword) && (
+                        <FormHelperText>
+                          {formik.errors.currentPassword}
+                        </FormHelperText>
+                      )}
+                  </FormControl>
+                </Stack>
+                <Stack spacing={1}>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl
+                    sx={{
+                      display: { sm: 'flex-column', md: 'flex-row' },
+                      gap: 2,
+                    }}
+                    error={
+                      formik.touched.password && Boolean(formik.errors.password)
                     }
-                  />
-                  {formik.touched.password &&
-                    Boolean(formik.errors.password) && (
-                      <FormHelperText>{formik.errors.password}</FormHelperText>
-                    )}
-                </FormControl>
-              </Stack>
-              <Stack spacing={1}>
-                <FormLabel>Confirmed Password</FormLabel>
-                <FormControl
-                  sx={{
-                    display: { sm: 'flex-column', md: 'flex-row' },
-                    gap: 2,
-                  }}
-                  error={
-                    formik.touched.confirmPassword &&
-                    Boolean(formik.errors.confirmPassword)
-                  }
-                >
-                  <Input
-                    size="sm"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    placeholder="Re-type new password"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={formik.values.confirmPassword}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    endDecorator={
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => handleClickShowPassword('confirm')}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {showConfirmPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
+                  >
+                    <Input
+                      size="sm"
+                      id="password"
+                      name="password"
+                      placeholder="Enter new password"
+                      type={showPassword ? 'text' : 'password'}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.password}
+                      endDecorator={
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => {
+                            handleClickShowPassword('password');
+                          }}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      }
+                    />
+                    {formik.touched.password &&
+                      Boolean(formik.errors.password) && (
+                        <FormHelperText>
+                          {formik.errors.password}
+                        </FormHelperText>
+                      )}
+                  </FormControl>
+                </Stack>
+                <Stack spacing={1}>
+                  <FormLabel>Confirmed Password</FormLabel>
+                  <FormControl
+                    sx={{
+                      display: { sm: 'flex-column', md: 'flex-row' },
+                      gap: 2,
+                    }}
+                    error={
+                      formik.touched.confirmPassword &&
+                      Boolean(formik.errors.confirmPassword)
                     }
-                  />
-                  {formik.touched.confirmPassword &&
-                    Boolean(formik.errors.confirmPassword) && (
-                      <FormHelperText>
-                        {formik.errors.confirmPassword}
-                      </FormHelperText>
-                    )}
-                </FormControl>
+                  >
+                    <Input
+                      size="sm"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      placeholder="Re-type new password"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={formik.values.confirmPassword}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      endDecorator={
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => handleClickShowPassword('confirm')}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
+                      }
+                    />
+                    {formik.touched.confirmPassword &&
+                      Boolean(formik.errors.confirmPassword) && (
+                        <FormHelperText>
+                          {formik.errors.confirmPassword}
+                        </FormHelperText>
+                      )}
+                  </FormControl>
+                </Stack>
               </Stack>
             </Stack>
-          </Stack>
+          </form>
           <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
             <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
-              <Button size="sm" variant="outlined" color="neutral">
+              <Button
+                size="sm"
+                variant="outlined"
+                color="neutral"
+                onClick={() => {
+                  formik.resetForm();
+                }}
+              >
                 Cancel
               </Button>
-              <Button size="sm" variant="solid">
+              <Button
+                size="sm"
+                variant="solid"
+                type="submit"
+                form="updatePasswordForm"
+                disabled={mutation.isPending}
+              >
                 Save
               </Button>
             </CardActions>
