@@ -119,7 +119,7 @@ export default function UserTable() {
   const isVerified = searchParams.get('isVerified');
   const searchTerm = searchParams.get('searchTerm');
   const page = searchParams.get('page');
-  const [curPage, setCurPage] = React.useState(page || '1');
+  const [curPage, setCurPage] = React.useState(page);
   const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ['users', { sort, role, isVerified, searchTerm, page }],
     queryFn: () =>
