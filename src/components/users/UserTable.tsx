@@ -61,7 +61,10 @@ function getComparator<Key extends keyof any>(
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
+interface searchInterface {
+  key: string;
+  term: string;
+}
 function RowMenu({
   dataId,
   setOpenDelete,
@@ -133,6 +136,17 @@ export default function UserTable() {
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
+  function handleSearchKeys(searchQueries: searchInterface[]) {
+    const params = new URLSearchParams(searchParams);
+    for (const searchQuery of searchQueries) {
+      if (searchQuery.term) {
+        params.set(searchQuery.key, searchQuery.term);
+      } else {
+        params.delete(searchQuery.key);
+      }
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }
   function handleSearch(key: string, term: string) {
     const params = new URLSearchParams(searchParams);
     if (term) {
@@ -140,6 +154,7 @@ export default function UserTable() {
     } else {
       params.delete(key);
     }
+    console.log('params', params.toString());
     replace(`${pathname}?${params.toString()}`);
   }
   const renderFilters = () => (
@@ -152,7 +167,11 @@ export default function UserTable() {
           defaultValue={sort || 'createdAt'}
           id="sort"
           onChange={(event, newValue) => {
-            handleSearch('sort', newValue || ''), handleSearch('page', '1');
+            handleSearchKeys([
+              { key: 'sort', term: newValue || '' },
+              { key: 'page', term: '1' },
+            ]);
+            setCurPage('1');
           }}
         >
           <Option value="createdAt">Created date</Option>
@@ -170,8 +189,11 @@ export default function UserTable() {
           defaultValue={role || ''}
           id="role"
           onChange={(event, newValue) => {
-            handleSearch('role', newValue || '');
-            handleSearch('page', '1');
+            handleSearchKeys([
+              { key: 'role', term: newValue || '' },
+              { key: 'page', term: '1' },
+            ]);
+            setCurPage('1');
           }}
         >
           <Option value="">All</Option>
@@ -188,8 +210,11 @@ export default function UserTable() {
           defaultValue={isVerified || ''}
           id="isVerified"
           onChange={(event, newValue) => {
-            handleSearch('isVerified', newValue || '');
-            handleSearch('page', '1');
+            handleSearchKeys([
+              { key: 'isVerified', term: newValue || '' },
+              { key: 'page', term: '1' },
+            ]);
+            setCurPage('1');
           }}
         >
           <Option value="">All</Option>
