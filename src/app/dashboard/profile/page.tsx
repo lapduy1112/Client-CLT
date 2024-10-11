@@ -254,6 +254,9 @@ export default function MyProfile() {
                 variant="outlined"
                 color="neutral"
                 disabled={mutation.isPending}
+                onClick={() => {
+                  formik.resetForm();
+                }}
               >
                 Cancel
               </Button>

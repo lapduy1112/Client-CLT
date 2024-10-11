@@ -34,7 +34,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { useState } from 'react';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '@/libs/common/utils/handleSideBar';
-
+import { useStore } from '@/providers/ZustandProvider';
 function Toggler({
   defaultExpanded = false,
   renderToggle,
@@ -70,6 +70,7 @@ function Toggler({
 }
 
 export default function Sidebar({ tab }: { tab?: string }) {
+  const user = useStore((state) => state.user);
   return (
     <Sheet
       className="Sidebar"
@@ -173,7 +174,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
           </ListItem>
 
           <ListItem>
-            <ListItemButton>
+            <ListItemButton selected={tab == 'users'}>
               <AdminPanelSettingsIcon />
               <ListItemContent>
                 <Typography level="title-sm">User Management</Typography>
@@ -226,7 +227,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
             </Toggler>
           </ListItem>
         </List>
-        <List
+        {/* <List
           size="sm"
           sx={{
             mt: 'auto',
@@ -248,11 +249,11 @@ export default function Sidebar({ tab }: { tab?: string }) {
               Settings
             </ListItemButton>
           </ListItem>
-        </List>
+        </List> */}
         <Card
           invertedColors
           variant="soft"
-          color="warning"
+          // color="warning"
           size="sm"
           sx={{ boxShadow: 'none' }}
         >
@@ -260,40 +261,32 @@ export default function Sidebar({ tab }: { tab?: string }) {
             direction="row"
             sx={{ justifyContent: 'space-between', alignItems: 'center' }}
           >
-            <Typography level="title-sm">Used space</Typography>
+            <Typography level="title-sm" color="warning">
+              Demo
+            </Typography>
             <IconButton size="sm">
               <CloseRoundedIcon />
             </IconButton>
           </Stack>
           <Typography level="body-xs">
-            Your team has used 80% of your available space. Need more?
+            Preview the shipping app demo! You can do many thing at the site
+            including manage user or book routes, etc. Try out!
           </Typography>
-          <LinearProgress
-            variant="outlined"
-            value={80}
-            determinate
-            sx={{ my: 1 }}
-          />
-          <Button size="sm" variant="solid">
-            Upgrade plan
-          </Button>
         </Card>
       </Box>
       <Divider />
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-        <Avatar
-          variant="outlined"
-          size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-        />
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
+      {user && (
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Avatar variant="outlined" size="sm" src={user.profileImage} />
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography level="title-sm">{user.username}</Typography>
+            <Typography level="body-xs">{user.email}</Typography>
+          </Box>
+          <IconButton size="sm" variant="plain" color="neutral">
+            <LogoutRoundedIcon />
+          </IconButton>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
-          <LogoutRoundedIcon />
-        </IconButton>
-      </Box>
+      )}
     </Sheet>
   );
 }
