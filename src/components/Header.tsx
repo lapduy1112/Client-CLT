@@ -24,7 +24,7 @@ import axios, { AxiosError } from "axios";
 
 const Header = () => {
   const user = useStore((state) => state.user);
-  // console.log(user);
+  console.log(user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const deleteUser = useStore((state) => state.deleteUser);

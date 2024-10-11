@@ -5,7 +5,7 @@ import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-
+import { usePathname, useSearchParams } from "next/navigation";
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
