@@ -116,6 +116,7 @@ export default function UserTable() {
   const isVerified = searchParams.get('isVerified');
   const searchTerm = searchParams.get('searchTerm');
   const page = searchParams.get('page');
+  const [curPage, setCurPage] = React.useState(page || '1');
   const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ['users', { sort, role, isVerified, searchTerm, page }],
     queryFn: () =>
@@ -419,7 +420,10 @@ export default function UserTable() {
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
           disabled={Number(page) === 1 || !page}
-          onClick={() => handleSearch('page', String(Number(page) - 1))}
+          onClick={() => {
+            handleSearch('page', String(Number(page) - 1));
+            setCurPage(String(Number(page) - 1));
+          }}
         >
           Previous
         </Button>
@@ -443,20 +447,38 @@ export default function UserTable() {
             justifyContent: 'center',
           }}
         >
-          <Input
-            className="max-w-20"
-            placeholder="Page"
-            value={page || 1}
-            onChange={(event) => handleSearch('page', event.target.value)}
-            endDecorator={
-              <Button variant="soft" color="neutral" disabled>
-                /
-                {data && data.totalCount && data.pageSize
-                  ? Math.ceil(data.totalCount / data.pageSize)
-                  : 1}
-              </Button>
-            }
-          />
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (
+                curPage === '' ||
+                curPage === page ||
+                Number(curPage) > Math.ceil(data.totalCount / data.pageSize)
+              ) {
+                setCurPage(page || '1');
+                return;
+              }
+              handleSearch('page', curPage);
+            }}
+          >
+            <Input
+              className="max-w-20"
+              value={curPage}
+              onBlur={() => setCurPage(page || '1')}
+              onChange={(e) => {
+                setCurPage(e.target.value || '');
+              }}
+              disabled={!data}
+              endDecorator={
+                <Button variant="soft" color="neutral" disabled size="sm">
+                  /
+                  {data && data.totalCount && data.pageSize
+                    ? Math.ceil(data.totalCount / data.pageSize)
+                    : 1}
+                </Button>
+              }
+            />
+          </form>
         </Box>
         <Button
           size="sm"
@@ -468,9 +490,10 @@ export default function UserTable() {
             data.totalCount < data.pageSize ||
             data.pageNumber * data.pageSize >= data.totalCount
           }
-          onClick={() =>
-            handleSearch('page', String(Number(data.pageNumber) + 1))
-          }
+          onClick={() => {
+            handleSearch('page', String(Number(data.pageNumber) + 1));
+            setCurPage(String(Number(data.pageNumber) + 1));
+          }}
         >
           Next
         </Button>
