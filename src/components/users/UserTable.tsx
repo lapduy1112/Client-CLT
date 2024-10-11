@@ -29,6 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -38,6 +39,9 @@ import { searchUsers } from '@/libs/common/utils/fetch';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import DeleteUserModal from '../modal/DeleteModal';
 import UpdateUserModal from '../modal/UpdateModal';
+import Stack from '@mui/joy/Stack';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -119,7 +123,7 @@ export default function UserTable() {
   const isVerified = searchParams.get('isVerified');
   const searchTerm = searchParams.get('searchTerm');
   const page = searchParams.get('page');
-  const [curPage, setCurPage] = React.useState(page);
+  const [curPage, setCurPage] = React.useState(page || '1');
   const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ['users', { sort, role, isVerified, searchTerm, page }],
     queryFn: () =>
@@ -159,7 +163,7 @@ export default function UserTable() {
   }
   const renderFilters = () => (
     <React.Fragment>
-      <FormControl size="sm">
+      {/* <FormControl size="sm">
         <FormLabel>Sort</FormLabel>
         <Select
           size="sm"
@@ -180,7 +184,7 @@ export default function UserTable() {
           <Option value="email">Email</Option>
           <Option value="role.role">Role</Option>
         </Select>
-      </FormControl>
+      </FormControl> */}
       <FormControl size="sm">
         <FormLabel>Role</FormLabel>
         <Select
@@ -334,7 +338,7 @@ export default function UserTable() {
                     padding: '12px 6px',
                   }}
                 ></th>
-                <th style={{ width: 180, padding: '12px 6px' }}>
+                {/* <th style={{ width: 180, padding: '12px 6px' }}>
                   <Link
                     underline="none"
                     color="primary"
@@ -359,18 +363,286 @@ export default function UserTable() {
                   >
                     Id
                   </Link>
+                </th> */}
+                <th
+                  style={{
+                    width: 120,
+                    padding: '12px 6px',
+                  }}
+                >
+                  Id
                 </th>
-                <th style={{ width: 180, padding: '12px 6px' }}>Email</th>
-                <th style={{ width: 140, padding: '12px 6px' }}>Username</th>
-                <th style={{ width: 80, padding: '12px 6px' }}>IsVerfied</th>
-                <th style={{ width: 140, padding: '12px 6px' }}>CreatedAt</th>
-                <th style={{ width: 140, padding: '12px 6px' }}>UpdatedAt</th>
-                <th style={{ width: 80, padding: '12px 6px' }}>Role</th>
-                <th style={{ width: 140, padding: '12px 6px' }}> </th>
+                {/* <th style={{ width: 180, padding: '12px 6px' }}>Email</th> */}
+                <th style={{ width: 160 }}>
+                  <Stack
+                    direction="row"
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                  >
+                    Email
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <IconButton
+                        onClick={() => {
+                          if (sort == 'email:ASC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'email:ASC');
+                          }
+                        }}
+                        color={sort == 'email:ASC' ? 'primary' : 'neutral'}
+                      >
+                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          if (sort == 'email:DESC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'email:DESC');
+                          }
+                        }}
+                        color={sort == 'email:DESC' ? 'primary' : 'neutral'}
+                      >
+                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140 }}>
+                  <Stack
+                    direction="row"
+                    sx={{
+                      alignItems: 'center',
+                      margin: 'auto',
+                    }}
+                  >
+                    Username
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <IconButton
+                        color={sort == 'username:ASC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'username:ASC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'username:ASC');
+                          }
+                        }}
+                      >
+                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort == 'username:DESC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'username:DESC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'username:DESC');
+                          }
+                        }}
+                      >
+                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 100 }}>
+                  {' '}
+                  <Stack
+                    direction="row"
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                  >
+                    Verified
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginLeft: '8px',
+                      }}
+                    >
+                      <IconButton
+                        color={sort == 'isVerified:ASC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'isVerified:ASC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'isVerified:ASC');
+                          }
+                        }}
+                      >
+                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                      <IconButton
+                        color={
+                          sort == 'isVerified:DESC' ? 'primary' : 'neutral'
+                        }
+                        onClick={() => {
+                          if (sort == 'isVerified:DESC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'isVerified:DESC');
+                          }
+                        }}
+                      >
+                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140 }}>
+                  {' '}
+                  <Stack
+                    direction="row"
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                  >
+                    CreatedAt
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <IconButton
+                        color={sort == 'createdAt:ASC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'createdAt:ASC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'createdAt:ASC');
+                          }
+                        }}
+                      >
+                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort == 'createdAt:DESC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'createdAt:DESC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'createdAt:DESC');
+                          }
+                        }}
+                      >
+                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140 }}>
+                  {' '}
+                  <Stack
+                    direction="row"
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                  >
+                    UpdatedAt
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <IconButton
+                        color={sort == 'updatedAt:ASC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'updatedAt:ASC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'updatedAt:ASC');
+                          }
+                        }}
+                      >
+                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort == 'updatedAt:DESC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'updatedAt:DESC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'updatedAt:DESC');
+                          }
+                        }}
+                      >
+                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 80 }}>
+                  {' '}
+                  <Stack
+                    direction="row"
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                  >
+                    Role
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <IconButton
+                        color={sort == 'role.role:ASC' ? 'primary' : 'neutral'}
+                        onClick={() => {
+                          if (sort == 'role.role:ASC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'role.role:ASC');
+                          }
+                        }}
+                      >
+                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          if (sort == 'role.role:DESC') {
+                            handleSearch('sort', '');
+                          } else {
+                            handleSearch('sort', 'role.role:DESC');
+                          }
+                        }}
+                      >
+                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 80 }}> </th>
               </tr>
             </thead>
             <tbody>
-              {[...data.users].sort(getComparator(order, 'id')).map((row) => (
+              {[...data.users].map((row) => (
                 <tr key={row.id}>
                   <td style={{ textAlign: 'center', width: 120 }}></td>
                   <td>
@@ -403,10 +675,18 @@ export default function UserTable() {
                     </Chip>
                   </td>
                   <td>
-                    <Typography level="body-xs">{row.createdAt}</Typography>
+                    <Typography level="body-xs">
+                      {row.createdAt
+                        ? new Date(row.createdAt).toUTCString()
+                        : ''}
+                    </Typography>
                   </td>
                   <td>
-                    <Typography level="body-xs">{row.updatedAt}</Typography>
+                    <Typography level="body-xs">
+                      {row.updatedAt
+                        ? new Date(row.updatedAt).toUTCString()
+                        : ''}
+                    </Typography>
                   </td>
                   <td>
                     <Typography level="body-xs">{row.role.role}</Typography>
