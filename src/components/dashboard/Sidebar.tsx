@@ -230,13 +230,12 @@ export default function Sidebar({ tab }: { tab?: string }) {
         {/* <List
           size="sm"
           sx={{
-            mt: 'auto',
+            mt: "auto",
             flexGrow: 0,
-            '--ListItem-radius': (theme) => theme.vars.radius.sm,
-            '--List-gap': '8px',
+            "--ListItem-radius": (theme) => theme.vars.radius.sm,
+            "--List-gap": "8px",
             mb: 2,
-          }}
-        >
+          }}>
           <ListItem>
             <ListItemButton>
               <SupportRoundedIcon />
@@ -277,10 +276,10 @@ export default function Sidebar({ tab }: { tab?: string }) {
       <Divider />
       {user && (
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Avatar variant="outlined" size="sm" src={user.profileImage} />
+          <Avatar variant="outlined" size="sm" src={user?.profileImage} />
           <Box sx={{ minWidth: 0, flex: 1 }}>
-            <Typography level="title-sm">{user.username}</Typography>
-            <Typography level="body-xs">{user.email}</Typography>
+            <Typography level="title-sm">{user?.username}</Typography>
+            <Typography level="body-xs">{user?.email}</Typography>
           </Box>
           <IconButton size="sm" variant="plain" color="neutral">
             <LogoutRoundedIcon />

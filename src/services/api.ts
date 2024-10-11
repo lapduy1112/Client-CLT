@@ -1,4 +1,5 @@
 import { BE_API_URL } from "@/libs/common/constants/api";
+import { PortsResponse, RouteResponse } from "@/services/interface";
 import axios from "axios";
 import { toast } from "react-toastify";
 const api = axios.create({
@@ -18,10 +19,23 @@ export const getUsers = async () => {
     throw error;
   }
 };
-export const getRoutes = async () => {
+export const getRoutes = async (
+  page: number = 1,
+  limit: number = 9,
+  sortBy: string = "createdAt",
+  sortOrder: string = "DESC"
+): Promise<RouteResponse> => {
   try {
-    const response = await api.get("/routes");
-    return response.data.data;
+    const response = await api.get("/routes", {
+      params: {
+        page,
+        limit,
+        sortBy,
+        sortOrder,
+      },
+    });
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching routes:", error);
     throw error;
@@ -43,26 +57,43 @@ export const searchRoutes = async (searchQuery: string) => {
     throw error;
   }
 };
-export const getPorts = async () => {
+export const getPorts = async (
+  page: number = 1,
+  limit: number = 4,
+  sortBy: string = "createdAt",
+  sortOrder: string = "DESC"
+): Promise<PortsResponse> => {
   try {
-    const response = await api.get("/port");
-    return response.data.data;
+    const response = await api.get("/port", {
+      params: {
+        page,
+        limit,
+        sortBy,
+        sortOrder,
+      },
+    });
+    // console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching ports:", error);
-    throw error;
+    throw new Error("Could not fetch ports. Please try again later.");
   }
 };
-export const searchPorts = async (searchQuery: string) => {
+export const searchPorts = async (
+  searchQuery: string,
+  page: number = 1,
+  limit: number = 10
+) => {
   try {
     const response = await api.get("/port", {
       params: {
         search: searchQuery,
-        limit: 10,
-        page: 1,
+        limit: limit,
+        page: page,
       },
     });
-    console.log(response.data.data);
-    return response.data.data;
+    // console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error("Error searching Ports:", error);
     throw error;

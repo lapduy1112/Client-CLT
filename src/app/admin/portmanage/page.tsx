@@ -14,6 +14,11 @@ import {
   Pagination,
   CircularProgress,
   Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -23,7 +28,7 @@ import MainLayout from "../MainLayout";
 import AddPort from "@/components/admin/AddPort";
 import { getPorts, searchPorts } from "@/services/api";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function PortManagePage() {
@@ -33,8 +38,11 @@ export default function PortManagePage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [portToDelete, setPortToDelete] = useState<any>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+
   useEffect(() => {
     const fetchPorts = async () => {
       try {
@@ -63,12 +71,13 @@ export default function PortManagePage() {
   };
 
   const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>,
+    event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
       router.push(`/admin/portmanage?search=${searchQuery}`);
     }
   };
+
   useEffect(() => {
     const fetchSearchedPorts = async () => {
       const searchParam = searchParams.get("search") || "";
@@ -76,7 +85,6 @@ export default function PortManagePage() {
         try {
           const fetchedPorts = await searchPorts(searchParam);
           setFilteredPorts(fetchedPorts || []);
-          console.log(fetchedPorts);
         } catch (error) {
           console.error("Error fetching searched Ports:", error);
           setFilteredPorts([]);
@@ -88,6 +96,35 @@ export default function PortManagePage() {
 
     fetchSearchedPorts();
   }, [searchParams, ports]);
+
+  const handleDeleteClick = (port: any) => {
+    setPortToDelete(port);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (portToDelete) {
+      console.log(`Deleting port with ID: ${portToDelete.id}`);
+      setFilteredPorts((prev) =>
+        prev.filter((port) => port.id !== portToDelete.id)
+      );
+      setPortToDelete(null);
+      toast.success("Port deleted successfully");
+    }
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setPortToDelete(null);
+  };
+
+  const handlePortAdded = (newPort: any) => {
+    setPorts((prevPorts) => [...prevPorts, newPort]);
+    setFilteredPorts((prevPorts) => [...prevPorts, newPort]);
+    // toast.success("Port added successfully");
+  };
+
   if (loading) {
     return (
       <MainLayout>
@@ -95,8 +132,7 @@ export default function PortManagePage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh"
-        >
+          height="100vh">
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -111,8 +147,7 @@ export default function PortManagePage() {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={handleClickOpen}
-        >
+          onClick={handleClickOpen}>
           Add new
         </Button>
       </div>
@@ -155,7 +190,9 @@ export default function PortManagePage() {
                     <IconButton color="primary">
                       <EditIcon />
                     </IconButton>
-                    <IconButton color="secondary">
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDeleteClick(port)}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -175,7 +212,34 @@ export default function PortManagePage() {
         />
       </div>
 
-      <AddPort open={open} onClose={handleClose} />
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">
+          {"Bạn có chắc chắn muốn xóa port này?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            This action will not be undone. Are you sure you want to continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel} className="text-gray-500">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="secondary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <AddPort
+        open={open}
+        onClose={handleClose}
+        onPortAdded={handlePortAdded}
+      />
       <ToastContainer />
     </MainLayout>
   );
