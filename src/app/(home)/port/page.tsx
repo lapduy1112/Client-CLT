@@ -44,7 +44,7 @@ export default function PortPage() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>(
     searchParams.get("search") || ""
-  ); // Thêm useState cho searchQuery
+  );
   const currentPage = searchParams.get("page")
     ? Number(searchParams.get("page"))
     : 1;

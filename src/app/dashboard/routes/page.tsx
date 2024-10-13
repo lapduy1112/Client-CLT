@@ -10,8 +10,8 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
 import UserList from "@/components/users/UserList";
-import UserTable from "@/components/users/UserTable";
-export default function UserManagement() {
+import RouteTable from "@/components/routemanage/RouteTable";
+export default function RouteManagement() {
   return (
     <Box
       component="main"
@@ -45,7 +45,7 @@ export default function UserManagement() {
             <HomeRoundedIcon />
           </Link>
           <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            User Management
+            Routes Management
           </Typography>
         </Breadcrumbs>
       </Box>
@@ -60,10 +60,10 @@ export default function UserManagement() {
           justifyContent: "space-between",
         }}>
         <Typography level="h2" component="h1">
-          User Management
+          Routes Management
         </Typography>
       </Box>
-      <UserTable />
+      <RouteTable />
     </Box>
   );
 }

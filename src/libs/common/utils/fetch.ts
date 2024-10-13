@@ -1,18 +1,18 @@
-import axios from 'axios';
-import { BE_API_URL } from '@/libs/common/constants/api';
-import { EErrorMessage } from '../constants/error';
-import { SearchUserQueryInterface } from '../interfaces/search_user_query.interface';
+import axios from "axios";
+import { BE_API_URL } from "@/libs/common/constants/api";
+import { EErrorMessage } from "../constants/error";
+import { SearchUserQueryInterface } from "../interfaces/search_user_query.interface";
 import {
   UserUpdateInterface,
   UserUpdatePasswordInterface,
-} from '../interfaces/update-user.interface';
-const BASE_URL = BE_API_URL || 'http://localhost:3000';
+} from "../interfaces/update-user.interface";
+const BASE_URL = BE_API_URL || "http://localhost:3000";
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
   headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
   },
 });
 export const generateRefreshToken = async () => {
@@ -23,8 +23,8 @@ export const generateRefreshToken = async () => {
       {
         withCredentials: true,
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
       }
     );
@@ -38,7 +38,7 @@ customAxiosWithCredentials.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    console.log('Error', error.response);
+    console.log("Error", error.response);
 
     if (
       error.response.status === 401 &&
@@ -53,14 +53,14 @@ customAxiosWithCredentials.interceptors.response.use(
           {
             withCredentials: true,
             headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
             },
           }
         );
         return customAxiosWithCredentials(originalRequest);
       } catch (refreshError) {
-        console.log('Refresh error', refreshError);
+        console.log("Refresh error", refreshError);
       }
     }
     return Promise.reject(error);
