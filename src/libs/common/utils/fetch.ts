@@ -6,6 +6,7 @@ import {
   UserUpdateInterface,
   UserUpdatePasswordInterface,
 } from "../interfaces/update-user.interface";
+import { SearchPermissionQueryInterface } from "../interfaces/search_permission_query.interface";
 const BASE_URL = BE_API_URL || "http://localhost:3000";
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
@@ -109,4 +110,30 @@ export function updatePassword(data: UserUpdatePasswordInterface) {
   return customAxiosWithCredentials
     .patch(`/auth/password`, data)
     .then((res) => res.data);
+}
+export function searchPermission(query?: SearchPermissionQueryInterface) {
+  if (query) {
+    let searchQuery = `/permission?`;
+    searchQuery = query.searchTerm
+      ? `${searchQuery}searchTerm=${query.searchTerm}&`
+      : searchQuery;
+    searchQuery = query.page
+      ? `${searchQuery}page=${query.page}&`
+      : searchQuery;
+    searchQuery = query.sort
+      ? `${searchQuery}sort=${query.sort}&`
+      : searchQuery;
+    searchQuery = query.action
+      ? `${searchQuery}action=${query.action}&`
+      : searchQuery;
+    searchQuery = query.object
+      ? `${searchQuery}object=${query.object}&`
+      : searchQuery;
+    searchQuery = query.possession
+      ? `${searchQuery}possession=${query.possession}&`
+      : searchQuery;
+    searchQuery = searchQuery.slice(0, -1);
+    return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
+  }
+  return customAxiosWithCredentials.get(`/users`).then((res) => res.data);
 }

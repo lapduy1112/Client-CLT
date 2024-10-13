@@ -9,7 +9,6 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
-import UserList from "@/components/users/UserList";
 import PortTable from "@/components/portmanage/PortTable";
 export default function PortManagement() {
   return (
