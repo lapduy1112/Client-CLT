@@ -34,17 +34,29 @@ export default function OrderSelector({ onSortChange }: OrderSelectorProps) {
           Order by
         </MenuButton>
         <Menu sx={{ minWidth: 120 }}>
-          <MenuItem onClick={() => handleSortChange("address", "DESC")}>
-            Address Desc
+          <MenuItem onClick={() => handleSortChange("startPort", "ASC")}>
+            Start Port Asc
           </MenuItem>
-          <MenuItem onClick={() => handleSortChange("address", "ASC")}>
-            Address Asc
+          <MenuItem onClick={() => handleSortChange("startPort", "DESC")}>
+            Start Port Desc
           </MenuItem>
-          <MenuItem onClick={() => handleSortChange("createdAt", "DESC")}>
-            CreatedAt Desc
+          <MenuItem onClick={() => handleSortChange("endPort", "ASC")}>
+            End Port Asc
+          </MenuItem>
+          <MenuItem onClick={() => handleSortChange("endPort", "DESC")}>
+            End Port Desc
           </MenuItem>
           <MenuItem onClick={() => handleSortChange("createdAt", "ASC")}>
-            CreatedAt Asc
+            Created At Asc
+          </MenuItem>
+          <MenuItem onClick={() => handleSortChange("createdAt", "DESC")}>
+            Created At Desc
+          </MenuItem>
+          <MenuItem onClick={() => handleSortChange("status", "ASC")}>
+            Status Asc
+          </MenuItem>
+          <MenuItem onClick={() => handleSortChange("status", "DESC")}>
+            Status Desc
           </MenuItem>
         </Menu>
       </Dropdown>

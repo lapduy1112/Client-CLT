@@ -106,15 +106,26 @@ export default function RouteDetailPage() {
     } catch (error) {
       console.log(error);
 
-      // toast.error("Failed to create booking.");
+      toast.error("Failed to create booking.");
     }
   };
 
   return (
     <MainLayout>
       <div className="flex flex-col items-center justify-between">
-        <div className="flex flex-row justify-between w-full">
-          <div className="container mx-auto py-6 px-4">
+        <div className="flex flex-row justify-between w-full px-4">
+          <div className="flex-1 container mx-auto pt-5 px-4 h-full">
+            <div className="h-full">
+              <MapLeaflet
+                startPort={[
+                  routeDetail.startPort.lat,
+                  routeDetail.startPort.lon,
+                ]}
+                endPort={[routeDetail.endPort.lat, routeDetail.endPort.lon]}
+              />
+            </div>
+          </div>
+          <div className="flex-1 container mx-auto py-6 px-4 h-full">
             <RouteInfo
               from={routeDetail.startPort.address}
               to={routeDetail.endPort.address}
@@ -131,7 +142,7 @@ export default function RouteDetailPage() {
                 size="large"
                 onClick={handleBooking}
                 sx={{
-                  backgroundColor: "#007BFF",
+                  backgroundColor: "#0e243c",
                   padding: "12px 24px",
                   fontSize: "1rem",
                   borderRadius: "8px",
@@ -142,13 +153,6 @@ export default function RouteDetailPage() {
                 Booking
               </Button>
             </div>
-          </div>
-
-          <div className="container mx-auto pt-5">
-            <MapLeaflet
-              startPort={[routeDetail.startPort.lat, routeDetail.startPort.lon]}
-              endPort={[routeDetail.endPort.lat, routeDetail.endPort.lon]}
-            />
           </div>
         </div>
       </div>

@@ -47,8 +47,8 @@ export default function PortManagePage() {
     const fetchPorts = async () => {
       try {
         const fetchedPorts = await getPorts();
-        setPorts(fetchedPorts);
-        setFilteredPorts(fetchedPorts);
+        setPorts(fetchedPorts.data);
+        setFilteredPorts(fetchedPorts.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching Ports:", error);

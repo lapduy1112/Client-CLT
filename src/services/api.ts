@@ -41,22 +41,60 @@ export const getRoutes = async (
     throw error;
   }
 };
-export const searchRoutes = async (searchQuery: string) => {
+// export const searchRoutes = async (
+//   searchQuery: string,
+//   page: number = 1,
+//   limit: number = 10,
+//   sortBy: string = "createdAt",
+//   sortOrder: string = "DESC"
+// ) => {
+//   try {
+//     const response = await api.get("/routes", {
+//       params: {
+//         search: searchQuery,
+//         limit: limit,
+//         page: page,
+//         sortBy: sortBy,
+//         sortOrder: sortOrder,
+//       },
+//     });
+
+//     // Ensure response has 'data'
+//     if (response && response.data && response.data.data) {
+//       return response.data; // Return the full response object
+//     } else {
+//       return { data: [], total: 0, currentPage: 1, lastPage: 1 }; // Return a default structure if no data
+//     }
+//   } catch (error) {
+//     console.error("Error searching routes:", error);
+//     throw error;
+//   }
+// };
+export const searchRoutes = async (
+  searchQuery: string,
+  page: number = 1,
+  limit: number = 10,
+  sortBy: string = "createdAt", // Default sort field
+  sortOrder: string = "DESC" // Default sort order
+) => {
   try {
     const response = await api.get("/routes", {
       params: {
         search: searchQuery,
-        limit: 10,
-        page: 1,
+        limit: limit,
+        page: page,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
       },
     });
-    console.log(response.data.data);
-    return response.data.data;
+
+    return response.data; // Ensure the correct data structure is returned
   } catch (error) {
     console.error("Error searching routes:", error);
     throw error;
   }
 };
+
 export const getPorts = async (
   page: number = 1,
   limit: number = 4,
@@ -82,7 +120,9 @@ export const getPorts = async (
 export const searchPorts = async (
   searchQuery: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
+  sortBy: string = "createdAt",
+  sortOrder: string = "DESC"
 ) => {
   try {
     const response = await api.get("/port", {
@@ -90,9 +130,10 @@ export const searchPorts = async (
         search: searchQuery,
         limit: limit,
         page: page,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
       },
     });
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error searching Ports:", error);

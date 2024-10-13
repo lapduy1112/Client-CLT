@@ -34,13 +34,12 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
   return (
     <Card
       style={{
-        backgroundColor: blue[50],
+        backgroundColor: "#fafafe",
         borderRadius: "16px",
         boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
         padding: "24px",
         fontFamily: "'Roboto', sans-serif",
-      }}
-    >
+      }}>
       <CardContent>
         <Box display="flex" alignItems="center" mb={3}>
           <WavesIcon
@@ -50,8 +49,7 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             variant="h4"
             color="primary"
             gutterBottom
-            style={{ fontWeight: "bold" }}
-          >
+            style={{ fontWeight: "bold" }}>
             Route Information
           </Typography>
         </Box>
@@ -62,9 +60,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
-            >
-              <strong>From:</strong> {from} — Departure port.
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Departure port:</strong> {from}.
             </Typography>
           </Box>
 
@@ -73,9 +70,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
-            >
-              <strong>To:</strong> {to} — Destination port.
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Destination port:</strong> {to}.
             </Typography>
           </Box>
 
@@ -84,10 +80,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
-            >
-              <strong>Distance:</strong> {distance} km — Total distance of the
-              route.
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Distance:</strong> {distance} km 
             </Typography>
           </Box>
 
@@ -96,10 +90,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
-            >
-              <strong>Travel Time:</strong> {travelTime} days — Estimated time
-              for the journey.
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Travel Time:</strong> {travelTime} days
             </Typography>
           </Box>
 
@@ -108,10 +100,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
-            >
-              <strong>Departure Time:</strong> {formattedDepartureDate} —
-              Scheduled time for departure.
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Departure Time:</strong> {formattedDepartureDate} 
             </Typography>
           </Box>
 
@@ -120,10 +110,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
-            >
-              <strong>Arrival Time:</strong> {formattedArrivalDate} — Expected
-              time of arrival at the destination.
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Arrival Time:</strong> {formattedArrivalDate}
             </Typography>
           </Box>
           <Box display="flex" alignItems="center" className="text-gray-700">
@@ -132,9 +120,8 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
             <Typography
               variant="body1"
               className="font-semibold"
-              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}
-            >
-              <strong>Status:</strong> {status} — Current status of the route.
+              style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
+              <strong>Status:</strong> {status} 
             </Typography>
           </Box>
         </Box>
