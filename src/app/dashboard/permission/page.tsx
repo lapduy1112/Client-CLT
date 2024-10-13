@@ -7,9 +7,8 @@ import Typography from '@mui/joy/Typography';
 
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-import UserTable from '@/components/users/UserTable';
+import PermissionTable from '@/components/permissions/PermissionsTable';
 export default function UserManagement() {
   return (
     <Box
@@ -47,7 +46,7 @@ export default function UserManagement() {
             <HomeRoundedIcon />
           </Link>
           <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            User Management
+            Permission Dashboard
           </Typography>
         </Breadcrumbs>
       </Box>
@@ -63,10 +62,10 @@ export default function UserManagement() {
         }}
       >
         <Typography level="h2" component="h1">
-          User Management
+          Permission Dashboard
         </Typography>
       </Box>
-      <UserTable />
+      <PermissionTable />
     </Box>
   );
 }

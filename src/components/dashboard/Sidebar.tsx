@@ -21,20 +21,16 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
-import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { useState } from 'react';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '@/libs/common/utils/handleSideBar';
 import { useStore } from '@/providers/ZustandProvider';
+import KeyIcon from '@mui/icons-material/Key';
 function Toggler({
   defaultExpanded = false,
   renderToggle,
@@ -169,6 +165,15 @@ export default function Sidebar({ tab }: { tab?: string }) {
               <DashboardRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Dashboard</Typography>
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem>
+            <ListItemButton selected={tab == 'permission'}>
+              <KeyIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Permission Dashboard</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
