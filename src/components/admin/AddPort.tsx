@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import {
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-} from "@mui/material";
+  Modal,
+  ModalDialog,
+  Typography,
+  FormControl,
+  FormLabel,
+  Input,
+} from "@mui/joy";
 import { addPort } from "@/services/api";
 import { toast } from "react-toastify";
 
@@ -39,31 +40,35 @@ const AddPort: React.FC<AddPortProps> = ({ open, onClose, onPortAdded }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add New Port</DialogTitle>
-      <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="address"
-          label="Tên Cổng"
-          type="text"
-          fullWidth
-          variant="outlined"
-          className="mb-4"
-          value={portName}
-          onChange={(e) => setPortName(e.target.value)}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancel
-        </Button>
-        <Button onClick={handleAddPort} color="primary">
+    <Modal open={open} onClose={onClose}>
+      <ModalDialog>
+        <Typography component="h2">Add New Port</Typography>
+        <FormControl sx={{ mt: 2 }}>
+          <FormLabel>Address</FormLabel>
+          <Input
+            autoFocus
+            fullWidth
+            value={portName}
+            onChange={(e) => setPortName(e.target.value)}
+          />
+        </FormControl>
+
+        <Button
+          sx={{ mt: 2 }}
+          onClick={handleAddPort}
+          color="primary"
+          variant="solid">
           Add
         </Button>
-      </DialogActions>
-    </Dialog>
+        <Button
+          sx={{ mt: 2, mr: 1 }}
+          onClick={onClose}
+          color="neutral"
+          variant="plain">
+          Cancel
+        </Button>
+      </ModalDialog>
+    </Modal>
   );
 };
 

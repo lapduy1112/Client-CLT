@@ -30,9 +30,9 @@ import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { useQuery } from "@tanstack/react-query";
 import { searchPorts } from "@/libs/common/utils/fetchRoute";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import DeleteUserModal from "../modal/DeleteModal";
-import UpdateUserModal from "../modal/UpdateModal";
 import Link from "@mui/joy/Link";
+import DeletePortModal from "@/components/portmanage/DeleteModal";
+import UpdatePortModal from "@/components/portmanage/UpdateModal";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -45,7 +45,14 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 }
 
 type Order = "asc" | "desc";
-
+interface Port {
+  id: string;
+  address: string;
+  lat: string;
+  lon: string;
+  createdAt: string;
+  updatedAt: string;
+}
 function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
@@ -105,7 +112,7 @@ function RowMenu({
   );
 }
 
-export default function PortTable() {
+export default function PortTable({ ports }: { ports: Port[] }) {
   const [order, setOrder] = React.useState<Order>("desc");
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
@@ -115,15 +122,15 @@ export default function PortTable() {
   const pathname = usePathname();
   const { replace } = useRouter();
   const sort = searchParams.get("sort");
-  const searchTerm = searchParams.get("searchTerm");
-  const page = searchParams.get("page") || "1";
-  const [curPage, setCurPage] = React.useState(page);
+  const search = searchParams.get("search");
+  const page = searchParams.get("page" || "1");
+  const [curPage, setCurPage] = React.useState(page || "1");
 
   const { data, isSuccess } = useQuery({
-    queryKey: ["port", { sort, searchTerm, page }],
+    queryKey: ["port", { sort, search, page }],
     queryFn: () =>
       searchPorts({
-        searchTerm: searchTerm || undefined,
+        search: search || undefined,
         sort: sort || undefined,
         page: Number(page) || undefined,
       }),
@@ -179,7 +186,7 @@ export default function PortTable() {
       </FormControl>
     </>
   );
-  // console.log(data.data);
+  console.log(data);
   return (
     <>
       <Sheet
@@ -232,7 +239,7 @@ export default function PortTable() {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
             handleSearch(
-              "searchTerm",
+              "search",
               (form.elements.namedItem("search") as HTMLInputElement).value ||
                 ""
             );
@@ -240,7 +247,7 @@ export default function PortTable() {
           <FormControl sx={{ flex: 1 }} size="sm">
             <FormLabel>Search for ports</FormLabel>
             <Input
-              id="searchTerm"
+              id="search"
               name="search"
               size="sm"
               placeholder="Search"
@@ -436,10 +443,7 @@ export default function PortTable() {
               disabled={!data}
               endDecorator={
                 <Button variant="soft" color="neutral" disabled size="sm">
-                  /
-                  {data && data.total && data.pageSize
-                    ? Math.ceil(data.total / data.pageSize)
-                    : 1}
+                  /{data && data.total && data.lastPage ? data.lastPage : 1}
                 </Button>
               }
             />
@@ -463,13 +467,13 @@ export default function PortTable() {
           Next
         </Button>
       </Box>
-      <DeleteUserModal
+      <DeletePortModal
         open={openDeleteModal}
         setOpen={setOpenDeleteModal}
         id={selectedId}
         setSelectedId={setSelectedId}
       />
-      <UpdateUserModal
+      <UpdatePortModal
         open={openUpdateModal}
         setOpen={setOpenUpdateModal}
         id={selectedId}

@@ -1,5 +1,5 @@
 export interface SearchRouteQueryInterface {
-  searchTerm?: string;
+  search?: string;
   page?: number;
   sort?: string;
 }

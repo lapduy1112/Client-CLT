@@ -16,6 +16,7 @@ const customAxiosWithCredentials = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 export const generateRefreshToken = async () => {
   try {
     axios.post(
@@ -137,3 +138,13 @@ export function searchPermission(query?: SearchPermissionQueryInterface) {
   }
   return customAxiosWithCredentials.get(`/users`).then((res) => res.data);
 }
+
+export const resendVerificationEmail = async () => {
+  try {
+    const response = await customAxiosWithCredentials.get(`/auth/verify`);
+    return response.data;
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    throw error;
+  }
+};

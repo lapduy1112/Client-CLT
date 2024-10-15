@@ -43,7 +43,7 @@ export default function RouteDetailPage() {
           );
 
           setRouteDetail(response.data);
-          // console.log(response.data);
+          console.log(response.data);
         } catch (err: any) {
           console.error("Error fetching route data", err);
           setError(err.message || "Something went wrong");

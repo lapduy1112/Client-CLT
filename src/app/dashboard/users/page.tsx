@@ -9,12 +9,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
-<<<<<<< HEAD
-import UserList from "@/components/users/UserList";
 import UserTable from "@/components/users/UserTable";
-=======
-import UserTable from '@/components/users/UserTable';
->>>>>>> 96a4dd143f513a140c8e24fe44153edf35856cd1
 export default function UserManagement() {
   return (
     <Box

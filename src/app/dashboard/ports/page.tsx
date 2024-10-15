@@ -8,9 +8,36 @@ import Typography from "@mui/joy/Typography";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-
+import AddIcon from "@mui/icons-material/Add";
 import PortTable from "@/components/portmanage/PortTable";
+import { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AddPort from "@/components/admin/AddPort";
+interface Port {
+  id: string;
+  address: string;
+  lat: string;
+  lon: string;
+  createdAt: string;
+  updatedAt: string;
+}
 export default function PortManagement() {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [ports, setPorts] = useState<Port[]>([]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handlePortAdded = (newPort: any) => {
+    setPorts((prevPorts) => [...prevPorts, newPort]);
+    toast.success("Port added successfully");
+  };
   return (
     <Box
       component="main"
@@ -61,8 +88,20 @@ export default function PortManagement() {
         <Typography level="h2" component="h1">
           Ports Management
         </Typography>
+        <Button
+          color="primary"
+          startDecorator={<AddIcon />}
+          onClick={handleClickOpen}
+          size="sm">
+          Create Port
+        </Button>
       </Box>
-      <PortTable />
+      <PortTable ports={ports} />
+      <AddPort
+        open={open}
+        onClose={handleClose}
+        onPortAdded={handlePortAdded}
+      />
     </Box>
   );
 }

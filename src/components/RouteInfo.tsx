@@ -81,7 +81,7 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
               variant="body1"
               className="font-semibold"
               style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
-              <strong>Distance:</strong> {distance} km 
+              <strong>Distance:</strong> {distance} km
             </Typography>
           </Box>
 
@@ -91,7 +91,7 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
               variant="body1"
               className="font-semibold"
               style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
-              <strong>Travel Time:</strong> {travelTime} days
+              <strong>Travel Time:</strong> {travelTime + 1} days
             </Typography>
           </Box>
 
@@ -101,7 +101,7 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
               variant="body1"
               className="font-semibold"
               style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
-              <strong>Departure Time:</strong> {formattedDepartureDate} 
+              <strong>Departure Time:</strong> {formattedDepartureDate}
             </Typography>
           </Box>
 
@@ -121,7 +121,7 @@ const RouteInfo: React.FC<RouteDetailProps> = ({
               variant="body1"
               className="font-semibold"
               style={{ fontSize: "1.1rem", fontWeight: 500, color: grey[800] }}>
-              <strong>Status:</strong> {status} 
+              <strong>Status:</strong> {status}
             </Typography>
           </Box>
         </Box>

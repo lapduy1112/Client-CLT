@@ -1,5 +1,5 @@
 export interface SearchPortQueryInterface {
-  searchTerm?: string;
+  search?: string;
   page?: number;
   sort?: string;
 }

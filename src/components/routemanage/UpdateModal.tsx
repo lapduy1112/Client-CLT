@@ -19,16 +19,19 @@ import Select from "@mui/joy/Select";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { getUserById, updateUser } from "@/libs/common/utils/fetch";
 import Option from "@mui/joy/Option";
 import { useSearchParams } from "next/navigation";
 import { getErrorMessage } from "@/libs/common/utils/error";
 import axios, { AxiosError } from "axios";
+import { getRouteById, updateRoute } from "@/libs/common/utils/fetchRoute";
+import { PortUpdateInterface } from "@/libs/common/interfaces/update-port.interface";
+import { RouteUpdateInterface } from "@/libs/common/interfaces/update-route.interface";
 const validationSchema = Yup.object({
-  username: Yup.string().min(4, "Username must be at least 4 characters"),
-  isVerified: Yup.string(),
+  startPort: Yup.string(),
+  endPort: Yup.string(),
+  distance: Yup.string(),
 });
-export default function UpdateUserModal({
+export default function UpdateRouteModal({
   open,
   setOpen,
   id,
@@ -42,27 +45,34 @@ export default function UpdateUserModal({
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const sort = searchParams.get("sort");
-  const role = searchParams.get("role");
-  const isVerified = searchParams.get("isVerified");
   const searchTerm = searchParams.get("searchTerm");
   const page = searchParams.get("page");
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ["user", { id: id }],
-    queryFn: () => getUserById(id),
+    queryKey: ["route", { id: id }],
+    queryFn: () => getRouteById(id),
     retry: false,
     retryOnMount: false,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
+  console.log("data", data);
   const mutation = useMutation({
-    mutationFn: updateUser,
+    mutationFn: async ({
+      data,
+      id,
+    }: {
+      data: RouteUpdateInterface;
+      id: string;
+    }) => {
+      return await updateRoute(data, id);
+    },
     onSuccess: (data) => {
-      queryClient.setQueryData(["user", { id: data.id }], data),
+      queryClient.setQueryData(["route", { id: data.id }], data),
         queryClient.invalidateQueries({
-          queryKey: ["users", { sort, role, isVerified, searchTerm, page }],
+          queryKey: ["route", { sort, searchTerm, page }],
         }),
-        toast.success("User Updated successfully"),
+        toast.success("Route Updated successfully"),
         setSelectedId("");
       setOpen(false);
     },
@@ -76,17 +86,22 @@ export default function UpdateUserModal({
       }
     },
   });
+
   const formik = useFormik({
     initialValues: {
-      username: undefined,
-      isVerified: undefined,
+      startPort: undefined,
+      endPort: undefined,
+      distance: undefined,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       mutation.mutate({
         id: id,
-        username: values.username,
-        isVerified: values.isVerified,
+        data: {
+          startPort: values.startPort,
+          endPort: values.endPort,
+          distance: values.distance,
+        },
       });
     },
   });
@@ -98,7 +113,7 @@ export default function UpdateUserModal({
           setOpen(false), setSelectedId("");
         }}>
         <ModalDialog variant="outlined" role="alertdialog">
-          <DialogTitle>Update User</DialogTitle>
+          <DialogTitle>Update Route</DialogTitle>
           <Divider />
           {isSuccess && data && (
             <form onSubmit={formik.handleSubmit} id="udpatedForm">
@@ -106,41 +121,6 @@ export default function UpdateUserModal({
                 direction="row"
                 spacing={3}
                 sx={{ display: { xs: "none", md: "flex" }, my: 1 }}>
-                <Stack direction="column" spacing={1}>
-                  <AspectRatio
-                    ratio="1"
-                    maxHeight={200}
-                    sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}>
-                    <img
-                      src={
-                        data?.profileImage ||
-                        "https://firebasestorage.googleapis.com/v0/b/mern-blog-project-28a14.appspot.com/o/profileImage.jpg?alt=media&token=4b00eeb1-6eb8-4c2d-9ba5-1c5fcf7e3d49"
-                      }
-                      srcSet={
-                        data?.profileImage ||
-                        "https://firebasestorage.googleapis.com/v0/b/mern-blog-project-28a14.appspot.com/o/profileImage.jpg?alt=media&token=4b00eeb1-6eb8-4c2d-9ba5-1c5fcf7e3d49"
-                      }
-                      loading="lazy"
-                      alt=""
-                    />
-                  </AspectRatio>
-                  <IconButton
-                    aria-label="upload new picture"
-                    size="sm"
-                    variant="outlined"
-                    color="neutral"
-                    sx={{
-                      bgcolor: "background.body",
-                      position: "absolute",
-                      zIndex: 2,
-                      borderRadius: "50%",
-                      left: 100,
-                      top: 170,
-                      boxShadow: "sm",
-                    }}>
-                    <EditRoundedIcon />
-                  </IconButton>
-                </Stack>
                 <Stack spacing={2} sx={{ flexGrow: 1 }}>
                   <Stack spacing={1}>
                     <FormLabel>Id</FormLabel>
@@ -159,80 +139,77 @@ export default function UpdateUserModal({
                   </Stack>
                   <Stack direction="row" spacing={2}>
                     <FormControl>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>Start Port</FormLabel>
                       <Input
                         size="sm"
-                        placeholder="Username"
-                        id="username"
-                        name="username"
-                        defaultValue={data?.username}
+                        placeholder="StartPort"
+                        id="startPort"
+                        name="startPort"
+                        defaultValue={data?.startPort?.address}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.username}
+                        value={formik.values.startPort}
                         error={
-                          formik.touched.username &&
-                          Boolean(formik.errors.username)
+                          formik.touched.startPort &&
+                          Boolean(formik.errors.startPort)
                         }
                       />
-                      {formik.touched.username &&
-                        Boolean(formik.errors.username) && (
+                      {formik.touched.startPort &&
+                        Boolean(formik.errors.startPort) && (
                           <FormHelperText>
-                            {formik.errors.username}
-                          </FormHelperText>
-                        )}
-                    </FormControl>
-                    <FormControl sx={{ flexGrow: 1 }}>
-                      <FormLabel>isVerified</FormLabel>
-                      <Select
-                        size="sm"
-                        defaultValue={data?.isVerified ? "true" : "false"}
-                        id="isVerified"
-                        name="isVerified"
-                        onChange={(event, value) =>
-                          formik.setFieldValue("isVerified", value)
-                        }
-                        onBlur={formik.handleBlur}
-                        color={
-                          formik.touched.isVerified &&
-                          Boolean(formik.errors.isVerified)
-                            ? "danger"
-                            : "neutral"
-                        }>
-                        <Option value="true" label="true">
-                          true
-                        </Option>
-                        <Option value="false" label="false">
-                          false
-                        </Option>
-                      </Select>
-                      {formik.touched.isVerified &&
-                        Boolean(formik.errors.isVerified) && (
-                          <FormHelperText>
-                            {formik.errors.isVerified}
+                            {formik.errors.startPort}
                           </FormHelperText>
                         )}
                     </FormControl>
                   </Stack>
                   <Stack direction="row" spacing={2}>
                     <FormControl>
-                      <FormLabel>Role</FormLabel>
+                      <FormLabel>End Port</FormLabel>
                       <Input
                         size="sm"
-                        defaultValue={data?.role?.role}
-                        disabled
+                        placeholder="EndPort"
+                        id="endPort"
+                        name="endPort"
+                        defaultValue={data?.endPort?.address}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.endPort}
+                        error={
+                          formik.touched.endPort &&
+                          Boolean(formik.errors.endPort)
+                        }
                       />
+                      {formik.touched.endPort &&
+                        Boolean(formik.errors.endPort) && (
+                          <FormHelperText>
+                            {formik.errors.endPort}
+                          </FormHelperText>
+                        )}
                     </FormControl>
-                    <FormControl sx={{ flexGrow: 1 }}>
-                      <FormLabel>Email</FormLabel>
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <FormControl>
+                      <FormLabel>Distance</FormLabel>
                       <Input
                         size="sm"
-                        type="email"
-                        startDecorator={<EmailRoundedIcon />}
-                        placeholder="email"
-                        defaultValue={data?.email}
-                        sx={{ flexGrow: 1 }}
-                        disabled
+                        placeholder="Distance"
+                        id="distance"
+                        name="distance"
+                        defaultValue={data?.distance}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.distance}
+                        error={
+                          formik.touched.distance &&
+                          Boolean(formik.errors.distance)
+                        }
                       />
+                      {formik.touched.distance &&
+                        Boolean(formik.errors.distance) && (
+                          <FormHelperText>
+                            {formik.errors.distance}
+                          </FormHelperText>
+                        )}
                     </FormControl>
                   </Stack>
                   <Stack direction="row" spacing={2}>

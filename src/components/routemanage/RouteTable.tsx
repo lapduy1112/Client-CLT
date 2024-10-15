@@ -17,7 +17,6 @@ import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
-import Checkbox from "@mui/joy/Checkbox";
 import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import Menu from "@mui/joy/Menu";
@@ -35,9 +34,10 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import DeleteUserModal from "../modal/DeleteModal";
-import UpdateUserModal from "../modal/UpdateModal";
 import { searchRoutes } from "@/libs/common/utils/fetchRoute";
+import DeleteRouteModal from "@/components/routemanage/DeleteModal";
+import UpdateRouteModal from "@/components/routemanage/UpdateModal";
+import UpdateRouteStatusModal from "@/components/routemanage/UpdateStatusModal";
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -69,11 +69,13 @@ function RowMenu({
   dataId,
   setOpenDelete,
   setOpenUpdate,
+  setOpenUpdateStatus,
   setId,
 }: {
   dataId: string;
   setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenUpdateStatus: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
@@ -94,6 +96,13 @@ function RowMenu({
         </MenuItem>
         <Divider />
         <MenuItem
+          onClick={() => {
+            setId(dataId), setOpenUpdateStatus(true);
+          }}>
+          Update Status
+        </MenuItem>
+        <Divider />
+        <MenuItem
           color="danger"
           onClick={() => {
             setId(dataId), setOpenDelete(true);
@@ -108,6 +117,8 @@ export default function RouteTable() {
   const [order, setOrder] = React.useState<Order>("desc");
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
+  const [openUpdateStatusModal, setOpenUpdateStatusModal] =
+    React.useState(false);
   const [selectedId, setselectedId] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const searchParams = useSearchParams();
@@ -115,14 +126,14 @@ export default function RouteTable() {
   const { replace } = useRouter();
   const sort = searchParams.get("sort");
   // const role = searchParams.get("role");
-  const searchTerm = searchParams.get("searchTerm");
+  const search = searchParams.get("search");
   const page = searchParams.get("page");
-  const [curPage, setCurPage] = React.useState(page);
+  const [curPage, setCurPage] = React.useState(page || "1");
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ["route", { sort, searchTerm, page }],
+    queryKey: ["route", { sort, search, page }],
     queryFn: () =>
       searchRoutes({
-        searchTerm: searchTerm || undefined,
+        search: search || undefined,
         sort: sort || undefined,
         page: Number(page) || undefined,
       }),
@@ -150,7 +161,6 @@ export default function RouteTable() {
     } else {
       params.delete(key);
     }
-    console.log("params", params.toString());
     replace(`${pathname}?${params.toString()}`);
   }
   const renderFilters = () => (
@@ -231,7 +241,7 @@ export default function RouteTable() {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
             handleSearch(
-              "searchTerm",
+              "search",
               (form.elements.namedItem("search") as HTMLInputElement).value ||
                 ""
             );
@@ -239,7 +249,7 @@ export default function RouteTable() {
           <FormControl sx={{ flex: 1 }} size="sm">
             <FormLabel>Search for route</FormLabel>
             <Input
-              id="searchTerm"
+              id="search"
               name="search"
               size="sm"
               placeholder="Search"
@@ -368,7 +378,7 @@ export default function RouteTable() {
                     </td>
                     <td>
                       <Typography level="body-xs">
-                        {row.travelTime} days
+                        {row.travelTime + 1} days
                       </Typography>
                     </td>
                     <td>
@@ -392,6 +402,7 @@ export default function RouteTable() {
                           dataId={(row.id as string) || ""}
                           setOpenDelete={setOpenDeleteModal}
                           setOpenUpdate={setOpenUpdateModal}
+                          setOpenUpdateStatus={setOpenUpdateStatusModal}
                           setId={setselectedId}
                         />
                       </Box>
@@ -425,18 +436,6 @@ export default function RouteTable() {
           }}>
           Previous
         </Button>
-
-        {/* <Box sx={{ flex: 1 }} />
-        {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
-          <IconButton
-            key={page}
-            size="sm"
-            variant={Number(page) ? 'outlined' : 'plain'}
-            color="neutral"
-          >
-            {page}
-          </IconButton>
-        ))} */}
         <Box
           sx={{
             flex: 1,
@@ -467,10 +466,7 @@ export default function RouteTable() {
               disabled={!data}
               endDecorator={
                 <Button variant="soft" color="neutral" disabled size="sm">
-                  /
-                  {data && data.totalCount && data.pageSize
-                    ? Math.ceil(data.totalCount / data.pageSize)
-                    : 1}
+                  /{data && data.total && data.lastPage ? data.lastPage : 1}
                 </Button>
               }
             />
@@ -481,27 +477,29 @@ export default function RouteTable() {
           variant="outlined"
           color="neutral"
           endDecorator={<KeyboardArrowRightIcon />}
-          disabled={
-            !data ||
-            data.totalCount < data.pageSize ||
-            data.pageNumber * data.pageSize >= data.totalCount
-          }
+          disabled={!data || data.currentPage >= data.lastPage}
           onClick={() => {
-            handleSearch("page", String(Number(data.pageNumber) + 1));
-            setCurPage(String(Number(data.pageNumber) + 1));
+            handleSearch("page", String(Number(data.currentPage) + 1));
+            setCurPage(String(Number(data.currentPage) + 1));
           }}>
           Next
         </Button>
       </Box>
-      <DeleteUserModal
+      <DeleteRouteModal
         open={openDeleteModal}
         setOpen={setOpenDeleteModal}
         id={selectedId}
         setSelectedId={setselectedId}
       />
-      <UpdateUserModal
+      <UpdateRouteModal
         open={openUpdateModal}
         setOpen={setOpenUpdateModal}
+        id={selectedId}
+        setSelectedId={setselectedId}
+      />
+      <UpdateRouteStatusModal
+        open={openUpdateStatusModal}
+        setOpen={setOpenUpdateStatusModal}
         id={selectedId}
         setSelectedId={setselectedId}
       />

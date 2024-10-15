@@ -121,14 +121,9 @@ export default function Sidebar({ tab }: { tab?: string }) {
         <IconButton variant="soft" color="primary" size="sm">
           <BrightnessAutoRoundedIcon />
         </IconButton>
-        <Typography level="title-lg">Acme Co.</Typography>
+        <Typography level="title-lg">SSMS</Typography>
         <ColorSchemeToggle sx={{ ml: "auto" }} />
       </Box>
-      <Input
-        size="sm"
-        startDecorator={<SearchRoundedIcon />}
-        placeholder="Search"
-      />
       <Box
         sx={{
           minHeight: 0,
@@ -147,7 +142,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
             "--List-nestedInsetStart": "30px",
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}>
-          <ListItem>
+          {/* <ListItem>
             <ListItemButton>
               <HomeRoundedIcon />
               <ListItemContent>
@@ -163,10 +158,13 @@ export default function Sidebar({ tab }: { tab?: string }) {
                 <Typography level="title-sm">Dashboard</Typography>
               </ListItemContent>
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
 
           <ListItem>
-            <ListItemButton selected={tab == "permission"}>
+            <ListItemButton
+              selected={tab == "permission"}
+              component="a"
+              href="/dashboard/permission">
               <KeyIcon />
               <ListItemContent>
                 <Typography level="title-sm">Permission Dashboard</Typography>
@@ -175,7 +173,10 @@ export default function Sidebar({ tab }: { tab?: string }) {
           </ListItem>
 
           <ListItem>
-            <ListItemButton selected={tab == "users"}>
+            <ListItemButton
+              selected={tab == "users"}
+              component="a"
+              href="/dashboard/users">
               <AdminPanelSettingsIcon />
               <ListItemContent>
                 <Typography level="title-sm">User Management</Typography>
@@ -235,12 +236,18 @@ export default function Sidebar({ tab }: { tab?: string }) {
               )}>
               <List sx={{ gap: 0.5 }}>
                 <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton selected={tab == "profile"}>
+                  <ListItemButton
+                    selected={tab == "profile"}
+                    component="a"
+                    href="/dashboard/profile">
                     My profile
                   </ListItemButton>
                 </ListItem>
                 <ListItem>
-                  <ListItemButton selected={tab == "account"}>
+                  <ListItemButton
+                    selected={tab == "account"}
+                    component="a"
+                    href="/dashboard/account">
                     Account security
                   </ListItemButton>
                 </ListItem>
