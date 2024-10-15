@@ -19,15 +19,18 @@ import Select from '@mui/joy/Select';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { getUserById, updateUser } from '@/libs/common/utils/fetch';
 import Option from '@mui/joy/Option';
 import { getErrorMessage } from '@/libs/common/utils/error';
 import axios, { AxiosError } from 'axios';
+import {
+  assignRole,
+  getAllRoles,
+  getUserById,
+} from '@/libs/common/utils/fetch';
 const validationSchema = Yup.object({
-  username: Yup.string().min(4, 'Username must be at least 4 characters'),
-  isVerified: Yup.string(),
+  roleId: Yup.string(),
 });
-export default function UpdateUserModal({
+export default function AssignRoleModal({
   open,
   setOpen,
   id,
@@ -48,8 +51,17 @@ export default function UpdateUserModal({
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
+  const fetchRole = useQuery({
+    queryKey: ['roles'],
+    queryFn: () => getAllRoles(),
+    retry: false,
+    retryOnMount: false,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
   const mutation = useMutation({
-    mutationFn: updateUser,
+    mutationFn: assignRole,
     onSuccess: (data) => {
       queryClient.setQueryData(['user', { id: data.id }], data),
         queryClient.invalidateQueries({
@@ -71,16 +83,17 @@ export default function UpdateUserModal({
   });
   const formik = useFormik({
     initialValues: {
-      username: undefined,
-      isVerified: undefined,
+      roleId: undefined,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      mutation.mutate({
-        id: id,
-        username: values.username,
-        isVerified: values.isVerified,
-      });
+      console.log(values);
+      if (!values.roleId || values.roleId === data?.role?.id) {
+        setSelectedId('');
+        setOpen(false);
+        return;
+      }
+      mutation.mutate({ id: id, roleId: values.roleId });
     },
   });
   return (
@@ -164,64 +177,55 @@ export default function UpdateUserModal({
                         id="username"
                         name="username"
                         defaultValue={data?.username}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.username}
-                        error={
-                          formik.touched.username &&
-                          Boolean(formik.errors.username)
-                        }
-                      />
-                      {formik.touched.username &&
-                        Boolean(formik.errors.username) && (
-                          <FormHelperText>
-                            {formik.errors.username}
-                          </FormHelperText>
-                        )}
-                    </FormControl>
-                    <FormControl sx={{ flexGrow: 1 }}>
-                      <FormLabel>isVerified</FormLabel>
-                      <Select
-                        size="sm"
-                        defaultValue={data?.isVerified ? 'true' : 'false'}
-                        id="isVerified"
-                        name="isVerified"
-                        onChange={(event, value) =>
-                          formik.setFieldValue('isVerified', value)
-                        }
-                        onBlur={formik.handleBlur}
-                        color={
-                          formik.touched.isVerified &&
-                          Boolean(formik.errors.isVerified)
-                            ? 'danger'
-                            : 'neutral'
-                        }
-                      >
-                        <Option value="true" label="true">
-                          true
-                        </Option>
-                        <Option value="false" label="false">
-                          false
-                        </Option>
-                      </Select>
-                      {formik.touched.isVerified &&
-                        Boolean(formik.errors.isVerified) && (
-                          <FormHelperText>
-                            {formik.errors.isVerified}
-                          </FormHelperText>
-                        )}
-                    </FormControl>
-                  </Stack>
-                  <Stack direction="row" spacing={2}>
-                    <FormControl>
-                      <FormLabel>Role</FormLabel>
-                      <Input
-                        size="sm"
-                        defaultValue={data?.role?.role}
                         disabled
                       />
                     </FormControl>
                     <FormControl sx={{ flexGrow: 1 }}>
+                      <FormLabel>isVerified</FormLabel>
+                      <Input
+                        size="sm"
+                        placeholder="isVerified"
+                        id="isVerified"
+                        name="isVerified"
+                        defaultValue={data?.isVerified}
+                        disabled
+                      />
+                    </FormControl>
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <FormControl sx={{ flexGrow: 1 }}>
+                      <FormLabel>Role</FormLabel>
+                      <Select
+                        size="sm"
+                        id="roleId"
+                        name="roleId"
+                        onBlur={formik.handleBlur}
+                        defaultValue={data?.role?.id}
+                        onChange={(event, value) =>
+                          formik.setFieldValue('roleId', value)
+                        }
+                        color={
+                          formik.touched.roleId && Boolean(formik.errors.roleId)
+                            ? 'danger'
+                            : 'neutral'
+                        }
+                        disabled={mutation.isPending}
+                      >
+                        {fetchRole.isSuccess &&
+                          fetchRole.data.roles.map((r) => (
+                            <Option key={r.id} value={r.id}>
+                              {r.role}
+                            </Option>
+                          ))}
+                      </Select>
+                      {formik.touched.roleId &&
+                        Boolean(formik.errors.roleId) && (
+                          <FormHelperText>
+                            {formik.errors.roleId}
+                          </FormHelperText>
+                        )}
+                    </FormControl>
+                    <FormControl sx={{ width: '50%' }}>
                       <FormLabel>Email</FormLabel>
                       <Input
                         size="sm"

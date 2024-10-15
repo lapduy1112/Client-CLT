@@ -1,19 +1,21 @@
-import axios from "axios";
-import { BE_API_URL } from "@/libs/common/constants/api";
-import { EErrorMessage } from "../constants/error";
-import { SearchUserQueryInterface } from "../interfaces/search_user_query.interface";
+import axios from 'axios';
+import { BE_API_URL } from '@/libs/common/constants/api';
+import { EErrorMessage } from '../constants/error';
+import { SearchUserQueryInterface } from '../interfaces/search_user_query.interface';
 import {
   UserUpdateInterface,
   UserUpdatePasswordInterface,
-} from "../interfaces/update-user.interface";
-import { SearchPermissionQueryInterface } from "../interfaces/search_permission_query.interface";
-const BASE_URL = BE_API_URL || "http://localhost:3000";
+  UserUpdateRoleInterface,
+} from '../interfaces/update-user.interface';
+import { SearchPermissionQueryInterface } from '../interfaces/search_permission_query.interface';
+import { SearchRoleQueryInterface } from '../interfaces/search_role_query.interface';
+const BASE_URL = BE_API_URL || 'http://localhost:3000';
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
   headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/json",
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
   },
 });
 
@@ -25,8 +27,8 @@ export const generateRefreshToken = async () => {
       {
         withCredentials: true,
         headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
         },
       }
     );
@@ -40,7 +42,7 @@ customAxiosWithCredentials.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    console.log("Error", error.response);
+    console.log('Error', error.response);
 
     if (
       error.response.status === 401 &&
@@ -55,14 +57,14 @@ customAxiosWithCredentials.interceptors.response.use(
           {
             withCredentials: true,
             headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json",
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
             },
           }
         );
         return customAxiosWithCredentials(originalRequest);
       } catch (refreshError) {
-        console.log("Refresh error", refreshError);
+        console.log('Refresh error', refreshError);
       }
     }
     return Promise.reject(error);
@@ -144,7 +146,43 @@ export const resendVerificationEmail = async () => {
     const response = await customAxiosWithCredentials.get(`/auth/verify`);
     return response.data;
   } catch (error) {
-    console.error("Error sending verification email:", error);
+    console.error('Error sending verification email:', error);
     throw error;
   }
 };
+export function getAllRoles() {
+  return customAxiosWithCredentials
+    .get(`/role?getAll=true&fields=id,role`)
+    .then((res) => res.data);
+}
+export function assignRole(data: UserUpdateRoleInterface) {
+  return customAxiosWithCredentials
+    .patch(`/users/role`, { id: data.id, roleId: data.roleId })
+    .then((res) => res.data);
+}
+export function searchRole(query: SearchRoleQueryInterface) {
+  if (query) {
+    let searchQuery = `/role?`;
+    searchQuery = query.searchTerm
+      ? `${searchQuery}searchTerm=${query.searchTerm}&`
+      : searchQuery;
+    searchQuery = query.page
+      ? `${searchQuery}page=${query.page}&`
+      : searchQuery;
+    searchQuery = query.sort
+      ? `${searchQuery}sort=${query.sort}&`
+      : searchQuery;
+    searchQuery = query.permission_action
+      ? `${searchQuery}permission_action=${query.permission_action}&`
+      : searchQuery;
+    searchQuery = query.permission_object
+      ? `${searchQuery}permission_object=${query.permission_object}&`
+      : searchQuery;
+    searchQuery = query.permission_possession
+      ? `${searchQuery}permission_possession=${query.permission_possession}&`
+      : searchQuery;
+    searchQuery = searchQuery.slice(0, -1);
+    return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
+  }
+  return customAxiosWithCredentials.get(`/role`).then((res) => res.data);
+}
