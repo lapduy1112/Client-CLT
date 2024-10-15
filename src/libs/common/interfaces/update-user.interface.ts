@@ -8,3 +8,7 @@ export interface UserUpdatePasswordInterface {
   newPassword: string;
   confirmPassword: string;
 }
+export interface UserUpdateRoleInterface {
+  id: string;
+  roleId: string;
+}

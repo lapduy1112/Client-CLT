@@ -1,15 +1,10 @@
 import * as React from 'react';
-import { ColorPaletteProp } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import ModalClose from '@mui/joy/ModalClose';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Table from '@mui/joy/Table';
@@ -20,60 +15,144 @@ import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { useQuery } from '@tanstack/react-query';
-import { searchUsers } from '@/libs/common/utils/fetch';
+import { searchRole } from '@/libs/common/utils/fetch';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import DeleteUserModal from '../modal/DeleteModal';
-import UpdateUserModal from '../modal/UpdateModal';
 import Stack from '@mui/joy/Stack';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import AssignRoleModal from '../modal/AssignRole';
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 interface searchInterface {
   key: string;
   term: string;
+}
+function Row({
+  row,
+  setOpenDelete,
+  setOpenUpdate,
+  setId,
+}: {
+  row: any;
+  setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  setId: React.Dispatch<React.SetStateAction<string>>;
+}) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <tr key={row.id}>
+        <td style={{ textAlign: 'center', width: 120 }}>
+          {' '}
+          <IconButton
+            aria-label="expand row"
+            variant="plain"
+            color="neutral"
+            size="sm"
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </td>
+        <td>
+          <Typography level="body-xs">{row.id}</Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">{row.role}</Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">
+            {row.createdAt ? new Date(row.createdAt).toUTCString() : ''}
+          </Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">
+            {row.updatedAt ? new Date(row.updatedAt).toUTCString() : ''}
+          </Typography>
+        </td>
+        <td>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+            <RowMenu
+              dataId={(row.id as string) || ''}
+              setOpenDelete={setOpenDelete}
+              setOpenUpdate={setOpenUpdate}
+              setId={setId}
+            />
+          </Box>
+        </td>
+      </tr>
+      <tr>
+        <td style={{ height: 0, padding: 0 }} colSpan={6}>
+          {open && (
+            <Sheet
+              variant="soft"
+              sx={{
+                p: 1,
+                pl: 6,
+                boxShadow: 'inset 0 3px 6px 0 rgba(0 0 0 / 0.08)',
+              }}
+            >
+              <Typography level="body-lg" component="div">
+                Permission
+              </Typography>
+              <Table
+                borderAxis="bothBetween"
+                size="sm"
+                aria-label="purchases"
+                sx={{
+                  '& > thead > tr > th:nth-child(n + 3), & > tbody > tr > td:nth-child(n + 3)':
+                    { textAlign: 'right' },
+                  '--TableCell-paddingX': '0.5rem',
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Action</th>
+                    <th>Object</th>
+                    <th>Possession</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {row.permission.map(
+                    (permissionRow: {
+                      permission: string;
+                      action: string;
+                      object: string;
+                      possession: string;
+                    }) => (
+                      <tr key={permissionRow.permission}>
+                        <th scope="row">{permissionRow.permission}</th>
+                        <th scope="row">{permissionRow.action}</th>
+                        <td>{permissionRow.object}</td>
+                        <td>{permissionRow.possession}</td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </Table>
+            </Sheet>
+          )}
+        </td>
+      </tr>
+    </>
+  );
 }
 function RowMenu({
   dataId,
   setOpenDelete,
   setOpenUpdate,
-  setOpenAssignRole,
   setId,
 }: {
   dataId: string;
   setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenAssignRole: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
@@ -90,15 +169,7 @@ function RowMenu({
             setId(dataId), setOpenUpdate(true);
           }}
         >
-          Edit
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={() => {
-            setId(dataId), setOpenAssignRole(true);
-          }}
-        >
-          Assign Role to User
+          Add Permission
         </MenuItem>
         <Divider />
         <MenuItem
@@ -107,35 +178,35 @@ function RowMenu({
             setId(dataId), setOpenDelete(true);
           }}
         >
-          Delete
+          Delete Permission
         </MenuItem>
       </Menu>
     </Dropdown>
   );
 }
-export default function UserTable() {
+export default function RoleTable() {
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
-  const [openAssignRoleModal, setOpenAssignRoleModal] = React.useState(false);
   const [selectedId, setselectedId] = React.useState('');
-  const [open, setOpen] = React.useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const sort = searchParams.get('sort');
-  const role = searchParams.get('role');
-  const isVerified = searchParams.get('isVerified');
+  const action = searchParams.get('action');
+  const object = searchParams.get('object');
+  const possession = searchParams.get('possession');
   const searchTerm = searchParams.get('searchTerm');
   const page = searchParams.get('page');
   const [curPage, setCurPage] = React.useState(page || '1');
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ['users', { sort, role, isVerified, searchTerm, page }],
+    queryKey: ['users', { sort, action, object, searchTerm, page, possession }],
     queryFn: () =>
-      searchUsers({
+      searchRole({
         searchTerm: searchTerm || undefined,
         sort: sort || undefined,
-        role: role || undefined,
-        isVerified: isVerified || undefined,
+        permission_action: action || undefined,
+        permission_object: object || undefined,
+        permission_possession: possession || undefined,
         page: Number(page) || undefined,
       }),
     retry: false,
@@ -167,38 +238,39 @@ export default function UserTable() {
   }
   const renderFilters = () => (
     <React.Fragment>
-      {/* <FormControl size="sm">
-        <FormLabel>Sort</FormLabel>
+      <FormControl size="sm">
+        <FormLabel>Action</FormLabel>
         <Select
           size="sm"
-          slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-          defaultValue={sort || 'createdAt'}
-          id="sort"
+          placeholder="All"
+          defaultValue={action || ''}
+          id="action"
           onChange={(event, newValue) => {
             handleSearchKeys([
-              { key: 'sort', term: newValue || '' },
+              { key: 'action', term: newValue || '' },
               { key: 'page', term: '1' },
             ]);
             setCurPage('1');
           }}
         >
-          <Option value="createdAt">Created date</Option>
-          <Option value="updatedAt">Updated date</Option>
-          <Option value="username">Username</Option>
-          <Option value="email">Email</Option>
-          <Option value="role.role">Role</Option>
+          <Option value="">All</Option>
+          <Option value="update">Update</Option>
+          <Option value="create">Create</Option>
+          <Option value="search">search</Option>
+          <Option value="delete">delete</Option>
+          <Option value="read">read</Option>
         </Select>
-      </FormControl> */}
+      </FormControl>
       <FormControl size="sm">
-        <FormLabel>Role</FormLabel>
+        <FormLabel>Object</FormLabel>
         <Select
           size="sm"
           placeholder="All"
-          defaultValue={role || ''}
-          id="role"
+          defaultValue={object || ''}
+          id="object"
           onChange={(event, newValue) => {
             handleSearchKeys([
-              { key: 'role', term: newValue || '' },
+              { key: 'object', term: newValue || '' },
               { key: 'page', term: '1' },
             ]);
             setCurPage('1');
@@ -206,68 +278,37 @@ export default function UserTable() {
         >
           <Option value="">All</Option>
           <Option value="user">User</Option>
-          <Option value="admin">Admin</Option>
-          <Option value="sysadmin">SysAdmin</Option>
+          <Option value="route">Routes</Option>
+          <Option value="role">Role</Option>
+          <Option value="permission">Permission</Option>
+          <Option value="user_role">User Role</Option>
+          <Option value="profile">Profile</Option>
         </Select>
       </FormControl>
       <FormControl size="sm">
-        <FormLabel>Verified</FormLabel>
+        <FormLabel>Possession</FormLabel>
         <Select
           size="sm"
           placeholder="All"
-          defaultValue={isVerified || ''}
-          id="isVerified"
+          defaultValue={object || ''}
+          id="object"
           onChange={(event, newValue) => {
             handleSearchKeys([
-              { key: 'isVerified', term: newValue || '' },
+              { key: 'possession', term: newValue || '' },
               { key: 'page', term: '1' },
             ]);
             setCurPage('1');
           }}
         >
           <Option value="">All</Option>
-          <Option value="True">Yes</Option>
-          <Option value="False">No</Option>
+          <Option value="own">Own</Option>
+          <Option value="any">Any</Option>
         </Select>
       </FormControl>
     </React.Fragment>
   );
   return (
     <React.Fragment>
-      <Sheet
-        className="SearchAndFilters-mobile"
-        sx={{ display: { xs: 'flex', sm: 'none' }, my: 1, gap: 1 }}
-      >
-        <Input
-          size="sm"
-          placeholder="Search"
-          startDecorator={<SearchIcon />}
-          sx={{ flexGrow: 1 }}
-        />
-        <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FilterAltIcon />
-        </IconButton>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Filters
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {renderFilters()}
-              <Button color="primary" onClick={() => setOpen(false)}>
-                Submit
-              </Button>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-      </Sheet>
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
@@ -341,33 +382,9 @@ export default function UserTable() {
                     textAlign: 'center',
                     padding: '12px 6px',
                   }}
-                ></th>
-                {/* <th style={{ width: 180, padding: '12px 6px' }}>
-                  <Link
-                    underline="none"
-                    color="primary"
-                    component="button"
-                    onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
-                    endDecorator={<ArrowDropDownIcon />}
-                    sx={[
-                      {
-                        fontWeight: 'lg',
-                        '& svg': {
-                          transition: '0.2s',
-                          transform:
-                            order === 'desc'
-                              ? 'rotate(0deg)'
-                              : 'rotate(180deg)',
-                        },
-                      },
-                      order === 'desc'
-                        ? { '& svg': { transform: 'rotate(0deg)' } }
-                        : { '& svg': { transform: 'rotate(180deg)' } },
-                    ]}
-                  >
-                    Id
-                  </Link>
-                </th> */}
+                >
+                  {' '}
+                </th>
                 <th
                   style={{
                     width: 120,
@@ -376,7 +393,6 @@ export default function UserTable() {
                 >
                   Id
                 </th>
-                {/* <th style={{ width: 180, padding: '12px 6px' }}>Email</th> */}
                 <th style={{ width: 160 }}>
                   <Stack
                     direction="row"
@@ -384,7 +400,7 @@ export default function UserTable() {
                       alignItems: 'center',
                     }}
                   >
-                    Email
+                    Role
                     <Stack
                       direction="row"
                       spacing={0}
@@ -395,116 +411,25 @@ export default function UserTable() {
                     >
                       <IconButton
                         onClick={() => {
-                          if (sort == 'email:ASC') {
+                          if (sort == 'role:ASC') {
                             handleSearch('sort', '');
                           } else {
-                            handleSearch('sort', 'email:ASC');
+                            handleSearch('sort', 'role:ASC');
                           }
                         }}
-                        color={sort == 'email:ASC' ? 'primary' : 'neutral'}
+                        color={sort == 'role:ASC' ? 'primary' : 'neutral'}
                       >
                         <ArrowUpwardIcon style={{ fontSize: '18px' }} />
                       </IconButton>
                       <IconButton
                         onClick={() => {
-                          if (sort == 'email:DESC') {
+                          if (sort == 'role:DESC') {
                             handleSearch('sort', '');
                           } else {
-                            handleSearch('sort', 'email:DESC');
+                            handleSearch('sort', 'role:DESC');
                           }
                         }}
-                        color={sort == 'email:DESC' ? 'primary' : 'neutral'}
-                      >
-                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 140 }}>
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: 'center',
-                      margin: 'auto',
-                    }}
-                  >
-                    Username
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <IconButton
-                        color={sort == 'username:ASC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'username:ASC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'username:ASC');
-                          }
-                        }}
-                      >
-                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                      <IconButton
-                        color={sort == 'username:DESC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'username:DESC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'username:DESC');
-                          }
-                        }}
-                      >
-                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 100 }}>
-                  {' '}
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: 'center',
-                    }}
-                  >
-                    Verified
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginLeft: '8px',
-                      }}
-                    >
-                      <IconButton
-                        color={sort == 'isVerified:ASC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'isVerified:ASC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'isVerified:ASC');
-                          }
-                        }}
-                      >
-                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                      <IconButton
-                        color={
-                          sort == 'isVerified:DESC' ? 'primary' : 'neutral'
-                        }
-                        onClick={() => {
-                          if (sort == 'isVerified:DESC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'isVerified:DESC');
-                          }
-                        }}
+                        color={sort == 'role:DESC' ? 'primary' : 'neutral'}
                       >
                         <ArrowDownwardIcon style={{ fontSize: '18px' }} />
                       </IconButton>
@@ -599,114 +524,18 @@ export default function UserTable() {
                     </Stack>
                   </Stack>
                 </th>
-                <th style={{ width: 80 }}>
-                  {' '}
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: 'center',
-                    }}
-                  >
-                    Role
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <IconButton
-                        color={sort == 'role.role:ASC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'role.role:ASC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'role.role:ASC');
-                          }
-                        }}
-                      >
-                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => {
-                          if (sort == 'role.role:DESC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'role.role:DESC');
-                          }
-                        }}
-                      >
-                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
                 <th style={{ width: 80 }}> </th>
               </tr>
             </thead>
             <tbody>
-              {[...data.users].map((row) => (
-                <tr key={row.id}>
-                  <td style={{ textAlign: 'center', width: 120 }}></td>
-                  <td>
-                    <Typography level="body-xs">{row.id}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.email}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.username}</Typography>
-                  </td>
-                  <td>
-                    <Chip
-                      variant="soft"
-                      size="sm"
-                      startDecorator={
-                        {
-                          true: <CheckRoundedIcon />,
-                          false: <BlockIcon />,
-                        }[String(row.isVerified)]
-                      }
-                      color={
-                        {
-                          true: 'success',
-                          false: 'danger',
-                        }[String(row.isVerified)] as ColorPaletteProp
-                      }
-                    >
-                      {row.isVerified.toString()}
-                    </Chip>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.createdAt
-                        ? new Date(row.createdAt).toUTCString()
-                        : ''}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.updatedAt
-                        ? new Date(row.updatedAt).toUTCString()
-                        : ''}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.role.role}</Typography>
-                  </td>
-                  <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                      <RowMenu
-                        dataId={(row.id as string) || ''}
-                        setOpenDelete={setOpenDeleteModal}
-                        setOpenUpdate={setOpenUpdateModal}
-                        setOpenAssignRole={setOpenAssignRoleModal}
-                        setId={setselectedId}
-                      />
-                    </Box>
-                  </td>
-                </tr>
+              {[...data.roles].map((row) => (
+                <Row
+                  key={row.id}
+                  row={row}
+                  setOpenUpdate={setOpenUpdateModal}
+                  setOpenDelete={setOpenDeleteModal}
+                  setId={setselectedId}
+                />
               ))}
             </tbody>
           </Table>
@@ -808,24 +637,6 @@ export default function UserTable() {
           Next
         </Button>
       </Box>
-      <DeleteUserModal
-        open={openDeleteModal}
-        setOpen={setOpenDeleteModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
-      <UpdateUserModal
-        open={openUpdateModal}
-        setOpen={setOpenUpdateModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
-      <AssignRoleModal
-        open={openAssignRoleModal}
-        setOpen={setOpenAssignRoleModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
     </React.Fragment>
   );
 }

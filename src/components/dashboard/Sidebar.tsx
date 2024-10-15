@@ -3,13 +3,10 @@ import * as React from 'react';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
-import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
-import LinearProgress from '@mui/joy/LinearProgress';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton, { listItemButtonClasses } from '@mui/joy/ListItemButton';
@@ -31,6 +28,7 @@ import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '@/libs/common/utils/handleSideBar';
 import { useStore } from '@/providers/ZustandProvider';
 import KeyIcon from '@mui/icons-material/Key';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 function Toggler({
   defaultExpanded = false,
   renderToggle,
@@ -174,6 +172,15 @@ export default function Sidebar({ tab }: { tab?: string }) {
               <KeyIcon />
               <ListItemContent>
                 <Typography level="title-sm">Permission Dashboard</Typography>
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem>
+            <ListItemButton selected={tab == 'role'}>
+              <ManageAccountsIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Role Management</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>

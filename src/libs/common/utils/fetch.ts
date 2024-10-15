@@ -5,8 +5,10 @@ import { SearchUserQueryInterface } from '../interfaces/search_user_query.interf
 import {
   UserUpdateInterface,
   UserUpdatePasswordInterface,
+  UserUpdateRoleInterface,
 } from '../interfaces/update-user.interface';
 import { SearchPermissionQueryInterface } from '../interfaces/search_permission_query.interface';
+import { SearchRoleQueryInterface } from '../interfaces/search_role_query.interface';
 const BASE_URL = BE_API_URL || 'http://localhost:3000';
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
@@ -136,4 +138,40 @@ export function searchPermission(query?: SearchPermissionQueryInterface) {
     return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
   }
   return customAxiosWithCredentials.get(`/users`).then((res) => res.data);
+}
+export function getAllRoles() {
+  return customAxiosWithCredentials
+    .get(`/role?getAll=true&fields=id,role`)
+    .then((res) => res.data);
+}
+export function assignRole(data: UserUpdateRoleInterface) {
+  return customAxiosWithCredentials
+    .patch(`/users/role`, { id: data.id, roleId: data.roleId })
+    .then((res) => res.data);
+}
+export function searchRole(query: SearchRoleQueryInterface) {
+  if (query) {
+    let searchQuery = `/role?`;
+    searchQuery = query.searchTerm
+      ? `${searchQuery}searchTerm=${query.searchTerm}&`
+      : searchQuery;
+    searchQuery = query.page
+      ? `${searchQuery}page=${query.page}&`
+      : searchQuery;
+    searchQuery = query.sort
+      ? `${searchQuery}sort=${query.sort}&`
+      : searchQuery;
+    searchQuery = query.permission_action
+      ? `${searchQuery}permission_action=${query.permission_action}&`
+      : searchQuery;
+    searchQuery = query.permission_object
+      ? `${searchQuery}permission_object=${query.permission_object}&`
+      : searchQuery;
+    searchQuery = query.permission_possession
+      ? `${searchQuery}permission_possession=${query.permission_possession}&`
+      : searchQuery;
+    searchQuery = searchQuery.slice(0, -1);
+    return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
+  }
+  return customAxiosWithCredentials.get(`/role`).then((res) => res.data);
 }
