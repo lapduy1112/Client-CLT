@@ -50,6 +50,7 @@ export default function AssignRoleModal({
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    enabled: !!id && open,
   });
   const fetchRole = useQuery({
     queryKey: ['roles'],
@@ -59,6 +60,7 @@ export default function AssignRoleModal({
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    enabled: !!id && open,
   });
   const mutation = useMutation({
     mutationFn: assignRole,

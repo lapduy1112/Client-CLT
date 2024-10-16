@@ -28,14 +28,14 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { useQuery } from '@tanstack/react-query';
-import { searchUsers } from '@/libs/common/utils/fetch';
+import { searchUsers, getAllRoles } from '@/libs/common/utils/fetch';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import DeleteUserModal from '../modal/DeleteModal';
 import UpdateUserModal from '../modal/UpdateModal';
 import Stack from '@mui/joy/Stack';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import AssignRoleModal from '../modal/AssignRole';
+import AssignRoleModal from '../modal/AssignRoleModal';
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -144,6 +144,15 @@ export default function UserTable() {
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
+  const fetchRole = useQuery({
+    queryKey: ['roles'],
+    queryFn: () => getAllRoles(),
+    retry: false,
+    retryOnMount: false,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
   function handleSearchKeys(searchQueries: searchInterface[]) {
     const params = new URLSearchParams(searchParams);
     for (const searchQuery of searchQueries) {
@@ -205,9 +214,12 @@ export default function UserTable() {
           }}
         >
           <Option value="">All</Option>
-          <Option value="user">User</Option>
-          <Option value="admin">Admin</Option>
-          <Option value="sysadmin">SysAdmin</Option>
+          {fetchRole.isSuccess &&
+            fetchRole.data.roles.map((r: { id: string; role: string }) => (
+              <Option key={r.id} value={r.id}>
+                {r.role}
+              </Option>
+            ))}
         </Select>
       </FormControl>
       <FormControl size="sm">
@@ -342,32 +354,6 @@ export default function UserTable() {
                     padding: '12px 6px',
                   }}
                 ></th>
-                {/* <th style={{ width: 180, padding: '12px 6px' }}>
-                  <Link
-                    underline="none"
-                    color="primary"
-                    component="button"
-                    onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
-                    endDecorator={<ArrowDropDownIcon />}
-                    sx={[
-                      {
-                        fontWeight: 'lg',
-                        '& svg': {
-                          transition: '0.2s',
-                          transform:
-                            order === 'desc'
-                              ? 'rotate(0deg)'
-                              : 'rotate(180deg)',
-                        },
-                      },
-                      order === 'desc'
-                        ? { '& svg': { transform: 'rotate(0deg)' } }
-                        : { '& svg': { transform: 'rotate(180deg)' } },
-                    ]}
-                  >
-                    Id
-                  </Link>
-                </th> */}
                 <th
                   style={{
                     width: 120,

@@ -9,7 +9,10 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/joy';
 import RoleTable from '@/components/role/RoleTable';
+import CreateRoleModal from '@/components/modal/CreateRoleModal';
+import { useState } from 'react';
 export default function RoleManagement() {
+  const [open, setOpen] = useState(false);
   return (
     <Box
       component="main"
@@ -64,11 +67,17 @@ export default function RoleManagement() {
         <Typography level="h2" component="h1">
           Role Management
         </Typography>
-        <Button color="primary" startDecorator={<AddIcon />} size="sm">
+        <Button
+          color="primary"
+          startDecorator={<AddIcon />}
+          size="sm"
+          onClick={() => setOpen(true)}
+        >
           Create Role
         </Button>
       </Box>
       <RoleTable />
+      <CreateRoleModal open={open} setOpen={setOpen} />
     </Box>
   );
 }

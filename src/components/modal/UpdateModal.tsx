@@ -47,6 +47,7 @@ export default function UpdateUserModal({
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    enabled: !!id && open,
   });
   const mutation = useMutation({
     mutationFn: updateUser,
