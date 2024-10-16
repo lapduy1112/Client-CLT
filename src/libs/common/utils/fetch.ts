@@ -6,9 +6,13 @@ import {
   UserUpdateInterface,
   UserUpdatePasswordInterface,
   UserUpdateRoleInterface,
-} from '../interfaces/update-user.interface';
+} from '../interfaces/user.interface';
 import { SearchPermissionQueryInterface } from '../interfaces/search_permission_query.interface';
 import { SearchRoleQueryInterface } from '../interfaces/search_role_query.interface';
+import {
+  createRoleInterface,
+  updateRoleInterface,
+} from '../interfaces/role.interface';
 const BASE_URL = BE_API_URL || 'http://localhost:3000';
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
@@ -174,4 +178,15 @@ export function searchRole(query: SearchRoleQueryInterface) {
     return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
   }
   return customAxiosWithCredentials.get(`/role`).then((res) => res.data);
+}
+export function createRole(data: createRoleInterface) {
+  return customAxiosWithCredentials.post(`/role`, data).then((res) => res.data);
+}
+export function updateRole(data: updateRoleInterface) {
+  return customAxiosWithCredentials
+    .patch(`/role`, data)
+    .then((res) => res.data);
+}
+export function getOneRole(id: string) {
+  return customAxiosWithCredentials.get(`/role/${id}`).then((res) => res.data);
 }

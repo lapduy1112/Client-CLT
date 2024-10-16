@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
@@ -27,18 +26,17 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import UpdateRoleModal from '../modal/UpdateRoleModal';
 interface searchInterface {
   key: string;
   term: string;
 }
 function Row({
   row,
-  setOpenDelete,
   setOpenUpdate,
   setId,
 }: {
   row: any;
-  setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
@@ -80,7 +78,6 @@ function Row({
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             <RowMenu
               dataId={(row.id as string) || ''}
-              setOpenDelete={setOpenDelete}
               setOpenUpdate={setOpenUpdate}
               setId={setId}
             />
@@ -146,12 +143,10 @@ function Row({
 }
 function RowMenu({
   dataId,
-  setOpenDelete,
   setOpenUpdate,
   setId,
 }: {
   dataId: string;
-  setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
@@ -169,23 +164,13 @@ function RowMenu({
             setId(dataId), setOpenUpdate(true);
           }}
         >
-          Add Permission
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          color="danger"
-          onClick={() => {
-            setId(dataId), setOpenDelete(true);
-          }}
-        >
-          Delete Permission
+          Edit Role
         </MenuItem>
       </Menu>
     </Dropdown>
   );
 }
 export default function RoleTable() {
-  const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
   const [selectedId, setselectedId] = React.useState('');
   const searchParams = useSearchParams();
@@ -199,7 +184,7 @@ export default function RoleTable() {
   const page = searchParams.get('page');
   const [curPage, setCurPage] = React.useState(page || '1');
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ['users', { sort, action, object, searchTerm, page, possession }],
+    queryKey: ['roles', { sort, action, object, searchTerm, page, possession }],
     queryFn: () =>
       searchRole({
         searchTerm: searchTerm || undefined,
@@ -233,7 +218,6 @@ export default function RoleTable() {
     } else {
       params.delete(key);
     }
-    console.log('params', params.toString());
     replace(`${pathname}?${params.toString()}`);
   }
   const renderFilters = () => (
@@ -245,6 +229,7 @@ export default function RoleTable() {
           placeholder="All"
           defaultValue={action || ''}
           id="action"
+          disabled={isPending}
           onChange={(event, newValue) => {
             handleSearchKeys([
               { key: 'action', term: newValue || '' },
@@ -264,6 +249,7 @@ export default function RoleTable() {
       <FormControl size="sm">
         <FormLabel>Object</FormLabel>
         <Select
+          disabled={isPending}
           size="sm"
           placeholder="All"
           defaultValue={object || ''}
@@ -288,6 +274,7 @@ export default function RoleTable() {
       <FormControl size="sm">
         <FormLabel>Possession</FormLabel>
         <Select
+          disabled={isPending}
           size="sm"
           placeholder="All"
           defaultValue={object || ''}
@@ -533,7 +520,6 @@ export default function RoleTable() {
                   key={row.id}
                   row={row}
                   setOpenUpdate={setOpenUpdateModal}
-                  setOpenDelete={setOpenDeleteModal}
                   setId={setselectedId}
                 />
               ))}
@@ -558,7 +544,7 @@ export default function RoleTable() {
           variant="outlined"
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
-          disabled={Number(page) === 1 || !page}
+          disabled={Number(page) === 1 || !page || isPending}
           onClick={() => {
             handleSearch('page', String(Number(page) - 1));
             setCurPage(String(Number(page) - 1));
@@ -566,18 +552,6 @@ export default function RoleTable() {
         >
           Previous
         </Button>
-
-        {/* <Box sx={{ flex: 1 }} />
-        {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
-          <IconButton
-            key={page}
-            size="sm"
-            variant={Number(page) ? 'outlined' : 'plain'}
-            color="neutral"
-          >
-            {page}
-          </IconButton>
-        ))} */}
         <Box
           sx={{
             flex: 1,
@@ -607,7 +581,7 @@ export default function RoleTable() {
               onChange={(e) => {
                 setCurPage(e.target.value || '');
               }}
-              disabled={!data}
+              disabled={!data || isPending}
               endDecorator={
                 <Button variant="soft" color="neutral" disabled size="sm">
                   /
@@ -627,7 +601,8 @@ export default function RoleTable() {
           disabled={
             !data ||
             data.totalCount < data.pageSize ||
-            data.pageNumber * data.pageSize >= data.totalCount
+            data.pageNumber * data.pageSize >= data.totalCount ||
+            isPending
           }
           onClick={() => {
             handleSearch('page', String(Number(data.pageNumber) + 1));
@@ -637,6 +612,12 @@ export default function RoleTable() {
           Next
         </Button>
       </Box>
+      <UpdateRoleModal
+        open={openUpdateModal}
+        setOpen={setOpenUpdateModal}
+        id={selectedId}
+        setSelectedId={setselectedId}
+      />
     </React.Fragment>
   );
 }
