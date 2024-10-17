@@ -90,6 +90,7 @@ export default function MyProfile(email: string) {
   const handleVerifyClick = async () => {
     try {
       await resendVerificationEmail();
+      toast.success("Email confirmation sent successfully!");
       console.log("Email confirmation sent successfully!");
     } catch (error) {
       console.error("Failed to send confirmation email:", error);

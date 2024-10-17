@@ -1,25 +1,25 @@
-import axios from 'axios';
-import { BE_API_URL } from '@/libs/common/constants/api';
-import { EErrorMessage } from '../constants/error';
-import { SearchUserQueryInterface } from '../interfaces/search_user_query.interface';
+import axios from "axios";
+import { BE_API_URL } from "@/libs/common/constants/api";
+import { EErrorMessage } from "../constants/error";
+import { SearchUserQueryInterface } from "../interfaces/search_user_query.interface";
 import {
   UserUpdateInterface,
   UserUpdatePasswordInterface,
   UserUpdateRoleInterface,
-} from '../interfaces/user.interface';
-import { SearchPermissionQueryInterface } from '../interfaces/search_permission_query.interface';
-import { SearchRoleQueryInterface } from '../interfaces/search_role_query.interface';
+} from "../interfaces/user.interface";
+import { SearchPermissionQueryInterface } from "../interfaces/search_permission_query.interface";
+import { SearchRoleQueryInterface } from "../interfaces/search_role_query.interface";
 import {
   createRoleInterface,
   updateRoleInterface,
-} from '../interfaces/role.interface';
-const BASE_URL = BE_API_URL || 'http://localhost:3000';
+} from "../interfaces/role.interface";
+const BASE_URL = BE_API_URL || "http://localhost:3000";
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
   headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
   },
 });
 
@@ -31,8 +31,8 @@ export const generateRefreshToken = async () => {
       {
         withCredentials: true,
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
       }
     );
@@ -46,7 +46,7 @@ customAxiosWithCredentials.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    console.log('Error', error.response);
+    console.log("Error", error.response);
 
     if (
       error.response.status === 401 &&
@@ -61,14 +61,14 @@ customAxiosWithCredentials.interceptors.response.use(
           {
             withCredentials: true,
             headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
             },
           }
         );
         return customAxiosWithCredentials(originalRequest);
       } catch (refreshError) {
-        console.log('Refresh error', refreshError);
+        console.log("Refresh error", refreshError);
       }
     }
     return Promise.reject(error);
@@ -147,10 +147,10 @@ export function searchPermission(query?: SearchPermissionQueryInterface) {
 
 export const resendVerificationEmail = async () => {
   try {
-    const response = await customAxiosWithCredentials.get(`/auth/verify`);
+    const response = await customAxiosWithCredentials.post(`/auth/verify`);
     return response.data;
   } catch (error) {
-    console.error('Error sending verification email:', error);
+    console.error("Error sending verification email:", error);
     throw error;
   }
 };

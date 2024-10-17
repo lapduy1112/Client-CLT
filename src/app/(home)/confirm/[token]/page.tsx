@@ -1,10 +1,35 @@
+"use client";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import { useRouter, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ConfirmPage = () => {
+  const router = useRouter(); // Lấy router
+  const { token } = useParams(); // Lấy token từ query params
+  console.log(token);
+
+  useEffect(() => {
+    const confirmEmail = async () => {
+      if (token) {
+        try {
+          // Gọi API xác nhận email với token
+          await axios.get(
+            `http://localhost:3000/api/v1/auth-api/auth/verify/${token}`
+          );
+          console.log("oke nha");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+
+    confirmEmail();
+  }, [token]);
   return (
     <div
       id="root"
@@ -18,11 +43,13 @@ const ConfirmPage = () => {
             />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Thank you!</h1>
-        <p className="text-gray-600 mb-8">
-          We've sent your free report to your inbox so it's easy to access. You
-          can find more information on our website and social pages.
-        </p>
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">{status}</h1>
+        <div className="text-gray-600 mb-8">
+          <p className="text-gray-600 mb-8">
+            Thank you for confirming your email. You can now log in to your
+            account.
+          </p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
