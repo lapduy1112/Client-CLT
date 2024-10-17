@@ -102,7 +102,7 @@ export default function ResetForm() {
   });
   return (
     <>
-      {isPending ? (
+      {isPending || isError ? (
         <LoadingSkeleton />
       ) : (
         <div className="max-w-md w-full p-6">
