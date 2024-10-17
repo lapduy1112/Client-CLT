@@ -21,18 +21,29 @@ const customAxiosWithCredentials = axios.create({
 export function searchPorts(query?: SearchPortQueryInterface) {
   if (query) {
     let searchQuery = `/port?`;
-    searchQuery = query.search
-      ? `${searchQuery}search=${query.search}&`
+
+    if (query.search) {
+      searchQuery += `search=${query.search}&`;
+    }
+
+    if (query.page) {
+      searchQuery += `page=${query.page}&`;
+    }
+
+    if (query.sortBy) {
+      searchQuery += `sortBy=${query.sortBy}&`;
+    }
+
+    if (query.sortOrder) {
+      searchQuery += `sortOrder=${query.sortOrder}&`;
+    }
+    searchQuery = searchQuery.endsWith("&")
+      ? searchQuery.slice(0, -1)
       : searchQuery;
-    searchQuery = query.page
-      ? `${searchQuery}page=${query.page}&`
-      : searchQuery;
-    searchQuery = query.sort
-      ? `${searchQuery}sort=${query.sort}&`
-      : searchQuery;
-    searchQuery = searchQuery.slice(0, -1);
+
     return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
   }
+
   return customAxiosWithCredentials.get(`/port`).then((res) => res.data);
 }
 export function updatePort(data: PortUpdateInterface, id: string) {
@@ -49,18 +60,32 @@ export function getPortById(id: string) {
 export function searchRoutes(query?: SearchRouteQueryInterface) {
   if (query) {
     let searchQuery = `/routes?`;
-    searchQuery = query.search
-      ? `${searchQuery}search=${query.search}&`
+
+    if (query.search) {
+      searchQuery += `search=${query.search}&`;
+    }
+
+    if (query.page) {
+      searchQuery += `page=${query.page}&`;
+    }
+
+    if (query.sortBy) {
+      searchQuery += `sortBy=${query.sortBy}&`;
+    }
+
+    if (query.sortOrder) {
+      searchQuery += `sortOrder=${query.sortOrder}&`;
+    }
+    if (query.status) {
+      searchQuery += `status=${query.status}&`;
+    }
+    searchQuery = searchQuery.endsWith("&")
+      ? searchQuery.slice(0, -1)
       : searchQuery;
-    searchQuery = query.page
-      ? `${searchQuery}page=${query.page}&`
-      : searchQuery;
-    searchQuery = query.sort
-      ? `${searchQuery}sort=${query.sort}&`
-      : searchQuery;
-    searchQuery = searchQuery.slice(0, -1);
+
     return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
   }
+
   return customAxiosWithCredentials.get(`/routes`).then((res) => res.data);
 }
 export function deleteRoute(id: string) {

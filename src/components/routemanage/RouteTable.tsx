@@ -26,9 +26,9 @@ import Dropdown from "@mui/joy/Dropdown";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import BlockIcon from "@mui/icons-material/Block";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
+import Stack from "@mui/joy/Stack";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
@@ -125,22 +125,23 @@ export default function RouteTable() {
   const pathname = usePathname();
   const { replace } = useRouter();
   const sort = searchParams.get("sort");
-  // const role = searchParams.get("role");
+  const status = searchParams.get("status");
   const search = searchParams.get("search");
   const page = searchParams.get("page");
   const [curPage, setCurPage] = React.useState(page || "1");
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ["route", { sort, search, page }],
+    queryKey: ["route", { sort, search, status, page }],
     queryFn: () =>
       searchRoutes({
         search: search || undefined,
-        sort: sort || undefined,
+        sortBy: sort?.split(":")[0],
+        sortOrder: sort?.split(":")[1],
+        status: status || undefined,
         page: Number(page) || undefined,
       }),
     retry: false,
-    retryOnMount: false,
     staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
+    // cacheTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
   function handleSearchKeys(searchQueries: searchInterface[]) {
@@ -166,24 +167,23 @@ export default function RouteTable() {
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
-        <FormLabel>Sort</FormLabel>
+        <FormLabel>Status</FormLabel>
         <Select
           size="sm"
-          slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-          defaultValue={sort || "createdAt"}
-          id="sort"
+          placeholder="All"
+          defaultValue={status || ""}
+          id="status"
           onChange={(event, newValue) => {
             handleSearchKeys([
-              { key: "sort", term: newValue || "" },
+              { key: "status", term: newValue || "" },
               { key: "page", term: "1" },
             ]);
             setCurPage("1");
           }}>
-          <Option value="createdAt">Created date</Option>
-          <Option value="updatedAt">Updated date</Option>
-          <Option value="username">StartPort</Option>
-          <Option value="email">EndPort</Option>
-          {/* <Option value="role.role">Status</Option> */}
+          <Option value="">All</Option>
+          <Option value="available">Available</Option>
+          <Option value="transit">Transit</Option>
+          <Option value="completed">Completed</Option>
         </Select>
       </FormControl>
     </React.Fragment>
@@ -294,50 +294,226 @@ export default function RouteTable() {
                   }}>
                   #
                 </th>
-                <th style={{ width: 80, padding: "12px 6px" }}>
-                  <Link
-                    underline="none"
-                    color="primary"
-                    component="button"
-                    onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-                    endDecorator={<ArrowDropDownIcon />}
-                    sx={[
-                      {
-                        fontWeight: "lg",
-                        "& svg": {
-                          transition: "0.2s",
-                          transform:
-                            order === "desc"
-                              ? "rotate(0deg)"
-                              : "rotate(180deg)",
-                        },
-                      },
-                      order === "desc"
-                        ? { "& svg": { transform: "rotate(0deg)" } }
-                        : { "& svg": { transform: "rotate(180deg)" } },
-                    ]}>
-                    Id
-                  </Link>
-                </th>
+                <th style={{ width: 80, padding: "12px 6px" }}>ID</th>
 
-                <th style={{ width: 120, padding: "12px 6px" }}>StartPort</th>
-                <th style={{ width: 120, padding: "12px 6px" }}>EndPort</th>
-                <th style={{ width: 80, padding: "12px 6px" }}>Status</th>
-                <th style={{ width: 140, padding: "12px 6px" }}>CreatedAt</th>
-                <th style={{ width: 140, padding: "12px 6px" }}>Travel Time</th>
                 <th style={{ width: 140, padding: "12px 6px" }}>
-                  Departure Date
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    StartPort
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "startPort:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "startPort:ASC") {
+                            handleSearch("sort", "startPort:DESC");
+                          } else {
+                            handleSearch("sort", "startPort:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={
+                          sort === "startPort:DESC" ? "primary" : "neutral"
+                        }
+                        onClick={() => {
+                          if (sort === "startPort:DESC") {
+                            handleSearch("sort", "startPort:ASC");
+                          } else {
+                            handleSearch("sort", "startPort:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
                 </th>
                 <th style={{ width: 140, padding: "12px 6px" }}>
-                  Arrival Date
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    EndPort
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "endPort:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "endPort:ASC") {
+                            handleSearch("sort", "endPort:DESC");
+                          } else {
+                            handleSearch("sort", "endPort:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort === "endPort:DESC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "endPort:DESC") {
+                            handleSearch("sort", "endPort:ASC");
+                          } else {
+                            handleSearch("sort", "endPort:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Status
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "status:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "status:ASC") {
+                            handleSearch("sort", "status:DESC");
+                          } else {
+                            handleSearch("sort", "status:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort === "status:DESC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "status:DESC") {
+                            handleSearch("sort", "status:ASC");
+                          } else {
+                            handleSearch("sort", "status:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    CreatedAt
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "createdAt:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "createdAt:ASC") {
+                            handleSearch("sort", "createdAt:DESC");
+                          } else {
+                            handleSearch("sort", "createdAt:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={
+                          sort === "createdAt:DESC" ? "primary" : "neutral"
+                        }
+                        onClick={() => {
+                          if (sort === "createdAt:DESC") {
+                            handleSearch("sort", "createdAt:ASC");
+                          } else {
+                            handleSearch("sort", "createdAt:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Departure Date
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "departureDate:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "departureDate:ASC") {
+                            handleSearch("sort", "departureDate:DESC");
+                          } else {
+                            handleSearch("sort", "departureDate:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={
+                          sort === "departureDate:DESC" ? "primary" : "neutral"
+                        }
+                        onClick={() => {
+                          if (sort === "departureDate:DESC") {
+                            handleSearch("sort", "departureDate:ASC");
+                          } else {
+                            handleSearch("sort", "departureDate:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Arrival Date
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "arrivalDate:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "arrivalDate:ASC") {
+                            handleSearch("sort", "arrivalDate:DESC");
+                          } else {
+                            handleSearch("sort", "arrivalDate:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={
+                          sort === "arrivalDate:DESC" ? "primary" : "neutral"
+                        }
+                        onClick={() => {
+                          if (sort === "arrivalDate:DESC") {
+                            handleSearch("sort", "arrivalDate:ASC");
+                          } else {
+                            handleSearch("sort", "arrivalDate:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
                 </th>
                 <th style={{ width: 140, padding: "12px 6px" }}> </th>
               </tr>
             </thead>
             <tbody>
-              {[...data.data]
-                .sort(getComparator(order, "id"))
-                .map((row, index) => (
+              {Array.isArray(data.data) && data.data.length > 0 ? (
+                [...data.data].map((row, index) => (
                   <tr key={row.id}>
                     <td style={{ textAlign: "center", width: 120 }}>
                       <Typography level="body-xs">{index + 1}</Typography>
@@ -378,11 +554,6 @@ export default function RouteTable() {
                     </td>
                     <td>
                       <Typography level="body-xs">
-                        {row.travelTime + 1} days
-                      </Typography>
-                    </td>
-                    <td>
-                      <Typography level="body-xs">
                         {new Date(row.departureDate)
                           .toISOString()
                           .substring(0, 10)}
@@ -408,7 +579,14 @@ export default function RouteTable() {
                       </Box>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8} style={{ textAlign: "center" }}>
+                    <Typography level="body-sm">No ports found</Typography>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </Table>
         )}

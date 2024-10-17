@@ -67,12 +67,11 @@ export default function UpdateRouteStatusModal({
             </Button>
             <Button
               variant="solid"
-              color="danger"
+              color="success"
               onClick={() => {
                 mutation.mutate(id); // Gửi id của route
                 setSelectedId("");
-              }}
-              startDecorator={<DeleteForever />}>
+              }}>
               Update
             </Button>
           </DialogActions>
