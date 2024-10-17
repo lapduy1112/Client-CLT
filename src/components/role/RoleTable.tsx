@@ -1,59 +1,197 @@
 import * as React from 'react';
-import { ColorPaletteProp } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import ModalClose from '@mui/joy/ModalClose';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import Menu from '@mui/joy/Menu';
+import MenuButton from '@mui/joy/MenuButton';
+import MenuItem from '@mui/joy/MenuItem';
+import Dropdown from '@mui/joy/Dropdown';
 import SearchIcon from '@mui/icons-material/Search';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { useQuery } from '@tanstack/react-query';
-import { searchUsers, searchPermission } from '@/libs/common/utils/fetch';
+import { searchRole } from '@/libs/common/utils/fetch';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import Stack from '@mui/joy/Stack';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { object } from 'yup';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import UpdateRoleModal from '../modal/UpdateRoleModal';
 interface searchInterface {
   key: string;
   term: string;
 }
-export default function PermissionTable() {
+function Row({
+  row,
+  setOpenUpdate,
+  setId,
+}: {
+  row: any;
+  setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  setId: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <tr key={row.id}>
+        <td style={{ textAlign: 'center', width: 120 }}>
+          {' '}
+          <IconButton
+            aria-label="expand row"
+            variant="plain"
+            color="neutral"
+            size="sm"
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </td>
+        <td>
+          <Typography level="body-xs">{row.id}</Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">{row.role}</Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">
+            {row.createdAt ? new Date(row.createdAt).toUTCString() : ''}
+          </Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">
+            {row.updatedAt ? new Date(row.updatedAt).toUTCString() : ''}
+          </Typography>
+        </td>
+        <td>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+            <RowMenu
+              dataId={(row.id as string) || ''}
+              setOpenUpdate={setOpenUpdate}
+              setId={setId}
+            />
+          </Box>
+        </td>
+      </tr>
+      <tr>
+        <td style={{ height: 0, padding: 0 }} colSpan={6}>
+          {open && (
+            <Sheet
+              variant="soft"
+              sx={{
+                p: 1,
+                pl: 6,
+                boxShadow: 'inset 0 3px 6px 0 rgba(0 0 0 / 0.08)',
+              }}
+            >
+              <Typography level="body-lg" component="div">
+                Permission
+              </Typography>
+              <Table
+                borderAxis="bothBetween"
+                size="sm"
+                aria-label="purchases"
+                sx={{
+                  '& > thead > tr > th:nth-child(n + 3), & > tbody > tr > td:nth-child(n + 3)':
+                    { textAlign: 'right' },
+                  '--TableCell-paddingX': '0.5rem',
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Action</th>
+                    <th>Object</th>
+                    <th>Possession</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {row.permission.map(
+                    (permissionRow: {
+                      permission: string;
+                      action: string;
+                      object: string;
+                      possession: string;
+                    }) => (
+                      <tr key={permissionRow.permission}>
+                        <th scope="row">{permissionRow.permission}</th>
+                        <th scope="row">{permissionRow.action}</th>
+                        <td>{permissionRow.object}</td>
+                        <td>{permissionRow.possession}</td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </Table>
+            </Sheet>
+          )}
+        </td>
+      </tr>
+    </>
+  );
+}
+function RowMenu({
+  dataId,
+  setOpenUpdate,
+  setId,
+}: {
+  dataId: string;
+  setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  setId: React.Dispatch<React.SetStateAction<string>>;
+}) {
+  return (
+    <Dropdown>
+      <MenuButton
+        slots={{ root: IconButton }}
+        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+      >
+        <MoreHorizRoundedIcon />
+      </MenuButton>
+      <Menu size="sm" sx={{ minWidth: 140 }}>
+        <MenuItem
+          onClick={() => {
+            setId(dataId), setOpenUpdate(true);
+          }}
+        >
+          Edit Role
+        </MenuItem>
+      </Menu>
+    </Dropdown>
+  );
+}
+export default function RoleTable() {
+  const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
+  const [selectedId, setselectedId] = React.useState('');
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const sort = searchParams.get('sort');
-  const possession = searchParams.get('possession');
-  const object = searchParams.get('object');
   const action = searchParams.get('action');
+  const object = searchParams.get('object');
+  const possession = searchParams.get('possession');
   const searchTerm = searchParams.get('searchTerm');
   const page = searchParams.get('page');
   const [curPage, setCurPage] = React.useState(page || '1');
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ['permissions', { sort, object, action, searchTerm, page, possession }],
+    queryKey: ['roles', { sort, action, object, searchTerm, page, possession }],
     queryFn: () =>
-      searchPermission({
+      searchRole({
         searchTerm: searchTerm || undefined,
         sort: sort || undefined,
-        object: object || undefined,
-        action: action || undefined,
-        possession: possession || undefined,
+        permission_action: action || undefined,
+        permission_object: object || undefined,
+        permission_possession: possession || undefined,
         page: Number(page) || undefined,
       }),
     retry: false,
@@ -80,7 +218,6 @@ export default function PermissionTable() {
     } else {
       params.delete(key);
     }
-    console.log('params', params.toString());
     replace(`${pathname}?${params.toString()}`);
   }
   const renderFilters = () => (
@@ -92,6 +229,7 @@ export default function PermissionTable() {
           placeholder="All"
           defaultValue={action || ''}
           id="action"
+          disabled={isPending}
           onChange={(event, newValue) => {
             handleSearchKeys([
               { key: 'action', term: newValue || '' },
@@ -101,15 +239,17 @@ export default function PermissionTable() {
           }}
         >
           <Option value="">All</Option>
-          <Option value="read">Read</Option>
           <Option value="update">Update</Option>
-          <Option value="delete">Delete</Option>
           <Option value="create">Create</Option>
+          <Option value="search">search</Option>
+          <Option value="delete">delete</Option>
+          <Option value="read">read</Option>
         </Select>
       </FormControl>
       <FormControl size="sm">
         <FormLabel>Object</FormLabel>
         <Select
+          disabled={isPending}
           size="sm"
           placeholder="All"
           defaultValue={object || ''}
@@ -124,18 +264,21 @@ export default function PermissionTable() {
         >
           <Option value="">All</Option>
           <Option value="user">User</Option>
-          <Option value="route">Route</Option>
+          <Option value="route">Routes</Option>
           <Option value="role">Role</Option>
           <Option value="permission">Permission</Option>
+          <Option value="user_role">User Role</Option>
+          <Option value="profile">Profile</Option>
         </Select>
       </FormControl>
       <FormControl size="sm">
         <FormLabel>Possession</FormLabel>
         <Select
+          disabled={isPending}
           size="sm"
           placeholder="All"
-          defaultValue={possession || ''}
-          id="possession"
+          defaultValue={object || ''}
+          id="object"
           onChange={(event, newValue) => {
             handleSearchKeys([
               { key: 'possession', term: newValue || '' },
@@ -145,48 +288,14 @@ export default function PermissionTable() {
           }}
         >
           <Option value="">All</Option>
-          <Option value="any">Any</Option>
           <Option value="own">Own</Option>
+          <Option value="any">Any</Option>
         </Select>
       </FormControl>
     </React.Fragment>
   );
   return (
     <React.Fragment>
-      <Sheet
-        className="SearchAndFilters-mobile"
-        sx={{ display: { xs: 'flex', sm: 'none' }, my: 1, gap: 1 }}
-      >
-        <Input
-          size="sm"
-          placeholder="Search"
-          startDecorator={<SearchIcon />}
-          sx={{ flexGrow: 1 }}
-        />
-        <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FilterAltIcon />
-        </IconButton>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Filters
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {renderFilters()}
-              <Button color="primary" onClick={() => setOpen(false)}>
-                Submit
-              </Button>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-      </Sheet>
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
@@ -260,23 +369,25 @@ export default function PermissionTable() {
                     textAlign: 'center',
                     padding: '12px 6px',
                   }}
-                ></th>
+                >
+                  {' '}
+                </th>
                 <th
                   style={{
-                    width: 140,
+                    width: 120,
                     padding: '12px 6px',
                   }}
                 >
                   Id
                 </th>
-                <th style={{ width: 120 }}>
+                <th style={{ width: 160 }}>
                   <Stack
                     direction="row"
                     sx={{
                       alignItems: 'center',
                     }}
                   >
-                    Name
+                    Role
                     <Stack
                       direction="row"
                       spacing={0}
@@ -287,163 +398,25 @@ export default function PermissionTable() {
                     >
                       <IconButton
                         onClick={() => {
-                          if (sort == 'permission:ASC') {
+                          if (sort == 'role:ASC') {
                             handleSearch('sort', '');
                           } else {
-                            handleSearch('sort', 'permission:ASC');
+                            handleSearch('sort', 'role:ASC');
                           }
                         }}
-                        color={sort == 'permission:ASC' ? 'primary' : 'neutral'}
+                        color={sort == 'role:ASC' ? 'primary' : 'neutral'}
                       >
                         <ArrowUpwardIcon style={{ fontSize: '18px' }} />
                       </IconButton>
                       <IconButton
                         onClick={() => {
-                          if (sort == 'permission:DESC') {
+                          if (sort == 'role:DESC') {
                             handleSearch('sort', '');
                           } else {
-                            handleSearch('sort', 'permission:DESC');
+                            handleSearch('sort', 'role:DESC');
                           }
                         }}
-                        color={
-                          sort == 'permission:DESC' ? 'primary' : 'neutral'
-                        }
-                      >
-                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 120 }}>
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: 'center',
-                      margin: 'auto',
-                    }}
-                  >
-                    Action
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <IconButton
-                        color={sort == 'action:ASC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'action:ASC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'action:ASC');
-                          }
-                        }}
-                      >
-                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                      <IconButton
-                        color={sort == 'action:DESC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'action:DESC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'action:DESC');
-                          }
-                        }}
-                      >
-                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 120 }}>
-                  {' '}
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: 'center',
-                    }}
-                  >
-                    Object
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginLeft: '8px',
-                      }}
-                    >
-                      <IconButton
-                        color={sort == 'object:ASC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'object:ASC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'object:ASC');
-                          }
-                        }}
-                      >
-                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                      <IconButton
-                        color={sort == 'object:DESC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'object:DESC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'object:DESC');
-                          }
-                        }}
-                      >
-                        <ArrowDownwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 120 }}>
-                  {' '}
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: 'center',
-                    }}
-                  >
-                    Possession
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginLeft: '8px',
-                      }}
-                    >
-                      <IconButton
-                        color={sort == 'possession:ASC' ? 'primary' : 'neutral'}
-                        onClick={() => {
-                          if (sort == 'possession:ASC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'possession:ASC');
-                          }
-                        }}
-                      >
-                        <ArrowUpwardIcon style={{ fontSize: '18px' }} />
-                      </IconButton>
-                      <IconButton
-                        color={
-                          sort == 'possession:DESC' ? 'primary' : 'neutral'
-                        }
-                        onClick={() => {
-                          if (sort == 'possession:DESC') {
-                            handleSearch('sort', '');
-                          } else {
-                            handleSearch('sort', 'possession:DESC');
-                          }
-                        }}
+                        color={sort == 'role:DESC' ? 'primary' : 'neutral'}
                       >
                         <ArrowDownwardIcon style={{ fontSize: '18px' }} />
                       </IconButton>
@@ -538,48 +511,17 @@ export default function PermissionTable() {
                     </Stack>
                   </Stack>
                 </th>
-                <th style={{ width: 40 }}> </th>
+                <th style={{ width: 80 }}> </th>
               </tr>
             </thead>
             <tbody>
-              {[...data.permissions].map((row) => (
-                <tr key={row.id}>
-                  <td style={{ textAlign: 'center', width: 120 }}></td>
-                  <td>
-                    <Typography level="body-xs">{row.id}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.permission}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.action}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.object}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.possession}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.createdAt
-                        ? new Date(row.createdAt).toUTCString()
-                        : ''}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.updatedAt
-                        ? new Date(row.updatedAt).toUTCString()
-                        : ''}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Box
-                      sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
-                    ></Box>
-                  </td>
-                </tr>
+              {[...data.roles].map((row) => (
+                <Row
+                  key={row.id}
+                  row={row}
+                  setOpenUpdate={setOpenUpdateModal}
+                  setId={setselectedId}
+                />
               ))}
             </tbody>
           </Table>
@@ -602,7 +544,7 @@ export default function PermissionTable() {
           variant="outlined"
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
-          disabled={Number(page) === 1 || !page}
+          disabled={Number(page) === 1 || !page || isPending}
           onClick={() => {
             handleSearch('page', String(Number(page) - 1));
             setCurPage(String(Number(page) - 1));
@@ -639,7 +581,7 @@ export default function PermissionTable() {
               onChange={(e) => {
                 setCurPage(e.target.value || '');
               }}
-              disabled={!data}
+              disabled={!data || isPending}
               endDecorator={
                 <Button variant="soft" color="neutral" disabled size="sm">
                   /
@@ -659,7 +601,8 @@ export default function PermissionTable() {
           disabled={
             !data ||
             data.totalCount < data.pageSize ||
-            data.pageNumber * data.pageSize >= data.totalCount
+            data.pageNumber * data.pageSize >= data.totalCount ||
+            isPending
           }
           onClick={() => {
             handleSearch('page', String(Number(data.pageNumber) + 1));
@@ -669,6 +612,12 @@ export default function PermissionTable() {
           Next
         </Button>
       </Box>
+      <UpdateRoleModal
+        open={openUpdateModal}
+        setOpen={setOpenUpdateModal}
+        id={selectedId}
+        setSelectedId={setselectedId}
+      />
     </React.Fragment>
   );
 }

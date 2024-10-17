@@ -1,15 +1,18 @@
 'use client';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-
-import PermissionTable from '@/components/permissions/PermissionsTable';
-export default function PermissionManagement() {
+import AddIcon from '@mui/icons-material/Add';
+import { Button } from '@mui/joy';
+import RoleTable from '@/components/role/RoleTable';
+import CreateRoleModal from '@/components/modal/CreateRoleModal';
+import { useState } from 'react';
+export default function RoleManagement() {
+  const [open, setOpen] = useState(false);
   return (
     <Box
       component="main"
@@ -34,7 +37,7 @@ export default function PermissionManagement() {
         <Breadcrumbs
           size="sm"
           aria-label="breadcrumbs"
-          separator={<ChevronRightRoundedIcon fontSize="small" />}
+          separator={<ChevronRightRoundedIcon fontSize="sm" />}
           sx={{ pl: 0 }}
         >
           <Link
@@ -46,7 +49,7 @@ export default function PermissionManagement() {
             <HomeRoundedIcon />
           </Link>
           <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            Permission Dashboard
+            Role Management
           </Typography>
         </Breadcrumbs>
       </Box>
@@ -62,10 +65,19 @@ export default function PermissionManagement() {
         }}
       >
         <Typography level="h2" component="h1">
-          Permission Dashboard
+          Role Management
         </Typography>
+        <Button
+          color="primary"
+          startDecorator={<AddIcon />}
+          size="sm"
+          onClick={() => setOpen(true)}
+        >
+          Create Role
+        </Button>
       </Box>
-      <PermissionTable />
+      <RoleTable />
+      <CreateRoleModal open={open} setOpen={setOpen} />
     </Box>
   );
 }

@@ -28,13 +28,14 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { useQuery } from '@tanstack/react-query';
-import { searchUsers } from '@/libs/common/utils/fetch';
+import { searchUsers, getAllRoles } from '@/libs/common/utils/fetch';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import DeleteUserModal from '../modal/DeleteModal';
 import UpdateUserModal from '../modal/UpdateModal';
 import Stack from '@mui/joy/Stack';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import AssignRoleModal from '../modal/AssignRoleModal';
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -66,11 +67,13 @@ function RowMenu({
   dataId,
   setOpenDelete,
   setOpenUpdate,
+  setOpenAssignRole,
   setId,
 }: {
   dataId: string;
   setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenAssignRole: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
@@ -91,6 +94,14 @@ function RowMenu({
         </MenuItem>
         <Divider />
         <MenuItem
+          onClick={() => {
+            setId(dataId), setOpenAssignRole(true);
+          }}
+        >
+          Assign Role to User
+        </MenuItem>
+        <Divider />
+        <MenuItem
           color="danger"
           onClick={() => {
             setId(dataId), setOpenDelete(true);
@@ -103,9 +114,9 @@ function RowMenu({
   );
 }
 export default function UserTable() {
-  const [order, setOrder] = React.useState<Order>('desc');
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
+  const [openAssignRoleModal, setOpenAssignRoleModal] = React.useState(false);
   const [selectedId, setselectedId] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const searchParams = useSearchParams();
@@ -127,6 +138,15 @@ export default function UserTable() {
         isVerified: isVerified || undefined,
         page: Number(page) || undefined,
       }),
+    retry: false,
+    retryOnMount: false,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+  const fetchRole = useQuery({
+    queryKey: ['roles'],
+    queryFn: () => getAllRoles(),
     retry: false,
     retryOnMount: false,
     staleTime: 1000 * 60 * 5,
@@ -194,9 +214,12 @@ export default function UserTable() {
           }}
         >
           <Option value="">All</Option>
-          <Option value="user">User</Option>
-          <Option value="admin">Admin</Option>
-          <Option value="sysadmin">SysAdmin</Option>
+          {fetchRole.isSuccess &&
+            fetchRole.data.roles.map((r: { id: string; role: string }) => (
+              <Option key={r.id} value={r.id}>
+                {r.role}
+              </Option>
+            ))}
         </Select>
       </FormControl>
       <FormControl size="sm">
@@ -331,32 +354,6 @@ export default function UserTable() {
                     padding: '12px 6px',
                   }}
                 ></th>
-                {/* <th style={{ width: 180, padding: '12px 6px' }}>
-                  <Link
-                    underline="none"
-                    color="primary"
-                    component="button"
-                    onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
-                    endDecorator={<ArrowDropDownIcon />}
-                    sx={[
-                      {
-                        fontWeight: 'lg',
-                        '& svg': {
-                          transition: '0.2s',
-                          transform:
-                            order === 'desc'
-                              ? 'rotate(0deg)'
-                              : 'rotate(180deg)',
-                        },
-                      },
-                      order === 'desc'
-                        ? { '& svg': { transform: 'rotate(0deg)' } }
-                        : { '& svg': { transform: 'rotate(180deg)' } },
-                    ]}
-                  >
-                    Id
-                  </Link>
-                </th> */}
                 <th
                   style={{
                     width: 120,
@@ -690,6 +687,7 @@ export default function UserTable() {
                         dataId={(row.id as string) || ''}
                         setOpenDelete={setOpenDeleteModal}
                         setOpenUpdate={setOpenUpdateModal}
+                        setOpenAssignRole={setOpenAssignRoleModal}
                         setId={setselectedId}
                       />
                     </Box>
@@ -805,6 +803,12 @@ export default function UserTable() {
       <UpdateUserModal
         open={openUpdateModal}
         setOpen={setOpenUpdateModal}
+        id={selectedId}
+        setSelectedId={setselectedId}
+      />
+      <AssignRoleModal
+        open={openAssignRoleModal}
+        setOpen={setOpenAssignRoleModal}
         id={selectedId}
         setSelectedId={setselectedId}
       />
