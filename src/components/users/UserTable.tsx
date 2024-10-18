@@ -216,7 +216,7 @@ export default function UserTable() {
           <Option value="">All</Option>
           {fetchRole.isSuccess &&
             fetchRole.data.roles.map((r: { id: string; role: string }) => (
-              <Option key={r.id} value={r.id}>
+              <Option key={r.id} value={r.role}>
                 {r.role}
               </Option>
             ))}
@@ -696,6 +696,25 @@ export default function UserTable() {
               ))}
             </tbody>
           </Table>
+        )}
+        {isError && (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: 200,
+            }}
+          >
+            <Typography
+              level="body-lg"
+              color="danger"
+              sx={{ textAlign: 'center' }}
+            >
+              (Ｔ▽Ｔ) {error?.message || 'Something went wrong'}
+            </Typography>
+          </Stack>
         )}
       </Sheet>
       <Box

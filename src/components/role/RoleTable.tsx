@@ -526,6 +526,25 @@ export default function RoleTable() {
             </tbody>
           </Table>
         )}
+        {isError && (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: 200,
+            }}
+          >
+            <Typography
+              level="body-lg"
+              color="danger"
+              sx={{ textAlign: 'center' }}
+            >
+              (Ｔ▽Ｔ) {error?.message || 'Something went wrong'}
+            </Typography>
+          </Stack>
+        )}
       </Sheet>
       <Box
         className="Pagination-laptopUp"

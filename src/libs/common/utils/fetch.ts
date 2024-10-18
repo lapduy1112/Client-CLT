@@ -160,6 +160,7 @@ export function getAllRoles() {
     .then((res) => res.data);
 }
 export function assignRole(data: UserUpdateRoleInterface) {
+  console.log('Data', data);
   return customAxiosWithCredentials
     .patch(`/users/role`, { id: data.id, roleId: data.roleId })
     .then((res) => res.data);

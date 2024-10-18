@@ -46,7 +46,10 @@ export default function PermissionTable() {
   const page = searchParams.get('page');
   const [curPage, setCurPage] = React.useState(page || '1');
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ['permissions', { sort, object, action, searchTerm, page, possession }],
+    queryKey: [
+      'permissions',
+      { sort, object, action, searchTerm, page, possession },
+    ],
     queryFn: () =>
       searchPermission({
         searchTerm: searchTerm || undefined,
@@ -583,6 +586,25 @@ export default function PermissionTable() {
               ))}
             </tbody>
           </Table>
+        )}
+        {isError && (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: 200,
+            }}
+          >
+            <Typography
+              level="body-lg"
+              color="danger"
+              sx={{ textAlign: 'center' }}
+            >
+              (Ｔ▽Ｔ) {error?.message || 'Something went wrong'}
+            </Typography>
+          </Stack>
         )}
       </Sheet>
       <Box
