@@ -137,18 +137,6 @@ export const HomeSlider = () => {
                   Home
                 </Button>
               </Link>
-              <Link href="/services" passHref>
-                <Button
-                  className="text-black mx-2 font-semibold"
-                  sx={{
-                    marginLeft: "0.5rem",
-                    marginRight: "0.5rem",
-                    fontWeight: 600,
-                    color: "#000000",
-                  }}>
-                  Services
-                </Button>
-              </Link>
               <Link href="/route" passHref>
                 <Button
                   className="text-black mx-2 font-semibold"

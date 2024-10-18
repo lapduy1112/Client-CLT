@@ -446,7 +446,9 @@ export default function RouteTable() {
                       spacing={0}
                       sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
-                        color={sort === "departureDate:ASC" ? "primary" : "neutral"}
+                        color={
+                          sort === "departureDate:ASC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
                           if (sort === "departureDate:ASC") {
                             handleSearch("sort", "departureDate:DESC");
@@ -476,13 +478,15 @@ export default function RouteTable() {
                   <Stack
                     direction="row"
                     sx={{ alignItems: "center", margin: "auto" }}>
-                    Arrival Date
+                    ArrivalDate
                     <Stack
                       direction="row"
                       spacing={0}
                       sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
-                        color={sort === "arrivalDate:ASC" ? "primary" : "neutral"}
+                        color={
+                          sort === "arrivalDate:ASC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
                           if (sort === "arrivalDate:ASC") {
                             handleSearch("sort", "arrivalDate:DESC");

@@ -6,7 +6,6 @@ import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
 import Divider from "@mui/joy/Divider";
 import IconButton from "@mui/joy/IconButton";
-import Input from "@mui/joy/Input";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
@@ -33,7 +32,14 @@ import { logOut } from "@/libs/common/utils/logOut";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@/libs/common/utils/error";
+
 import axios, { AxiosError } from "axios";
+// import { Can } from "@/libs/common/constants/Can";
+// import {
+//   useAbilities,
+//   useSetAbilities,
+// } from "@/providers/ZustandContextProvider";
+import { useEffect } from "react";
 function Toggler({
   defaultExpanded = false,
   renderToggle,
@@ -69,6 +75,7 @@ function Toggler({
 
 export default function Sidebar({ tab }: { tab?: string }) {
   const user = useStore((state) => state.user);
+  const role = user?.role;
   const router = useRouter();
   const deleteUser = useStore((state) => state.deleteUser);
   const mutation = useMutation({
@@ -86,7 +93,14 @@ export default function Sidebar({ tab }: { tab?: string }) {
       }
     },
   });
-
+  // const setAbilities = useSetAbilities();
+  // const abilities = useAbilities();
+  // useEffect(() => {
+  //   if (user) {
+  //     const abilities = defineAbilitiesFor(role);
+  //     setAbilities(abilities);
+  //   }
+  // }, [user, setAbilities]);
   const handleLogout = () => {
     console.log("Logout clicked");
     router.push("/login");
@@ -168,24 +182,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
             "--List-nestedInsetStart": "30px",
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}>
-          {/* <ListItem>
-            <ListItemButton>
-              <HomeRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Home</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem>
-            <ListItemButton>
-              <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Dashboard</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem> */}
-
+          {/* <Can I="read" a="Permission"> */}
           <ListItem>
             <ListItemButton
               selected={tab == "permission"}
@@ -197,7 +194,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
               </ListItemContent>
             </ListItemButton>
           </ListItem>
-
+          {/* </Can> */}
           <ListItem>
             <ListItemButton
               selected={tab == "role"}

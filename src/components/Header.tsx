@@ -99,13 +99,6 @@ const Header = () => {
               Home
             </Button>
           </Link>
-          <Link href="/services" passHref>
-            <Button
-              color="inherit"
-              className="text-slate-200 mx-2 font-semibold hover:text-white">
-              Services
-            </Button>
-          </Link>
           <Link href="/route" passHref>
             <Button
               color="inherit"

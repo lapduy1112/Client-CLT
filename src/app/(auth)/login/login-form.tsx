@@ -43,6 +43,7 @@ export default function LoginForm() {
         role: data.role.role,
         permission: permission,
       };
+      toast.success("Port created successfully!");
       setUser(user);
       router.push("/");
     },
@@ -80,7 +81,7 @@ export default function LoginForm() {
   };
 
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     event.preventDefault();
   };
@@ -97,14 +98,12 @@ export default function LoginForm() {
         <div className="w-full lg:w-1/2 mb-2 lg:mb-0">
           <button
             type="button"
-            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-          >
+            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
               className="w-4"
-              id="google"
-            >
+              id="google">
               <path
                 fill="#fbbb00"
                 d="M113.47 309.408 95.648 375.94l-65.139 1.378C11.042 341.211 0 299.9 0 256c0-42.451 10.324-82.483 28.624-117.732h.014L86.63 148.9l25.404 57.644c-5.317 15.501-8.215 32.141-8.215 49.456.002 18.792 3.406 36.797 9.651 53.408z"
@@ -128,8 +127,7 @@ export default function LoginForm() {
         <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
           <button
             type="button"
-            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-          >
+            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300">
             {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 16 16"
@@ -142,16 +140,14 @@ export default function LoginForm() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               id="facebook"
-              className="w-5"
-            >
+              className="w-5">
               <linearGradient
                 id="Ld6sqrtcxMyckEl6xeDdMa"
                 x1="9.993"
                 x2="40.615"
                 y1="9.993"
                 y2="40.615"
-                gradientUnits="userSpaceOnUse"
-              >
+                gradientUnits="userSpaceOnUse">
                 <stop offset="0" stopColor="#2aa4f4" />
                 <stop offset="1" stopColor="#007ad9" />
               </linearGradient>
@@ -173,8 +169,7 @@ export default function LoginForm() {
       </div>
       <form
         className="w-full flex flex-col items-center"
-        onSubmit={formik.handleSubmit}
-      >
+        onSubmit={formik.handleSubmit}>
         <div className="mb-4 w-full">
           <TextField
             fullWidth
@@ -216,8 +211,7 @@ export default function LoginForm() {
                     aria-label="toggle password visibility"
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
+                    edge="end">
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -230,8 +224,7 @@ export default function LoginForm() {
           <a
             href="#"
             className="text-blue-500 hover:underline"
-            onClick={handleForgotClick}
-          >
+            onClick={handleForgotClick}>
             Forgot password?
           </a>
         </div>
@@ -239,8 +232,7 @@ export default function LoginForm() {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
             type="submit"
-            disabled={mutation.isPending}
-          >
+            disabled={mutation.isPending}>
             Sign In
           </button>
         </div>
@@ -251,8 +243,7 @@ export default function LoginForm() {
           <a
             href="#"
             className="text-blue-500 hover:underline"
-            onClick={handleSignUpClick}
-          >
+            onClick={handleSignUpClick}>
             Sign up
           </a>
         </p>
