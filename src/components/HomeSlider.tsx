@@ -209,7 +209,7 @@ export const HomeSlider = () => {
                   </MenuItem>
                   <Divider />
                   <MenuItem onClick={handleProfile}>Profile</MenuItem>
-                  <MenuItem onClick={handleDashboard}>Dashboard</MenuItem>
+                  <MenuItem>Dashboard</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </div>

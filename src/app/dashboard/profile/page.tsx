@@ -20,7 +20,6 @@ import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { useEffect } from 'react';
 import { useStore } from '@/providers/ZustandProvider';
-import { redirect } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { updateUser } from '@/libs/common/utils/fetch';
 import { useFormik } from 'formik';
@@ -34,11 +33,13 @@ import { PermissionInterface } from '@/libs/common/interfaces/permission.interfa
 import { UserInterface } from '@/libs/common/interfaces/user.interface';
 import UploadImageModal from '@/components/modal/UploadImageModal';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 const validationSchema = Yup.object({
   username: Yup.string().min(4, 'Username must be at least 4 characters'),
 });
 export default function MyProfile() {
   const user = useStore((state) => state.user);
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const setUser = useStore((state) => state.setUser);
   const queryClient = useQueryClient();
@@ -72,7 +73,6 @@ export default function MyProfile() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log('values', values);
       if (!user) {
         toast.error('User not found');
         return;
@@ -88,7 +88,7 @@ export default function MyProfile() {
   });
   useEffect(() => {
     if (!user) {
-      redirect('/unauthorized');
+      router.push('/unauthorized');
     }
   }, [user]);
   return (

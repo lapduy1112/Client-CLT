@@ -32,14 +32,7 @@ import { logOut } from '@/libs/common/utils/logOut';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { getErrorMessage } from '@/libs/common/utils/error';
-
 import axios, { AxiosError } from 'axios';
-// import { Can } from "@/libs/common/constants/Can";
-// import {
-//   useAbilities,
-//   useSetAbilities,
-// } from "@/providers/ZustandContextProvider";
-import { useEffect } from 'react';
 function Toggler({
   defaultExpanded = false,
   renderToggle,
@@ -76,14 +69,16 @@ function Toggler({
 
 export default function Sidebar({ tab }: { tab?: string }) {
   const user = useStore((state) => state.user);
-  const role = user?.role;
   const router = useRouter();
+  const abilities = useStore((state) => state.abilities);
+  console.log('abilities', abilities);
   const deleteUser = useStore((state) => state.deleteUser);
   const mutation = useMutation({
     mutationFn: logOut,
     onSuccess: () => {
-      deleteUser();
       toast.success('Logged out successfully');
+      deleteUser();
+      router.push('/login');
     },
     onError: (error: Error | AxiosError) => {
       console.log('Error', error);
@@ -94,17 +89,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
       }
     },
   });
-  // const setAbilities = useSetAbilities();
-  // const abilities = useAbilities();
-  // useEffect(() => {
-  //   if (user) {
-  //     const abilities = defineAbilitiesFor(role);
-  //     setAbilities(abilities);
-  //   }
-  // }, [user, setAbilities]);
   const handleLogout = () => {
-    console.log('Logout clicked');
-    router.push('/login');
     mutation.mutate();
   };
   return (
@@ -186,70 +171,84 @@ export default function Sidebar({ tab }: { tab?: string }) {
             '--ListItem-radius': (theme) => theme.vars.radius.sm,
           }}
         >
-          {/* <Can I="read" a="Permission"> */}
-          <ListItem>
-            <ListItemButton
-              selected={tab == 'permission'}
-              component="a"
-              href="/dashboard/permission"
-            >
-              <KeyIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Permission Dashboard</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          {/* </Can> */}
-          <ListItem>
-            <ListItemButton
-              selected={tab == 'role'}
-              href="/dashboard/role"
-              component="a"
-            >
-              <ManageAccountsIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Role Management</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem>
-            <ListItemButton
-              selected={tab == 'users'}
-              href="/dashboard/users"
-              component="a"
-            >
-              <AdminPanelSettingsIcon />
-              <ListItemContent>
-                <Typography level="title-sm">User Management</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem>
-            <ListItemButton
-              selected={tab == 'ports'}
-              component="a"
-              href="/dashboard/ports"
-            >
-              <DirectionsBoatFilledIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Port Management</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton
-              selected={tab == 'routes'}
-              component="a"
-              href="/dashboard/routes"
-            >
-              <ModeOfTravelIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Route Management</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
+          {abilities &&
+            abilities.size >= 1 &&
+            abilities.has('search:permission') && (
+              <ListItem>
+                <ListItemButton
+                  selected={tab == 'permission'}
+                  component="a"
+                  href="/dashboard/permission"
+                >
+                  <KeyIcon />
+                  <ListItemContent>
+                    <Typography level="title-sm">
+                      Permission Dashboard
+                    </Typography>
+                  </ListItemContent>
+                </ListItemButton>
+              </ListItem>
+            )}
+          {abilities && abilities.size >= 1 && abilities.has('search:role') && (
+            <ListItem>
+              <ListItemButton
+                selected={tab == 'role'}
+                href="/dashboard/role"
+                component="a"
+              >
+                <ManageAccountsIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Role Management</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+          )}
+          {abilities && abilities.size >= 1 && abilities.has('search:user') && (
+            <ListItem>
+              <ListItemButton
+                selected={tab == 'users'}
+                href="/dashboard/users"
+                component="a"
+              >
+                <AdminPanelSettingsIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">User Management</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+          )}
+          {abilities &&
+            abilities.size >= 1 &&
+            abilities.has('search:route') && (
+              <ListItem>
+                <ListItemButton
+                  selected={tab == 'ports'}
+                  component="a"
+                  href="/dashboard/ports"
+                >
+                  <DirectionsBoatFilledIcon />
+                  <ListItemContent>
+                    <Typography level="title-sm">Port Management</Typography>
+                  </ListItemContent>
+                </ListItemButton>
+              </ListItem>
+            )}
+          {abilities &&
+            abilities.size >= 1 &&
+            abilities.has('search:route') && (
+              <ListItem>
+                <ListItemButton
+                  selected={tab == 'routes'}
+                  component="a"
+                  href="/dashboard/routes"
+                >
+                  <ModeOfTravelIcon />
+                  <ListItemContent>
+                    <Typography level="title-sm">Route Management</Typography>
+                  </ListItemContent>
+                </ListItemButton>
+              </ListItem>
+            )}
           <ListItem>
             <ListItemButton
               role="menuitem"

@@ -27,6 +27,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import UpdateRoleModal from '../modal/UpdateRoleModal';
+import { useStore } from '@/providers/ZustandProvider';
 interface searchInterface {
   key: string;
   term: string;
@@ -150,6 +151,7 @@ function RowMenu({
   setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const abilities = useStore((state) => state.abilities);
   return (
     <Dropdown>
       <MenuButton
@@ -159,13 +161,15 @@ function RowMenu({
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem
-          onClick={() => {
-            setId(dataId), setOpenUpdate(true);
-          }}
-        >
-          Edit Role
-        </MenuItem>
+        {abilities && abilities.size > 0 && abilities.get('update:role') && (
+          <MenuItem
+            onClick={() => {
+              setId(dataId), setOpenUpdate(true);
+            }}
+          >
+            Edit Role
+          </MenuItem>
+        )}
       </Menu>
     </Dropdown>
   );
@@ -183,6 +187,7 @@ export default function RoleTable() {
   const searchTerm = searchParams.get('searchTerm');
   const page = searchParams.get('page');
   const [curPage, setCurPage] = React.useState(page || '1');
+  const abilities = useStore((state) => state.abilities);
   const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ['roles', { sort, action, object, searchTerm, page, possession }],
     queryFn: () =>
@@ -631,12 +636,14 @@ export default function RoleTable() {
           Next
         </Button>
       </Box>
-      <UpdateRoleModal
-        open={openUpdateModal}
-        setOpen={setOpenUpdateModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
+      {abilities && abilities.size > 0 && abilities.get('update:role') && (
+        <UpdateRoleModal
+          open={openUpdateModal}
+          setOpen={setOpenUpdateModal}
+          id={selectedId}
+          setSelectedId={setselectedId}
+        />
+      )}
     </React.Fragment>
   );
 }

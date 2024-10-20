@@ -1,15 +1,11 @@
-import { createContext, useState, ReactNode, useContext } from "react";
-import { createStore, StoreApi, useStore } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { UserInterface } from "@/libs/common/interfaces/user.interface";
-import { Abilities } from "@/libs/common/interfaces/ability.interface";
-import { defineAbilitiesFor, AppAbility } from "@/libs/common/utils/ability";
+import { createContext, useState, ReactNode, useContext } from 'react';
+import { createStore, StoreApi, useStore } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { UserInterface } from '@/libs/common/interfaces/user.interface';
 type UserStore = {
   user: UserInterface | null;
   setUser: (user: UserInterface) => void;
   deleteUser: () => void;
-  // abilities: AppAbility | null;
-  // setAbilities: (abilities: AppAbility) => void;
 };
 
 const BearStoreContext = createContext<StoreApi<UserStore> | null>(null);
@@ -28,11 +24,9 @@ export const UserStoreProvider = ({
           user: initialUser,
           setUser: (user: UserInterface) => set({ user }),
           deleteUser: () => set({ user: null }),
-          // abilities: null,
-          // setAbilities: (abilities: AppAbility) => set({ abilities }),
         }),
         {
-          name: "user-storage",
+          name: 'user-storage',
           storage: createJSONStorage(() => sessionStorage),
         }
       )
@@ -48,7 +42,7 @@ export const UserStoreProvider = ({
 const useUserStore = (selector: any) => {
   const store = useContext(BearStoreContext);
   if (!store) {
-    throw new Error("Missing UserStoreProvider");
+    throw new Error('Missing UserStoreProvider');
   }
   return useStore(store, selector);
 };
