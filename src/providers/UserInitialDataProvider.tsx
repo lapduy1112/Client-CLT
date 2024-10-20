@@ -10,7 +10,6 @@ import { useEffect } from 'react';
 import Loading from '@/components/Loading';
 import React from 'react';
 function UserInitialDataProvider({ children }: React.PropsWithChildren) {
-  console.log('UserInitialDataProvider');
   const setUser = useStore((state) => state.setUser);
   const deleteUser = useStore((state) => state.deleteUser);
   const { isPending, isError, data, error } = useQuery({

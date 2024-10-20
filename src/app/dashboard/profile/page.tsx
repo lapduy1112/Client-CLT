@@ -32,11 +32,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { FormHelperText } from '@mui/joy';
 import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
 import { UserInterface } from '@/libs/common/interfaces/user.interface';
+import UploadImageModal from '@/components/modal/UploadImageModal';
+import { useState } from 'react';
 const validationSchema = Yup.object({
   username: Yup.string().min(4, 'Username must be at least 4 characters'),
 });
 export default function MyProfile() {
   const user = useStore((state) => state.user);
+  const [open, setOpen] = useState(false);
   const setUser = useStore((state) => state.setUser);
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -95,7 +98,6 @@ export default function MyProfile() {
           position: 'sticky',
           top: { sm: -100, md: -110 },
           bgcolor: 'background.body',
-          zIndex: 9995,
         }}
       >
         <Box sx={{ px: { xs: 2, md: 6 } }}>
@@ -179,6 +181,7 @@ export default function MyProfile() {
                   size="sm"
                   variant="outlined"
                   color="neutral"
+                  onClick={() => setOpen(true)}
                   sx={{
                     bgcolor: 'background.body',
                     position: 'absolute',
@@ -270,6 +273,12 @@ export default function MyProfile() {
           </CardOverflow>
         </Card>
       </Stack>
+      <UploadImageModal
+        open={open}
+        setOpen={setOpen}
+        id={user?.id || ''}
+        setSelectedId={() => {}}
+      />
     </Box>
   );
 }
