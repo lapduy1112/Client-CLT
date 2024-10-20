@@ -65,6 +65,7 @@ export default function PermissionTable() {
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
+  console.log(data)
   function handleSearchKeys(searchQueries: searchInterface[]) {
     const params = new URLSearchParams(searchParams);
     for (const searchQuery of searchQueries) {

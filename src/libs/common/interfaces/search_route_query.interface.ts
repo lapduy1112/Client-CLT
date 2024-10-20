@@ -1,5 +1,7 @@
 export interface SearchRouteQueryInterface {
   search?: string;
   page?: number;
-  sort?: string;
+  sortBy?: string;
+  sortOrder?: string;
+  status?: string;
 }

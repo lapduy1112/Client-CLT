@@ -3,16 +3,11 @@ import * as React from "react";
 import { ColorPaletteProp } from "@mui/joy/styles";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
-import Chip from "@mui/joy/Chip";
+import Stack from "@mui/joy/Stack";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
-import Modal from "@mui/joy/Modal";
-import ModalDialog from "@mui/joy/ModalDialog";
-import ModalClose from "@mui/joy/ModalClose";
-import Select from "@mui/joy/Select";
-import Option from "@mui/joy/Option";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
 import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
@@ -23,7 +18,8 @@ import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
@@ -131,7 +127,8 @@ export default function PortTable({ ports }: { ports: Port[] }) {
     queryFn: () =>
       searchPorts({
         search: search || undefined,
-        sort: sort || undefined,
+        sortBy: sort?.split(":")[0],
+        sortOrder: sort?.split(":")[1],
         page: Number(page) || undefined,
       }),
     retry: false,
@@ -162,65 +159,9 @@ export default function PortTable({ ports }: { ports: Port[] }) {
     replace(`${pathname}?${params.toString()}`);
   }
 
-  const renderFilters = () => (
-    <>
-      <FormControl size="sm">
-        <FormLabel>Sort</FormLabel>
-        <Select
-          size="sm"
-          defaultValue={sort || "createdAt"}
-          id="sort"
-          onChange={(event, newValue) => {
-            handleSearchKeys([
-              { key: "sort", term: newValue || "" },
-              { key: "page", term: "1" },
-            ]);
-            setCurPage("1");
-          }}>
-          <Option value="createdAt">Created date</Option>
-          <Option value="updatedAt">Updated date</Option>
-          <Option value="address">Address</Option>
-          <Option value="lat">Latitude</Option>
-          <Option value="lon">Longitude</Option>
-        </Select>
-      </FormControl>
-    </>
-  );
   console.log(data);
   return (
     <>
-      <Sheet
-        className="SearchAndFilters-mobile"
-        sx={{ display: { xs: "flex", sm: "none" }, my: 1, gap: 1 }}>
-        <Input
-          size="sm"
-          placeholder="Search"
-          startDecorator={<SearchIcon />}
-          sx={{ flexGrow: 1 }}
-        />
-        <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}>
-          <FilterAltIcon />
-        </IconButton>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Filters
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {renderFilters()}
-              <Button color="primary" onClick={() => setOpen(false)}>
-                Submit
-              </Button>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-      </Sheet>
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
@@ -255,7 +196,7 @@ export default function PortTable({ ports }: { ports: Port[] }) {
             />
           </FormControl>
         </form>
-        {renderFilters()}
+        {/* {renderFilters()} */}
       </Box>
       <Sheet
         className="OrderTableContainer"
@@ -292,91 +233,226 @@ export default function PortTable({ ports }: { ports: Port[] }) {
                   }}>
                   #
                 </th>
-                <th style={{ width: 180, padding: "12px 6px" }}>
-                  <Link
-                    underline="none"
-                    color="primary"
-                    component="button"
-                    onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-                    endDecorator={<ArrowDropDownIcon />}
-                    sx={[
-                      {
-                        fontWeight: "lg",
-                        "& svg": {
-                          transition: "0.2s",
-                          transform:
-                            order === "desc"
-                              ? "rotate(0deg)"
-                              : "rotate(180deg)",
-                        },
-                      },
-                      order === "desc"
-                        ? { "& svg": { transform: "rotate(0deg)" } }
-                        : { "& svg": { transform: "rotate(180deg)" } },
-                    ]}>
-                    Id
-                  </Link>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Address
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "address:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "address:ASC") {
+                            handleSearch("sort", "address:DESC");
+                          } else {
+                            handleSearch("sort", "address:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort === "address:DESC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "address:DESC") {
+                            handleSearch("sort", "address:ASC");
+                          } else {
+                            handleSearch("sort", "address:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
                 </th>
-                <th style={{ width: 180, padding: "12px 6px" }}>Address</th>
-                <th style={{ width: 140, padding: "12px 6px" }}>Latitude</th>
-                <th style={{ width: 140, padding: "12px 6px" }}>Longitude</th>
-                <th style={{ width: 140, padding: "12px 6px" }}>CreatedAt</th>
-                <th style={{ width: 140, padding: "12px 6px" }}>UpdatedAt</th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Latitude
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "lat:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "lat:ASC") {
+                            handleSearch("sort", "lat:DESC");
+                          } else {
+                            handleSearch("sort", "lat:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort === "lat:DESC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "lat:DESC") {
+                            handleSearch("sort", "lat:ASC");
+                          } else {
+                            handleSearch("sort", "lat:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Longtitude
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "lon:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "lon:ASC") {
+                            handleSearch("sort", "lon:DESC");
+                          } else {
+                            handleSearch("sort", "lon:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort === "lon:DESC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "lon:DESC") {
+                            handleSearch("sort", "lon:ASC");
+                          } else {
+                            handleSearch("sort", "lon:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    CreatedAt
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "createdAt:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "createdAt:ASC") {
+                            handleSearch("sort", "createdAt:DESC");
+                          } else {
+                            handleSearch("sort", "createdAt:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={
+                          sort === "createdAt:DESC" ? "primary" : "neutral"
+                        }
+                        onClick={() => {
+                          if (sort === "createdAt:DESC") {
+                            handleSearch("sort", "createdAt:ASC");
+                          } else {
+                            handleSearch("sort", "createdAt:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    updatedAt
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "updatedAt:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "updatedAt:ASC") {
+                            handleSearch("sort", "updatedAt:DESC");
+                          } else {
+                            handleSearch("sort", "updatedAt:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={
+                          sort === "updatedAt:DESC" ? "primary" : "neutral"
+                        }
+                        onClick={() => {
+                          if (sort === "updatedAt:DESC") {
+                            handleSearch("sort", "updatedAt:ASC");
+                          } else {
+                            handleSearch("sort", "updatedAt:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
                 <th style={{ width: 140, padding: "12px 6px" }}> </th>
               </tr>
             </thead>
             <tbody>
               {Array.isArray(data.data) && data.data.length > 0 ? (
-                [...data.data]
-                  .sort(getComparator(order, "id"))
-                  .map((row, index) => (
-                    <tr key={row.id}>
-                      <td style={{ textAlign: "center", width: 120 }}>
-                        <Typography level="body-xs">{index + 1}</Typography>
-                      </td>
-                      <td>
-                        <Typography level="body-xs">{row.id}</Typography>
-                      </td>
-                      <td>
-                        <Typography level="body-xs">{row.address}</Typography>
-                      </td>
-                      <td>
-                        <Typography level="body-xs">{row.lat}</Typography>
-                      </td>
-                      <td>
-                        <Typography level="body-xs">{row.lon}</Typography>
-                      </td>
-                      <td>
-                        <Typography level="body-xs">
-                          {new Date(row.createdAt)
-                            .toISOString()
-                            .substring(0, 10)}
-                        </Typography>
-                      </td>
-                      <td>
-                        <Typography level="body-xs">
-                          {new Date(row.updatedAt)
-                            .toISOString()
-                            .substring(0, 10)}
-                        </Typography>
-                      </td>
-                      <td>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            gap: 2,
-                            alignItems: "center",
-                          }}>
-                          <RowMenu
-                            dataId={row.id || ""}
-                            setOpenDelete={setOpenDeleteModal}
-                            setOpenUpdate={setOpenUpdateModal}
-                            setId={setSelectedId}
-                          />
-                        </Box>
-                      </td>
-                    </tr>
-                  ))
+                [...data.data].map((row, index) => (
+                  <tr key={row.id}>
+                    <td style={{ textAlign: "center", width: 120 }}>
+                      <Typography level="body-xs">{index + 1}</Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">{row.address}</Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">{row.lat}</Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">{row.lon}</Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {new Date(row.createdAt).toISOString().substring(0, 10)}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {new Date(row.updatedAt).toISOString().substring(0, 10)}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 2,
+                          alignItems: "center",
+                        }}>
+                        <RowMenu
+                          dataId={row.id || ""}
+                          setOpenDelete={setOpenDeleteModal}
+                          setOpenUpdate={setOpenUpdateModal}
+                          setId={setSelectedId}
+                        />
+                      </Box>
+                    </td>
+                  </tr>
+                ))
               ) : (
                 <tr>
                   <td colSpan={8} style={{ textAlign: "center" }}>
@@ -405,7 +481,7 @@ export default function PortTable({ ports }: { ports: Port[] }) {
           variant="outlined"
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
-          disabled={Number(page) <= 1}
+          disabled={Number(page) === 1 || !page}
           onClick={() => {
             const prevPage = String(Number(page) - 1);
             handleSearch("page", prevPage);
@@ -454,11 +530,7 @@ export default function PortTable({ ports }: { ports: Port[] }) {
           variant="outlined"
           color="neutral"
           endDecorator={<KeyboardArrowRightIcon />}
-          disabled={
-            !data ||
-            data.total <= data.pageSize ||
-            Number(page) >= Math.ceil(data.total / data.pageSize)
-          }
+          disabled={!data || data.nextPage == null}
           onClick={() => {
             const nextPage = String(Number(page) + 1);
             handleSearch("page", nextPage);

@@ -2,10 +2,14 @@ import { createContext, useState, ReactNode, useContext } from "react";
 import { createStore, StoreApi, useStore } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { UserInterface } from "@/libs/common/interfaces/user.interface";
+import { Abilities } from "@/libs/common/interfaces/ability.interface";
+import { defineAbilitiesFor, AppAbility } from "@/libs/common/utils/ability";
 type UserStore = {
   user: UserInterface | null;
   setUser: (user: UserInterface) => void;
   deleteUser: () => void;
+  // abilities: AppAbility | null;
+  // setAbilities: (abilities: AppAbility) => void;
 };
 
 const BearStoreContext = createContext<StoreApi<UserStore> | null>(null);
@@ -22,15 +26,17 @@ export const UserStoreProvider = ({
       persist(
         (set) => ({
           user: initialUser,
-          setUser: (user: UserInterface) => set({ user: user }),
+          setUser: (user: UserInterface) => set({ user }),
           deleteUser: () => set({ user: null }),
+          // abilities: null,
+          // setAbilities: (abilities: AppAbility) => set({ abilities }),
         }),
         {
-          name: "user-storage", // name of the item in the storage (must be unique)
-          storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
-        },
-      ),
-    ),
+          name: "user-storage",
+          storage: createJSONStorage(() => sessionStorage),
+        }
+      )
+    )
   );
 
   return (
@@ -51,3 +57,8 @@ export const useSetUser = () =>
   useUserStore((state: UserStore) => state.setUser);
 export const useDeleteUser = (): any =>
   useUserStore((state: UserStore) => state.deleteUser);
+
+// export const useAbilities = () =>
+//   useUserStore((state: UserStore) => state.abilities);
+// export const useSetAbilities = () =>
+//   useUserStore((state: UserStore) => state.setAbilities);
