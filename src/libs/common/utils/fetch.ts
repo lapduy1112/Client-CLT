@@ -210,9 +210,11 @@ export const uploadImage = async (data: updateAvatarInterface) => {
   const formData = new FormData();
   formData.append('file', data.avatar);
   formData.append('id', data.id);
-  return customAxiosWithCredentials.post(`/users/avatar`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  return customAxiosWithCredentials
+    .post(`/users/avatar`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((res) => res.data);
 };

@@ -35,6 +35,7 @@ export default function UploadImageModal({
   id: string;
   setSelectedId: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const queryClient = useQueryClient();
   const filePickerRef = useRef<HTMLInputElement>(null);
@@ -47,8 +48,15 @@ export default function UploadImageModal({
         queryKey: ['users'],
       });
       toast.success('User Updated successfully');
-      const permission: PermissionInterface[] = data.role
-        .permission as PermissionInterface[];
+      console.log('data', data);
+      const permission: PermissionInterface[] = [];
+      for (let i = 0; i < data.role.permission.length; i++) {
+        permission.push({
+          action: data.role.permission[i].action,
+          object: data.role.permission[i].object,
+          possession: data.role.permission[i].possession,
+        });
+      }
       const user: UserInterface = {
         ...data,
         role: data.role.role,
@@ -227,6 +235,7 @@ export default function UploadImageModal({
                     sx={{ backgroundColor: '#000000' }}
                     variant="solid"
                     color="neutral"
+                    onClick={handleUpload}
                   >
                     Save as profile image
                   </Button>
