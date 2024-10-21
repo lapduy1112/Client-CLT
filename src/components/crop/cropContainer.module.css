@@ -1,0 +1,9 @@
+.cropContainer {
+  position: relative;
+  width: 32rem;
+  height: 32rem;
+  background-color: inherit;
+}
+.reactEasyCrop_CropArea {
+  border: 0 !important;
+}

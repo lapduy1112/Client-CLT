@@ -12,6 +12,8 @@ import { useMutation } from '@tanstack/react-query';
 import { deleteUser } from '@/libs/common/utils/fetch';
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
+import { getErrorMessage } from '@/libs/common/utils/error';
+import axios, { AxiosError } from 'axios';
 export default function DeleteUserModal({
   open,
   setOpen,
@@ -31,8 +33,12 @@ export default function DeleteUserModal({
         toast.success('User deleted successfully'),
         setOpen(false);
     },
-    onError: () => {
-      toast.error('Error deleting user');
+    onError: (error: Error | AxiosError) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(getErrorMessage(error?.response?.data));
+      } else {
+        toast.error(getErrorMessage(error));
+      }
       setOpen(false);
     },
   });

@@ -3,6 +3,7 @@ import { BE_API_URL } from '@/libs/common/constants/api';
 import { EErrorMessage } from '../constants/error';
 import { SearchUserQueryInterface } from '../interfaces/search_user_query.interface';
 import {
+  updateAvatarInterface,
   UserUpdateInterface,
   UserUpdatePasswordInterface,
   UserUpdateRoleInterface,
@@ -160,6 +161,7 @@ export function getAllRoles() {
     .then((res) => res.data);
 }
 export function assignRole(data: UserUpdateRoleInterface) {
+  console.log('Data', data);
   return customAxiosWithCredentials
     .patch(`/users/role`, { id: data.id, roleId: data.roleId })
     .then((res) => res.data);
@@ -204,3 +206,15 @@ export function getOneRole(id: string) {
 export function confirmEmail(token: string) {
   return axios.get(`${BASE_URL}/auth/verify/${token}`).then((res) => res.data);
 }
+export const uploadImage = async (data: updateAvatarInterface) => {
+  const formData = new FormData();
+  formData.append('file', data.avatar);
+  formData.append('id', data.id);
+  return customAxiosWithCredentials
+    .post(`/users/avatar`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((res) => res.data);
+};

@@ -12,7 +12,7 @@ function ReactQueryProvider({ children }: React.PropsWithChildren) {
     <Suspense fallback={<Loading />}>
       <QueryClientProvider client={client}>
         {children}
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </Suspense>
   );

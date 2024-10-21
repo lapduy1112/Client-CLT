@@ -23,6 +23,7 @@ import { getUserById, updateUser } from '@/libs/common/utils/fetch';
 import Option from '@mui/joy/Option';
 import { getErrorMessage } from '@/libs/common/utils/error';
 import axios, { AxiosError } from 'axios';
+import UploadImageModal from './UploadImageModal';
 const validationSchema = Yup.object({
   username: Yup.string().min(4, 'Username must be at least 4 characters'),
   isVerified: Yup.string(),
@@ -39,6 +40,7 @@ export default function UpdateUserModal({
   setSelectedId: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const queryClient = useQueryClient();
+  const [openUploadImage, setOpenUploadImage] = React.useState(false);
   const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ['user', { id: id }],
     queryFn: () => getUserById(id),
@@ -135,6 +137,7 @@ export default function UpdateUserModal({
                       top: 170,
                       boxShadow: 'sm',
                     }}
+                    onClick={() => setOpenUploadImage(true)}
                   >
                     <EditRoundedIcon />
                   </IconButton>
@@ -257,7 +260,6 @@ export default function UpdateUserModal({
               </Stack>
             </form>
           )}
-
           <DialogActions>
             <Button
               form="udpatedForm"
@@ -281,6 +283,12 @@ export default function UpdateUserModal({
           </DialogActions>
         </ModalDialog>
       </Modal>
+      <UploadImageModal
+        open={openUploadImage}
+        setOpen={setOpenUploadImage}
+        id={id}
+        setSelectedId={() => {}}
+      />
     </React.Fragment>
   );
 }

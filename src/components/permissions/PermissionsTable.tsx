@@ -18,8 +18,6 @@ import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useQuery } from '@tanstack/react-query';
@@ -28,7 +26,6 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import Stack from '@mui/joy/Stack';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { object } from 'yup';
 interface searchInterface {
   key: string;
   term: string;
@@ -46,7 +43,10 @@ export default function PermissionTable() {
   const page = searchParams.get('page');
   const [curPage, setCurPage] = React.useState(page || '1');
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ['permissions', { sort, object, action, searchTerm, page, possession }],
+    queryKey: [
+      'permissions',
+      { sort, object, action, searchTerm, page, possession },
+    ],
     queryFn: () =>
       searchPermission({
         searchTerm: searchTerm || undefined,
@@ -62,7 +62,6 @@ export default function PermissionTable() {
     gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
-  console.log(data)
   function handleSearchKeys(searchQueries: searchInterface[]) {
     const params = new URLSearchParams(searchParams);
     for (const searchQuery of searchQueries) {
@@ -584,6 +583,25 @@ export default function PermissionTable() {
               ))}
             </tbody>
           </Table>
+        )}
+        {isError && (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: 200,
+            }}
+          >
+            <Typography
+              level="body-lg"
+              color="danger"
+              sx={{ textAlign: 'center' }}
+            >
+              (Ｔ▽Ｔ) {error?.message || 'Something went wrong'}
+            </Typography>
+          </Stack>
         )}
       </Sheet>
       <Box

@@ -36,6 +36,7 @@ import Stack from '@mui/joy/Stack';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import AssignRoleModal from '../modal/AssignRoleModal';
+import { useStore } from '@/providers/ZustandProvider';
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -76,6 +77,7 @@ function RowMenu({
   setOpenAssignRole: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const abilities = useStore((state) => state.abilities);
   return (
     <Dropdown>
       <MenuButton
@@ -85,30 +87,36 @@ function RowMenu({
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem
-          onClick={() => {
-            setId(dataId), setOpenUpdate(true);
-          }}
-        >
-          Edit
-        </MenuItem>
+        {abilities && abilities.size > 0 && abilities.has('update:profile') && (
+          <MenuItem
+            onClick={() => {
+              setId(dataId), setOpenUpdate(true);
+            }}
+          >
+            Edit
+          </MenuItem>
+        )}
         <Divider />
-        <MenuItem
-          onClick={() => {
-            setId(dataId), setOpenAssignRole(true);
-          }}
-        >
-          Assign Role to User
-        </MenuItem>
+        {abilities && abilities.size > 0 && abilities.has('update:user') && (
+          <MenuItem
+            onClick={() => {
+              setId(dataId), setOpenAssignRole(true);
+            }}
+          >
+            Assign Role to User
+          </MenuItem>
+        )}
         <Divider />
-        <MenuItem
-          color="danger"
-          onClick={() => {
-            setId(dataId), setOpenDelete(true);
-          }}
-        >
-          Delete
-        </MenuItem>
+        {abilities && abilities.size > 0 && abilities.has('delete:user') && (
+          <MenuItem
+            color="danger"
+            onClick={() => {
+              setId(dataId), setOpenDelete(true);
+            }}
+          >
+            Delete
+          </MenuItem>
+        )}
       </Menu>
     </Dropdown>
   );
@@ -128,6 +136,7 @@ export default function UserTable() {
   const searchTerm = searchParams.get('searchTerm');
   const page = searchParams.get('page');
   const [curPage, setCurPage] = React.useState(page || '1');
+  const abilities = useStore((state) => state.abilities);
   const { isPending, isError, data, error, isSuccess } = useQuery({
     queryKey: ['users', { sort, role, isVerified, searchTerm, page }],
     queryFn: () =>
@@ -216,7 +225,7 @@ export default function UserTable() {
           <Option value="">All</Option>
           {fetchRole.isSuccess &&
             fetchRole.data.roles.map((r: { id: string; role: string }) => (
-              <Option key={r.id} value={r.id}>
+              <Option key={r.id} value={r.role}>
                 {r.role}
               </Option>
             ))}
@@ -615,6 +624,7 @@ export default function UserTable() {
                         <ArrowUpwardIcon style={{ fontSize: '18px' }} />
                       </IconButton>
                       <IconButton
+                        color={sort == 'role.role:DESC' ? 'primary' : 'neutral'}
                         onClick={() => {
                           if (sort == 'role.role:DESC') {
                             handleSearch('sort', '');
@@ -696,6 +706,25 @@ export default function UserTable() {
               ))}
             </tbody>
           </Table>
+        )}
+        {isError && (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: 200,
+            }}
+          >
+            <Typography
+              level="body-lg"
+              color="danger"
+              sx={{ textAlign: 'center' }}
+            >
+              (Ｔ▽Ｔ) {error?.message || 'Something went wrong'}
+            </Typography>
+          </Stack>
         )}
       </Sheet>
       <Box
@@ -794,24 +823,30 @@ export default function UserTable() {
           Next
         </Button>
       </Box>
-      <DeleteUserModal
-        open={openDeleteModal}
-        setOpen={setOpenDeleteModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
-      <UpdateUserModal
-        open={openUpdateModal}
-        setOpen={setOpenUpdateModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
-      <AssignRoleModal
-        open={openAssignRoleModal}
-        setOpen={setOpenAssignRoleModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
+      {abilities && abilities.size > 0 && abilities.has('delete:user') && (
+        <DeleteUserModal
+          open={openDeleteModal}
+          setOpen={setOpenDeleteModal}
+          id={selectedId}
+          setSelectedId={setselectedId}
+        />
+      )}
+      {abilities && abilities.size > 0 && abilities.has('update:profile') && (
+        <UpdateUserModal
+          open={openUpdateModal}
+          setOpen={setOpenUpdateModal}
+          id={selectedId}
+          setSelectedId={setselectedId}
+        />
+      )}
+      {abilities && abilities.size > 0 && abilities.has('update:user') && (
+        <AssignRoleModal
+          open={openAssignRoleModal}
+          setOpen={setOpenAssignRoleModal}
+          id={selectedId}
+          setSelectedId={setselectedId}
+        />
+      )}
     </React.Fragment>
   );
 }
