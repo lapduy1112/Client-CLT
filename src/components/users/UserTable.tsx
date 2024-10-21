@@ -624,6 +624,7 @@ export default function UserTable() {
                         <ArrowUpwardIcon style={{ fontSize: '18px' }} />
                       </IconButton>
                       <IconButton
+                        color={sort == 'role.role:DESC' ? 'primary' : 'neutral'}
                         onClick={() => {
                           if (sort == 'role.role:DESC') {
                             handleSearch('sort', '');

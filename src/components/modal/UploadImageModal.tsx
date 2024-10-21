@@ -35,7 +35,6 @@ export default function UploadImageModal({
   id: string;
   setSelectedId: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const queryClient = useQueryClient();
   const filePickerRef = useRef<HTMLInputElement>(null);
@@ -172,11 +171,9 @@ export default function UploadImageModal({
                   }}
                 >
                   <Button
-                    form="udpatedForm"
                     sx={{ backgroundColor: '#000000' }}
                     variant="solid"
                     color="neutral"
-                    type="submit"
                     onClick={() =>
                       filePickerRef.current && filePickerRef.current.click()
                     }

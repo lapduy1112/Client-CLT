@@ -78,7 +78,6 @@ export default function Sidebar({ tab }: { tab?: string }) {
     onSuccess: () => {
       toast.success('Logged out successfully');
       deleteUser();
-      router.push('/login');
     },
     onError: (error: Error | AxiosError) => {
       console.log('Error', error);
@@ -89,7 +88,9 @@ export default function Sidebar({ tab }: { tab?: string }) {
       }
     },
   });
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault();
+    router.push('/login');
     mutation.mutate();
   };
   return (
