@@ -18,6 +18,7 @@ import { useStore } from '@/providers/ZustandProvider';
 import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
 import { UserInterface } from '@/libs/common/interfaces/user.interface';
 import { abilitiesMap } from '@/providers/ZustandProvider';
+import { useEffect } from 'react';
 const validationSchema = Yup.object({
   fullName: Yup.string().required('Full Name is required'),
   email: Yup.string()
@@ -34,6 +35,12 @@ const validationSchema = Yup.object({
     .required('Confirm Password is required'),
 });
 export default function RegisterForm() {
+  const user = useStore((state) => state.user);
+  useEffect(() => {
+    if (user) {
+      router.push('/home');
+    }
+  }, [user]);
   const setUser = useStore((state) => state.setUser);
   const setAbilities = useStore((state) => state.setAbilities);
   const [showPassword, setShowPassword] = useState(false);
@@ -58,6 +65,7 @@ export default function RegisterForm() {
         }
       }
       setAbilities(abilities);
+      toast.success('User registered successfully!');
       router.push('/');
     },
     onError: (error: Error | AxiosError) => {

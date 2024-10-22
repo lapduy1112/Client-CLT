@@ -88,7 +88,7 @@ export default function MyProfile() {
   });
   useEffect(() => {
     if (!user) {
-      router.push('/unauthorized');
+      router.push('/login');
     }
   }, [user]);
   return (
@@ -174,6 +174,7 @@ export default function MyProfile() {
                     }
                     loading="lazy"
                     alt=""
+                    referrerpolicy="no-referrer"
                   />
                 </AspectRatio>
                 <IconButton

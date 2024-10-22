@@ -353,7 +353,12 @@ export default function Sidebar({ tab }: { tab?: string }) {
       <Divider />
       {user && (
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-          <Avatar variant="outlined" size="sm" src={user?.profileImage} />
+          <Avatar
+            variant="outlined"
+            size="sm"
+            src={user?.profileImage}
+            imgProps={{ referrerPolicy: 'no-referrer' }}
+          />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography
               level="title-sm"

@@ -121,6 +121,7 @@ export default function UpdateUserModal({
                       }
                       loading="lazy"
                       alt=""
+                      referrerPolicy="no-referrer"
                     />
                   </AspectRatio>
                   <IconButton
