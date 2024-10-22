@@ -101,15 +101,14 @@ export default function RegisterForm() {
   return (
     <div className="max-w-md w-full p-6">
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
-        SSMS
+        Simple Shipping Management System
       </h1>
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
         Create new account
       </h1>
       <form
         className="w-full flex flex-col items-center"
-        onSubmit={formik.handleSubmit}
-      >
+        onSubmit={formik.handleSubmit}>
         <div className="mb-4 w-full">
           <TextField
             fullWidth
@@ -170,8 +169,7 @@ export default function RegisterForm() {
                     aria-label="toggle password visibility"
                     onClick={() => handleClickShowPassword("password")}
                     onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
+                    edge="end">
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -208,8 +206,7 @@ export default function RegisterForm() {
                     aria-label="toggle confirm password visibility"
                     onClick={() => handleClickShowPassword("confirm")}
                     onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
+                    edge="end">
                     {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -221,8 +218,7 @@ export default function RegisterForm() {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
             type="submit"
-            disabled={mutation.isPending}
-          >
+            disabled={mutation.isPending}>
             Sign Up
           </button>
         </div>
@@ -232,8 +228,7 @@ export default function RegisterForm() {
           Already have an account?{" "}
           <button
             className="text-blue-500 hover:text-blue-700 focus:outline-none"
-            onClick={handleSignInClick}
-          >
+            onClick={handleSignInClick}>
             Sign in
           </button>
         </p>

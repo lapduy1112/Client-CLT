@@ -45,6 +45,10 @@ const AddPort: React.FC<AddPortProps> = ({ open, onClose, onPortAdded }) => {
         <Typography component="h2">Add New Port</Typography>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel>Address</FormLabel>
+          <Typography component="h4">
+            Enter the address name, we will show the port based on the available
+            information
+          </Typography>
           <Input
             autoFocus
             fullWidth
