@@ -203,9 +203,9 @@ export default function AssignRoleModal({
                         name="roleId"
                         onBlur={formik.handleBlur}
                         defaultValue={data?.role?.id}
-                        onChange={(event, value) =>
-                          formik.setFieldValue('roleId', value)
-                        }
+                        onChange={(event, value) => {
+                          formik.setFieldValue('roleId', value);
+                        }}
                         color={
                           formik.touched.roleId && Boolean(formik.errors.roleId)
                             ? 'danger'
@@ -214,11 +214,13 @@ export default function AssignRoleModal({
                         disabled={mutation.isPending}
                       >
                         {fetchRole.isSuccess &&
-                          fetchRole.data.roles.map((r) => (
-                            <Option key={r.id} value={r.id}>
-                              {r.role}
-                            </Option>
-                          ))}
+                          fetchRole.data.roles.map(
+                            (r: { id: string; role: string }) => (
+                              <Option key={r.id} value={r.id}>
+                                {r.role}
+                              </Option>
+                            )
+                          )}
                       </Select>
                       {formik.touched.roleId &&
                         Boolean(formik.errors.roleId) && (

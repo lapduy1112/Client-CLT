@@ -4,7 +4,9 @@ export default function UserInfo() {
   return (
     <section className="py-12 bg-white">
       <div className="text-center mb-10">
-        <h2 className="text-3xl font-semibold">Meet our soldier of finance</h2>
+        <h2 className="text-3xl font-semibold">
+          Meet our soldier of our project
+        </h2>
         <p className="text-gray-500 mt-4 max-w-xl mx-auto">
           Our team brings together expertise in logistics, technology, and
           innovation to build a seamless and efficient shipping management
@@ -29,7 +31,8 @@ export default function UserInfo() {
               Developer
             </a>
             <p className="text-gray-500 mt-2">
-              Responsible for managing Auth service.
+              Responsible for managing Auth service and UI Design of the
+              project.
             </p>
             <div className="flex space-x-4 mt-4">
               <a href="#" className="text-purple-600">

@@ -7,7 +7,7 @@ const UnauthorizedPage = () => {
   const router = useRouter();
 
   const handleGoBack = () => {
-    router.back();
+    router.push('/login');
   };
 
   return (

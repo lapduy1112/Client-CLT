@@ -19,6 +19,7 @@ interface Port {
   address: string;
   lat: string;
   lon: string;
+  imageUrl: string;
 }
 
 interface PortsResponse {
@@ -71,6 +72,7 @@ export default function PortPage() {
             sortOrder
           );
         }
+        console.log(fetchedPorts.data);
         setPorts(fetchedPorts.data);
         setFilteredPorts(fetchedPorts.data);
         setTotalPages(fetchedPorts.lastPage);
@@ -200,7 +202,7 @@ export default function PortPage() {
                       address={port.address}
                       lat={port.lat}
                       lon={port.lon}
-                      image="https://cdnen.thesaigontimes.vn/wp-content/uploads/2024/05/cai-mep.jpg"
+                      image={port.imageUrl}
                       onClick={() => handleCardClick(port.lat, port.lon)}
                     />
                   ))

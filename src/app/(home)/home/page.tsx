@@ -15,8 +15,8 @@ const Home = () => {
         <AnotherHomeCarousel />
         <Stats />
         <About />
-        <UserInfo />
         <AboutUs />
+        <UserInfo />
       </HomePageLayout>
     </Suspense>
   );

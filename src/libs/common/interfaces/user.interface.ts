@@ -25,3 +25,16 @@ export interface UserUpdateRoleInterface {
   id: string;
   roleId: string;
 }
+export interface updateAvatarInterface {
+  id: string;
+  avatar: File;
+}
+export interface Permission {
+  id: string;
+  permission: string;
+  action: string;
+  object: string;
+  possession: string;
+  createdAt: string;
+  updatedAt: string;
+}

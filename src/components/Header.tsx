@@ -136,7 +136,6 @@ const Header = () => {
                 vertical: "top",
                 horizontal: "right",
               }}>
-              <MenuItem onClick={handleProfile}>Profile</MenuItem>
               <MenuItem onClick={handleDashboard}>Dashboard</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
