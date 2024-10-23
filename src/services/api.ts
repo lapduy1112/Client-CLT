@@ -4,7 +4,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 const api = axios.create({
   baseURL: "http://localhost:3000/api/v1/route-api",
+  withCredentials: true,
   headers: {
+    "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
   },
 });
@@ -163,7 +165,7 @@ export const addPort = async (data: { address: string; imageUrl: string }) => {
     return response.data;
   } catch (error) {
     toast.error("Failed to create port.");
-    console.error("Error searching Ports:", error);
+    console.log("Error adding Ports:", error);
     throw error;
   }
 };

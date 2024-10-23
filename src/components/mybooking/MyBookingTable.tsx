@@ -1,11 +1,14 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
 import { ColorPaletteProp } from "@mui/joy/styles";
+import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Chip from "@mui/joy/Chip";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
+import Link from "@mui/joy/Link";
 import Input from "@mui/joy/Input";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
@@ -22,20 +25,23 @@ import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import BlockIcon from "@mui/icons-material/Block";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Stack from "@mui/joy/Stack";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { useQuery } from "@tanstack/react-query";
-import { searchUsers, getAllRoles } from "@/libs/common/utils/fetch";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import DeleteUserModal from "../modal/DeleteModal";
-import UpdateUserModal from "../modal/UpdateModal";
-import Stack from "@mui/joy/Stack";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import AssignRoleModal from "../modal/AssignRoleModal";
+import {
+  getBookingHistory,
+  searchBooking,
+  searchRoutes,
+} from "@/libs/common/utils/fetchRoute";
+import DeleteRouteModal from "@/components/routemanage/DeleteModal";
+import UpdateRouteModal from "@/components/routemanage/UpdateModal";
+import UpdateBookingStatusModal from "@/components/bookingmanage/UpdateStatusModal";
 import { useStore } from "@/providers/ZustandProvider";
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -66,18 +72,13 @@ interface searchInterface {
 }
 function RowMenu({
   dataId,
-  setOpenDelete,
-  setOpenUpdate,
-  setOpenAssignRole,
+  setOpenUpdateStatus,
   setId,
 }: {
   dataId: string;
-  setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenAssignRole: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenUpdateStatus: React.Dispatch<React.SetStateAction<boolean>>;
   setId: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const abilities = useStore((state) => state.abilities);
   return (
     <Dropdown>
       <MenuButton
@@ -88,76 +89,47 @@ function RowMenu({
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        {abilities && abilities.size > 0 && abilities.has("update:profile") && (
-          <MenuItem
-            onClick={() => {
-              setId(dataId), setOpenUpdate(true);
-            }}>
-            Edit
-          </MenuItem>
-        )}
         <Divider />
-        {abilities && abilities.size > 0 && abilities.has("update:user") && (
-          <MenuItem
-            onClick={() => {
-              setId(dataId), setOpenAssignRole(true);
-            }}>
-            Assign Role to User
-          </MenuItem>
-        )}
+        <MenuItem
+          onClick={() => {
+            setId(dataId), setOpenUpdateStatus(true);
+          }}>
+          Update Status
+        </MenuItem>
         <Divider />
-        {abilities && abilities.size > 0 && abilities.has("delete:user") && (
-          <MenuItem
-            color="danger"
-            onClick={() => {
-              setId(dataId), setOpenDelete(true);
-            }}>
-            Delete
-          </MenuItem>
-        )}
       </Menu>
     </Dropdown>
   );
 }
-export default function UserTable() {
-  const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = React.useState(false);
-  const [openAssignRoleModal, setOpenAssignRoleModal] = React.useState(false);
+export default function MyBookingTable() {
+  const [openUpdateStatusModal, setOpenUpdateStatusModal] =
+    React.useState(false);
   const [selectedId, setselectedId] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const user = useStore((state) => state.user);
+  const userId = user?.id;
+  console.log(userId);
   const { replace } = useRouter();
   const sort = searchParams.get("sort");
-  const role = searchParams.get("role");
-  const isVerified = searchParams.get("isVerified");
-  const searchTerm = searchParams.get("searchTerm");
+  const status = searchParams.get("status");
+  const search = searchParams.get("search");
   const page = searchParams.get("page");
   const [curPage, setCurPage] = React.useState(page || "1");
-  const abilities = useStore((state) => state.abilities);
   const { isPending, isError, data, error, isSuccess } = useQuery({
-    queryKey: ["users", { sort, role, isVerified, searchTerm, page }],
+    queryKey: ["mybooking", { sort, search, status, page }],
     queryFn: () =>
-      searchUsers({
-        searchTerm: searchTerm || undefined,
-        sort: sort || undefined,
-        role: role || undefined,
-        isVerified: isVerified || undefined,
+      getBookingHistory(userId!, {
+        search: search || undefined,
+        sortBy: sort?.split(":")[0],
+        sortOrder: sort?.split(":")[1],
+        status: status || undefined,
         page: Number(page) || undefined,
       }),
     retry: false,
-    retryOnMount: false,
     staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-  });
-  const fetchRole = useQuery({
-    queryKey: ["roles"],
-    queryFn: () => getAllRoles(),
-    retry: false,
-    retryOnMount: false,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
+    // cacheTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
   function handleSearchKeys(searchQueries: searchInterface[]) {
@@ -178,55 +150,32 @@ export default function UserTable() {
     } else {
       params.delete(key);
     }
-    console.log("params", params.toString());
     replace(`${pathname}?${params.toString()}`);
   }
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
-        <FormLabel>Role</FormLabel>
+        <FormLabel>Status</FormLabel>
         <Select
           size="sm"
           placeholder="All"
-          defaultValue={role || ""}
-          id="role"
+          defaultValue={status || ""}
+          id="status"
           onChange={(event, newValue) => {
             handleSearchKeys([
-              { key: "role", term: newValue || "" },
+              { key: "status", term: newValue || "" },
               { key: "page", term: "1" },
             ]);
             setCurPage("1");
           }}>
           <Option value="">All</Option>
-          {fetchRole.isSuccess &&
-            fetchRole.data.roles.map((r: { id: string; role: string }) => (
-              <Option key={r.id} value={r.role}>
-                {r.role}
-              </Option>
-            ))}
-        </Select>
-      </FormControl>
-      <FormControl size="sm">
-        <FormLabel>Verified</FormLabel>
-        <Select
-          size="sm"
-          placeholder="All"
-          defaultValue={isVerified || ""}
-          id="isVerified"
-          onChange={(event, newValue) => {
-            handleSearchKeys([
-              { key: "isVerified", term: newValue || "" },
-              { key: "page", term: "1" },
-            ]);
-            setCurPage("1");
-          }}>
-          <Option value="">All</Option>
-          <Option value="True">Yes</Option>
-          <Option value="False">No</Option>
+          <Option value="pending">Pending</Option>
+          <Option value="confirm">Confirm</Option>
         </Select>
       </FormControl>
     </React.Fragment>
   );
+  console.log(data);
   return (
     <React.Fragment>
       <Sheet
@@ -279,15 +228,15 @@ export default function UserTable() {
             event.preventDefault();
             const form = event.target as HTMLFormElement;
             handleSearch(
-              "searchTerm",
+              "search",
               (form.elements.namedItem("search") as HTMLInputElement).value ||
                 ""
             );
           }}>
           <FormControl sx={{ flex: 1 }} size="sm">
-            <FormLabel>Search for users</FormLabel>
+            <FormLabel>Search for route</FormLabel>
             <Input
-              id="searchTerm"
+              id="search"
               name="search"
               size="sm"
               placeholder="Search"
@@ -329,130 +278,39 @@ export default function UserTable() {
                     width: 24,
                     textAlign: "center",
                     padding: "12px 6px",
-                  }}></th>
-                <th
-                  style={{
-                    width: 120,
-                    padding: "12px 6px",
                   }}>
-                  Id
+                  #
                 </th>
-                {/* <th style={{ width: 180, padding: '12px 6px' }}>Email</th> */}
-                <th style={{ width: 160 }}>
+                <th style={{ width: 80, padding: "12px 6px" }}>UserID </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
                   <Stack
                     direction="row"
-                    sx={{
-                      alignItems: "center",
-                    }}>
-                    Email
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Details
                     <Stack
                       direction="row"
                       spacing={0}
-                      sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}>
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
+                        color={sort === "startPort:ASC" ? "primary" : "neutral"}
                         onClick={() => {
-                          if (sort == "email:ASC") {
-                            handleSearch("sort", "");
+                          if (sort === "startPort:ASC") {
+                            handleSearch("sort", "startPort:DESC");
                           } else {
-                            handleSearch("sort", "email:ASC");
-                          }
-                        }}
-                        color={sort == "email:ASC" ? "primary" : "neutral"}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => {
-                          if (sort == "email:DESC") {
-                            handleSearch("sort", "");
-                          } else {
-                            handleSearch("sort", "email:DESC");
-                          }
-                        }}
-                        color={sort == "email:DESC" ? "primary" : "neutral"}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 140 }}>
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: "center",
-                      margin: "auto",
-                    }}>
-                    Username
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}>
-                      <IconButton
-                        color={sort == "username:ASC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort == "username:ASC") {
-                            handleSearch("sort", "");
-                          } else {
-                            handleSearch("sort", "username:ASC");
-                          }
-                        }}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        color={sort == "username:DESC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort == "username:DESC") {
-                            handleSearch("sort", "");
-                          } else {
-                            handleSearch("sort", "username:DESC");
-                          }
-                        }}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 100 }}>
-                  {" "}
-                  <Stack
-                    direction="row"
-                    sx={{
-                      alignItems: "center",
-                    }}>
-                    Verified
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginLeft: "8px",
-                      }}>
-                      <IconButton
-                        color={sort == "isVerified:ASC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort == "isVerified:ASC") {
-                            handleSearch("sort", "");
-                          } else {
-                            handleSearch("sort", "isVerified:ASC");
+                            handleSearch("sort", "startPort:ASC");
                           }
                         }}>
                         <ArrowUpwardIcon style={{ fontSize: "18px" }} />
                       </IconButton>
                       <IconButton
                         color={
-                          sort == "isVerified:DESC" ? "primary" : "neutral"
+                          sort === "startPort:DESC" ? "primary" : "neutral"
                         }
                         onClick={() => {
-                          if (sort == "isVerified:DESC") {
-                            handleSearch("sort", "");
+                          if (sort === "startPort:DESC") {
+                            handleSearch("sort", "startPort:ASC");
                           } else {
-                            handleSearch("sort", "isVerified:DESC");
+                            handleSearch("sort", "startPort:DESC");
                           }
                         }}>
                         <ArrowDownwardIcon style={{ fontSize: "18px" }} />
@@ -460,26 +318,88 @@ export default function UserTable() {
                     </Stack>
                   </Stack>
                 </th>
-                <th style={{ width: 140 }}>
-                  {" "}
+                <th style={{ width: 140, padding: "12px 6px" }}>
                   <Stack
                     direction="row"
-                    sx={{
-                      alignItems: "center",
-                    }}>
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Weight
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "endPort:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "endPort:ASC") {
+                            handleSearch("sort", "endPort:DESC");
+                          } else {
+                            handleSearch("sort", "endPort:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort === "endPort:DESC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "endPort:DESC") {
+                            handleSearch("sort", "endPort:ASC");
+                          } else {
+                            handleSearch("sort", "endPort:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Status
+                    <Stack
+                      direction="row"
+                      spacing={0}
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
+                      <IconButton
+                        color={sort === "status:ASC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "status:ASC") {
+                            handleSearch("sort", "status:DESC");
+                          } else {
+                            handleSearch("sort", "status:ASC");
+                          }
+                        }}>
+                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                      <IconButton
+                        color={sort === "status:DESC" ? "primary" : "neutral"}
+                        onClick={() => {
+                          if (sort === "status:DESC") {
+                            handleSearch("sort", "status:ASC");
+                          } else {
+                            handleSearch("sort", "status:DESC");
+                          }
+                        }}>
+                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: "center", margin: "auto" }}>
                     CreatedAt
                     <Stack
                       direction="row"
                       spacing={0}
-                      sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}>
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
-                        color={sort == "createdAt:ASC" ? "primary" : "neutral"}
+                        color={sort === "createdAt:ASC" ? "primary" : "neutral"}
                         onClick={() => {
-                          if (sort == "createdAt:ASC") {
-                            handleSearch("sort", "");
+                          if (sort === "createdAt:ASC") {
+                            handleSearch("sort", "createdAt:DESC");
                           } else {
                             handleSearch("sort", "createdAt:ASC");
                           }
@@ -487,10 +407,12 @@ export default function UserTable() {
                         <ArrowUpwardIcon style={{ fontSize: "18px" }} />
                       </IconButton>
                       <IconButton
-                        color={sort == "createdAt:DESC" ? "primary" : "neutral"}
+                        color={
+                          sort === "createdAt:DESC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort == "createdAt:DESC") {
-                            handleSearch("sort", "");
+                          if (sort === "createdAt:DESC") {
+                            handleSearch("sort", "createdAt:ASC");
                           } else {
                             handleSearch("sort", "createdAt:DESC");
                           }
@@ -500,39 +422,37 @@ export default function UserTable() {
                     </Stack>
                   </Stack>
                 </th>
-                <th style={{ width: 140 }}>
-                  {" "}
+                <th style={{ width: 140, padding: "12px 6px" }}>
                   <Stack
                     direction="row"
-                    sx={{
-                      alignItems: "center",
-                    }}>
-                    UpdatedAt
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    Departure Date
                     <Stack
                       direction="row"
                       spacing={0}
-                      sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}>
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
-                        color={sort == "updatedAt:ASC" ? "primary" : "neutral"}
+                        color={
+                          sort === "departureDate:ASC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort == "updatedAt:ASC") {
-                            handleSearch("sort", "");
+                          if (sort === "departureDate:ASC") {
+                            handleSearch("sort", "departureDate:DESC");
                           } else {
-                            handleSearch("sort", "updatedAt:ASC");
+                            handleSearch("sort", "departureDate:ASC");
                           }
                         }}>
                         <ArrowUpwardIcon style={{ fontSize: "18px" }} />
                       </IconButton>
                       <IconButton
-                        color={sort == "updatedAt:DESC" ? "primary" : "neutral"}
+                        color={
+                          sort === "departureDate:DESC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort == "updatedAt:DESC") {
-                            handleSearch("sort", "");
+                          if (sort === "departureDate:DESC") {
+                            handleSearch("sort", "departureDate:ASC");
                           } else {
-                            handleSearch("sort", "updatedAt:DESC");
+                            handleSearch("sort", "departureDate:DESC");
                           }
                         }}>
                         <ArrowDownwardIcon style={{ fontSize: "18px" }} />
@@ -540,39 +460,37 @@ export default function UserTable() {
                     </Stack>
                   </Stack>
                 </th>
-                <th style={{ width: 80 }}>
-                  {" "}
+                <th style={{ width: 140, padding: "12px 6px" }}>
                   <Stack
                     direction="row"
-                    sx={{
-                      alignItems: "center",
-                    }}>
-                    Role
+                    sx={{ alignItems: "center", margin: "auto" }}>
+                    ArrivalDate
                     <Stack
                       direction="row"
                       spacing={0}
-                      sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}>
+                      sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
-                        color={sort == "role.role:ASC" ? "primary" : "neutral"}
+                        color={
+                          sort === "arrivalDate:ASC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort == "role.role:ASC") {
-                            handleSearch("sort", "");
+                          if (sort === "arrivalDate:ASC") {
+                            handleSearch("sort", "arrivalDate:DESC");
                           } else {
-                            handleSearch("sort", "role.role:ASC");
+                            handleSearch("sort", "arrivalDate:ASC");
                           }
                         }}>
                         <ArrowUpwardIcon style={{ fontSize: "18px" }} />
                       </IconButton>
                       <IconButton
-                        color={sort == "role.role:DESC" ? "primary" : "neutral"}
+                        color={
+                          sort === "arrivalDate:DESC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort == "role.role:DESC") {
-                            handleSearch("sort", "");
+                          if (sort === "arrivalDate:DESC") {
+                            handleSearch("sort", "arrivalDate:ASC");
                           } else {
-                            handleSearch("sort", "role.role:DESC");
+                            handleSearch("sort", "arrivalDate:DESC");
                           }
                         }}>
                         <ArrowDownwardIcon style={{ fontSize: "18px" }} />
@@ -580,90 +498,82 @@ export default function UserTable() {
                     </Stack>
                   </Stack>
                 </th>
-                <th style={{ width: 80 }}> </th>
+                <th style={{ width: 140, padding: "12px 6px" }}> </th>
               </tr>
             </thead>
             <tbody>
-              {[...data.users].map((row) => (
-                <tr key={row.id}>
-                  <td style={{ textAlign: "center", width: 120 }}></td>
-                  <td>
-                    <Typography level="body-xs">{row.id}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.email}</Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.username}</Typography>
-                  </td>
-                  <td>
-                    <Chip
-                      variant="soft"
-                      size="sm"
-                      startDecorator={
-                        {
-                          true: <CheckRoundedIcon />,
-                          false: <BlockIcon />,
-                        }[String(row.isVerified)]
-                      }
-                      color={
-                        {
-                          true: "success",
-                          false: "danger",
-                        }[String(row.isVerified)] as ColorPaletteProp
-                      }>
-                      {row.isVerified.toString()}
-                    </Chip>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.createdAt
-                        ? new Date(row.createdAt).toUTCString()
-                        : ""}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.updatedAt
-                        ? new Date(row.updatedAt).toUTCString()
-                        : ""}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">{row.role.role}</Typography>
-                  </td>
-                  <td>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                      <RowMenu
-                        dataId={(row.id as string) || ""}
-                        setOpenDelete={setOpenDeleteModal}
-                        setOpenUpdate={setOpenUpdateModal}
-                        setOpenAssignRole={setOpenAssignRoleModal}
-                        setId={setselectedId}
-                      />
-                    </Box>
+              {Array.isArray(data.data) && data.data.length > 0 ? (
+                [...data.data].map((row, index) => (
+                  <tr key={row.id}>
+                    <td style={{ textAlign: "center", width: 120 }}>
+                      <Typography level="body-xs">{index + 1}</Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {row.userId.substring(0, 4).toUpperCase()}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {row.goodsDetails}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">{row.weightRange}</Typography>
+                    </td>
+                    <td>
+                      <Chip
+                        variant="soft"
+                        size="sm"
+                        color={
+                          {
+                            Pending: "danger",
+                            Completed: "success",
+                          }[String(row.status)] as ColorPaletteProp
+                        }>
+                        {row.status.toString()}
+                      </Chip>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {new Date(row.createdAt).toISOString().substring(0, 10)}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {new Date(row.route.departureDate)
+                          .toISOString()
+                          .substring(0, 10)}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {new Date(row.route.arrivalDate)
+                          .toISOString()
+                          .substring(0, 10)}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Box
+                        sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                        <RowMenu
+                          dataId={(row.id as string) || ""}
+                          setOpenUpdateStatus={setOpenUpdateStatusModal}
+                          setId={setselectedId}
+                        />
+                      </Box>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8} style={{ textAlign: "center" }}>
+                    <Typography level="body-sm">No booking found</Typography>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </Table>
-        )}
-        {isError && (
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: 200,
-            }}>
-            <Typography
-              level="body-lg"
-              color="danger"
-              sx={{ textAlign: "center" }}>
-              (Ｔ▽Ｔ) {error?.message || "Something went wrong"}
-            </Typography>
-          </Stack>
         )}
       </Sheet>
       <Box
@@ -689,18 +599,6 @@ export default function UserTable() {
           }}>
           Previous
         </Button>
-
-        {/* <Box sx={{ flex: 1 }} />
-        {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
-          <IconButton
-            key={page}
-            size="sm"
-            variant={Number(page) ? 'outlined' : 'plain'}
-            color="neutral"
-          >
-            {page}
-          </IconButton>
-        ))} */}
         <Box
           sx={{
             flex: 1,
@@ -731,10 +629,7 @@ export default function UserTable() {
               disabled={!data}
               endDecorator={
                 <Button variant="soft" color="neutral" disabled size="sm">
-                  /
-                  {data && data.totalCount && data.pageSize
-                    ? Math.ceil(data.totalCount / data.pageSize)
-                    : 1}
+                  /{data && data.total && data.lastPage ? data.lastPage : 1}
                 </Button>
               }
             />
@@ -745,42 +640,20 @@ export default function UserTable() {
           variant="outlined"
           color="neutral"
           endDecorator={<KeyboardArrowRightIcon />}
-          disabled={
-            !data ||
-            data.totalCount < data.pageSize ||
-            data.pageNumber * data.pageSize >= data.totalCount
-          }
+          disabled={!data || data.currentPage >= data.lastPage}
           onClick={() => {
-            handleSearch("page", String(Number(data.pageNumber) + 1));
-            setCurPage(String(Number(data.pageNumber) + 1));
+            handleSearch("page", String(Number(data.currentPage) + 1));
+            setCurPage(String(Number(data.currentPage) + 1));
           }}>
           Next
         </Button>
       </Box>
-      {abilities && abilities.size > 0 && abilities.has("delete:user") && (
-        <DeleteUserModal
-          open={openDeleteModal}
-          setOpen={setOpenDeleteModal}
-          id={selectedId}
-          setSelectedId={setselectedId}
-        />
-      )}
-      {abilities && abilities.size > 0 && abilities.has("update:profile") && (
-        <UpdateUserModal
-          open={openUpdateModal}
-          setOpen={setOpenUpdateModal}
-          id={selectedId}
-          setSelectedId={setselectedId}
-        />
-      )}
-      {abilities && abilities.size > 0 && abilities.has("update:user") && (
-        <AssignRoleModal
-          open={openAssignRoleModal}
-          setOpen={setOpenAssignRoleModal}
-          id={selectedId}
-          setSelectedId={setselectedId}
-        />
-      )}
+      <UpdateBookingStatusModal
+        open={openUpdateStatusModal}
+        setOpen={setOpenUpdateStatusModal}
+        id={selectedId}
+        setSelectedId={setselectedId}
+      />
     </React.Fragment>
   );
 }

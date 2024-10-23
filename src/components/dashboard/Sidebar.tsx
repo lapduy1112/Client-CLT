@@ -71,6 +71,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
   const router = useRouter();
   const abilities = useStore((state) => state.abilities);
   console.log("abilities", abilities);
+  console.log(user);
   const deleteUser = useStore((state) => state.deleteUser);
   const mutation = useMutation({
     mutationFn: logOut,
@@ -245,10 +246,10 @@ export default function Sidebar({ tab }: { tab?: string }) {
             <ListItemButton
               role="menuitem"
               component="a"
-              href="/dashboard/booking">
+              href="/dashboard/bookingmanage">
               <ShoppingCartRoundedIcon />
               <ListItemContent>
-                <Typography level="title-sm">Booking</Typography>
+                <Typography level="title-sm">Booking Management</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
@@ -285,6 +286,14 @@ export default function Sidebar({ tab }: { tab?: string }) {
                     component="a"
                     href="/dashboard/account">
                     Account security
+                  </ListItemButton>
+                </ListItem>
+                <ListItem>
+                  <ListItemButton
+                    selected={tab == "booking"}
+                    component="a"
+                    href="/dashboard/booking">
+                    Your Booking
                   </ListItemButton>
                 </ListItem>
               </List>
