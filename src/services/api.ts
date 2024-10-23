@@ -1,11 +1,11 @@
-import { BE_API_URL } from "@/libs/common/constants/api";
-import { PortsResponse, RouteResponse } from "@/services/interface";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { BE_API_URL } from '@/libs/common/constants/api';
+import { PortsResponse, RouteResponse } from '@/services/interface';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/v1/route-api",
+  baseURL: 'http://localhost:3000/api/v1/route-api',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -15,18 +15,18 @@ export const getUsers = async () => {
     console.log(response.data.users);
     return response.data.users;
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error('Error fetching users:', error);
     throw error;
   }
 };
 export const getRoutes = async (
   page: number = 1,
   limit: number = 9,
-  sortBy: string = "createdAt",
-  sortOrder: string = "DESC"
+  sortBy: string = 'createdAt',
+  sortOrder: string = 'DESC'
 ): Promise<RouteResponse> => {
   try {
-    const response = await api.get("/routes", {
+    const response = await api.get('/routes', {
       params: {
         page,
         limit,
@@ -37,7 +37,7 @@ export const getRoutes = async (
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching routes:", error);
+    console.error('Error fetching routes:', error);
     throw error;
   }
 };
@@ -74,11 +74,11 @@ export const searchRoutes = async (
   searchQuery: string,
   page: number = 1,
   limit: number = 10,
-  sortBy: string = "createdAt", // Default sort field
-  sortOrder: string = "DESC" // Default sort order
+  sortBy: string = 'createdAt', // Default sort field
+  sortOrder: string = 'DESC' // Default sort order
 ) => {
   try {
-    const response = await api.get("/routes", {
+    const response = await api.get('/routes', {
       params: {
         search: searchQuery,
         limit: limit,
@@ -90,7 +90,7 @@ export const searchRoutes = async (
 
     return response.data; // Ensure the correct data structure is returned
   } catch (error) {
-    console.error("Error searching routes:", error);
+    console.error('Error searching routes:', error);
     throw error;
   }
 };
@@ -98,11 +98,11 @@ export const searchRoutes = async (
 export const getPorts = async (
   page: number = 1,
   limit: number = 4,
-  sortBy: string = "createdAt",
-  sortOrder: string = "DESC"
+  sortBy: string = 'createdAt',
+  sortOrder: string = 'DESC'
 ): Promise<PortsResponse> => {
   try {
-    const response = await api.get("/port", {
+    const response = await api.get('/port', {
       params: {
         page,
         limit,
@@ -113,19 +113,19 @@ export const getPorts = async (
     // console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching ports:", error);
-    throw new Error("Could not fetch ports. Please try again later.");
+    console.error('Error fetching ports:', error);
+    throw new Error('Could not fetch ports. Please try again later.');
   }
 };
 export const searchPorts = async (
   searchQuery: string,
   page: number = 1,
   limit: number = 10,
-  sortBy: string = "createdAt",
-  sortOrder: string = "DESC"
+  sortBy: string = 'createdAt',
+  sortOrder: string = 'DESC'
 ) => {
   try {
-    const response = await api.get("/port", {
+    const response = await api.get('/port', {
       params: {
         search: searchQuery,
         limit: limit,
@@ -136,20 +136,20 @@ export const searchPorts = async (
     });
     return response.data;
   } catch (error) {
-    console.error("Error searching Ports:", error);
+    console.error('Error searching Ports:', error);
     throw error;
   }
 };
 
 export const addPort = async (data: { address: string }) => {
   try {
-    const response = await api.post("/port/create", data);
+    const response = await api.post('/port/create', data);
     console.log(response.data);
-    toast.success("Port created successfully!");
+    toast.success('Port created successfully!');
     return response.data;
   } catch (error) {
-    toast.error("Failed to create port.");
-    console.error("Error searching Ports:", error);
+    toast.error('Failed to create port.');
+    console.error('Error searching Ports:', error);
     throw error;
   }
 };
@@ -159,27 +159,27 @@ export const addRoute = async (newRoute: {
   departureDate: string;
 }) => {
   try {
-    const response = await api.post("/routes/create", newRoute);
-    toast.success("Route created successfully!");
+    const response = await api.post('/routes/create', newRoute);
+    toast.success('Route created successfully!');
     console.log(response.data);
     return response.data;
   } catch (error) {
-    toast.error("Failed to create route.");
-    console.error("Error adding new route:", error);
+    toast.error('Failed to create route.');
+    console.error('Error adding new route:', error);
     throw error;
   }
 };
 
 export const createBooking = async (routeId: string, userId: string) => {
   try {
-    const response = await api.post("/booking", {
+    const response = await api.post('/booking', {
       routeId,
       userId,
     });
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error("Error creating booking:", error);
+    console.error('Error creating booking:', error);
     throw error;
   }
 };
