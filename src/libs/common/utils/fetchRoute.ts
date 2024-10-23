@@ -8,7 +8,7 @@ import {
   RouteUpdateStatusInterface,
 } from "@/libs/common/interfaces/update-route.interface";
 import { SearchBookingQueryInterface } from "@/libs/common/interfaces/search_booking_query.interface";
-
+import { toast } from "react-toastify";
 const BASE_URL = BE_ROUTE_API_URL || "http://localhost:3000";
 const customAxiosWithCredentials = axios.create({
   baseURL: BASE_URL,
@@ -47,6 +47,41 @@ export function searchPorts(query?: SearchPortQueryInterface) {
 
   return customAxiosWithCredentials.get(`/port`).then((res) => res.data);
 }
+
+//add port
+// export const uploadImage = async (formData: FormData) => {
+//   console.log(formData);
+//   try {
+//     const response = await axios.post(
+//       "http://localhost:3000/cloudinary/upload",
+//       formData,
+//       {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//       }
+//     );
+//     console.log(response);
+//     return response;
+//   } catch (error) {
+//     console.error("Error upload Image:", error);
+//     throw error;
+//   }
+// };
+
+// export const addPort = async (data: { address: string; imageUrl: string }) => {
+//   try {
+//     const response = await api.post("/port/create", data);
+//     console.log(response.data);
+//     toast.success("Port created successfully!");
+//     return response.data;
+//   } catch (error) {
+//     toast.error("Failed to create port.");
+//     console.error("Error searching Ports:", error);
+//     throw error;
+//   }
+// };
+
 export function updatePort(data: PortUpdateInterface, id: string) {
   return customAxiosWithCredentials
     .patch(`/port/${id}`, data)
@@ -144,4 +179,55 @@ export function updateBookingStatus(id: string) {
   return customAxiosWithCredentials
     .patch(`/booking/${id}/status`)
     .then((res) => res.data);
+}
+
+// export function getBookingHistory(userId: string) {
+//   return customAxiosWithCredentials
+//     .get(`/booking/history/${userId}`)
+//     .then((res) => res.data)
+//     .catch((err) => {
+//       console.log("Error fetching booking history:", err);
+//       toast.error("Failed to fetch booking history.");
+//     });
+// }
+
+export async function getBookingHistory(
+  userId: string,
+  query?: SearchBookingQueryInterface
+) {
+  if (query) {
+    let searchQuery = `/booking/history/${userId}?`;
+
+    if (query.search) {
+      searchQuery += `search=${query.search}&`;
+    }
+
+    if (query.page) {
+      searchQuery += `page=${query.page}&`;
+    }
+
+    if (query.sortBy) {
+      searchQuery += `sortBy=${query.sortBy}&`;
+    }
+
+    if (query.sortOrder) {
+      searchQuery += `sortOrder=${query.sortOrder}&`;
+    }
+
+    if (query.status) {
+      searchQuery += `status=${query.status}&`;
+    }
+
+    searchQuery = searchQuery.endsWith("&")
+      ? searchQuery.slice(0, -1)
+      : searchQuery;
+
+    const res = await customAxiosWithCredentials.get(searchQuery);
+    return res.data;
+  }
+
+  const res_1 = await customAxiosWithCredentials.get(
+    `/booking/history/${userId}`
+  );
+  return res_1.data;
 }

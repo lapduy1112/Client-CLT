@@ -65,6 +65,20 @@ interface searchInterface {
   key: string;
   term: string;
 }
+interface Port {
+  id: string;
+  address: string;
+}
+interface Route {
+  id: string;
+  startPort: Port;
+  endPort: Port;
+  distance: number;
+  departureDate: Date;
+  arrivalDate: Date;
+  travelTime: number;
+  status: string;
+}
 function RowMenu({
   dataId,
   setOpenDelete,

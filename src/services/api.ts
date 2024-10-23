@@ -6,6 +6,7 @@ const api = axios.create({
   baseURL: 'http://localhost:3000/api/v1/route-api',
   headers: {
     'Content-Type': 'application/json',
+
   },
 });
 
@@ -162,8 +163,8 @@ export const addPort = async (data: { address: string; imageUrl: string }) => {
     toast.success('Port created successfully!');
     return response.data;
   } catch (error) {
-    toast.error('Failed to create port.');
-    console.error('Error searching Ports:', error);
+    toast.error("Failed to create port.");
+    console.log("Error adding Ports:", error);
     throw error;
   }
 };
