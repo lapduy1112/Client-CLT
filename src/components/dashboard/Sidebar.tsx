@@ -77,6 +77,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
     mutationFn: logOut,
     onSuccess: () => {
       toast.success("Logged out successfully");
+      router.push("/login");
       deleteUser();
     },
     onError: (error: Error | AxiosError) => {
@@ -90,7 +91,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
   });
   const handleLogout = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    router.push("/login");
+
     mutation.mutate();
   };
   return (
@@ -242,17 +243,21 @@ export default function Sidebar({ tab }: { tab?: string }) {
                 </ListItemButton>
               </ListItem>
             )}
-          <ListItem>
-            <ListItemButton
-              role="menuitem"
-              component="a"
-              href="/dashboard/bookingmanage">
-              <ShoppingCartRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Booking Management</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
+          {abilities &&
+            abilities.size >= 1 &&
+            abilities.has("search:route") && (
+              <ListItem>
+                <ListItemButton
+                  role="menuitem"
+                  component="a"
+                  href="/dashboard/bookingmanage">
+                  <ShoppingCartRoundedIcon />
+                  <ListItemContent>
+                    <Typography level="title-sm">Booking Management</Typography>
+                  </ListItemContent>
+                </ListItemButton>
+              </ListItem>
+            )}
           <ListItem nested>
             <Toggler
               defaultExpanded
@@ -346,12 +351,12 @@ export default function Sidebar({ tab }: { tab?: string }) {
       </Box>
       <Divider />
       {user && (
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <Avatar
             variant="outlined"
             size="sm"
             src={user?.profileImage}
-            imgProps={{ referrerPolicy: 'no-referrer' }}
+            imgProps={{ referrerPolicy: "no-referrer" }}
           />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography

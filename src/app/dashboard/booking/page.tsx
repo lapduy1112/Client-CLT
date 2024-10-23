@@ -60,7 +60,7 @@ export default function UserManagement() {
           justifyContent: "space-between",
         }}>
         <Typography level="h2" component="h1">
-          My Booking
+          History Booking
         </Typography>
       </Box>
       <MyBookingTable />

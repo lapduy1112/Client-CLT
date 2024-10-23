@@ -165,7 +165,7 @@ export default function BookingTable() {
           }}>
           <Option value="">All</Option>
           <Option value="pending">Pending</Option>
-          <Option value="confirm">Confirm</Option>
+          <Option value="confirmed">Confirmed</Option>
         </Select>
       </FormControl>
     </React.Fragment>
@@ -287,25 +287,27 @@ export default function BookingTable() {
                       spacing={0}
                       sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
-                        color={sort === "startPort:ASC" ? "primary" : "neutral"}
+                        color={
+                          sort === "goodsDetails:ASC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort === "startPort:ASC") {
-                            handleSearch("sort", "startPort:DESC");
+                          if (sort === "goodsDetails:ASC") {
+                            handleSearch("sort", "goodsDetails:DESC");
                           } else {
-                            handleSearch("sort", "startPort:ASC");
+                            handleSearch("sort", "goodsDetails:ASC");
                           }
                         }}>
                         <ArrowUpwardIcon style={{ fontSize: "18px" }} />
                       </IconButton>
                       <IconButton
                         color={
-                          sort === "startPort:DESC" ? "primary" : "neutral"
+                          sort === "goodsDetails:DESC" ? "primary" : "neutral"
                         }
                         onClick={() => {
-                          if (sort === "startPort:DESC") {
-                            handleSearch("sort", "startPort:ASC");
+                          if (sort === "goodsDetails:DESC") {
+                            handleSearch("sort", "goodsDetails:ASC");
                           } else {
-                            handleSearch("sort", "startPort:DESC");
+                            handleSearch("sort", "goodsDetails:DESC");
                           }
                         }}>
                         <ArrowDownwardIcon style={{ fontSize: "18px" }} />
@@ -323,23 +325,27 @@ export default function BookingTable() {
                       spacing={0}
                       sx={{ justifyContent: "center", alignItems: "center" }}>
                       <IconButton
-                        color={sort === "endPort:ASC" ? "primary" : "neutral"}
+                        color={
+                          sort === "weightRange:ASC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort === "endPort:ASC") {
-                            handleSearch("sort", "endPort:DESC");
+                          if (sort === "weightRange:ASC") {
+                            handleSearch("sort", "weightRange:DESC");
                           } else {
-                            handleSearch("sort", "endPort:ASC");
+                            handleSearch("sort", "weightRange:ASC");
                           }
                         }}>
                         <ArrowUpwardIcon style={{ fontSize: "18px" }} />
                       </IconButton>
                       <IconButton
-                        color={sort === "endPort:DESC" ? "primary" : "neutral"}
+                        color={
+                          sort === "weightRange:DESC" ? "primary" : "neutral"
+                        }
                         onClick={() => {
-                          if (sort === "endPort:DESC") {
-                            handleSearch("sort", "endPort:ASC");
+                          if (sort === "weightRange:DESC") {
+                            handleSearch("sort", "weightRange:ASC");
                           } else {
-                            handleSearch("sort", "endPort:DESC");
+                            handleSearch("sort", "weightRange:DESC");
                           }
                         }}>
                         <ArrowDownwardIcon style={{ fontSize: "18px" }} />

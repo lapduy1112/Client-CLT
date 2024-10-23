@@ -83,7 +83,7 @@ export default function BookingManagement() {
           justifyContent: "space-between",
         }}>
         <Typography level="h2" component="h1">
-          Ports Management
+          Booking Management
         </Typography>
       </Box>
       <BookingTable />

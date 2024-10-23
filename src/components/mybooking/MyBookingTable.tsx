@@ -222,7 +222,7 @@ export default function MyBookingTable() {
             minWidth: { xs: "120px", md: "160px" },
           },
         }}>
-        <form
+        {/* <form
           className="flex-1"
           onSubmit={(event) => {
             event.preventDefault();
@@ -243,8 +243,8 @@ export default function MyBookingTable() {
               startDecorator={<SearchIcon />}
             />
           </FormControl>
-        </form>
-        {renderFilters()}
+        </form> */}
+        {/* {renderFilters()} */}
       </Box>
       <Sheet
         className="OrderTableContainer"
@@ -281,236 +281,38 @@ export default function MyBookingTable() {
                   }}>
                   #
                 </th>
-                <th style={{ width: 80, padding: "12px 6px" }}>UserID </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>StartPort </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>EndPort </th>
                 <th style={{ width: 140, padding: "12px 6px" }}>
-                  <Stack
-                    direction="row"
-                    sx={{ alignItems: "center", margin: "auto" }}>
-                    Details
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{ justifyContent: "center", alignItems: "center" }}>
-                      <IconButton
-                        color={sort === "startPort:ASC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort === "startPort:ASC") {
-                            handleSearch("sort", "startPort:DESC");
-                          } else {
-                            handleSearch("sort", "startPort:ASC");
-                          }
-                        }}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        color={
-                          sort === "startPort:DESC" ? "primary" : "neutral"
-                        }
-                        onClick={() => {
-                          if (sort === "startPort:DESC") {
-                            handleSearch("sort", "startPort:ASC");
-                          } else {
-                            handleSearch("sort", "startPort:DESC");
-                          }
-                        }}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
+                  Good Details
                 </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>Weight</th>
+                <th style={{ width: 120, padding: "12px 6px" }}>Status</th>
                 <th style={{ width: 140, padding: "12px 6px" }}>
-                  <Stack
-                    direction="row"
-                    sx={{ alignItems: "center", margin: "auto" }}>
-                    Weight
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{ justifyContent: "center", alignItems: "center" }}>
-                      <IconButton
-                        color={sort === "endPort:ASC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort === "endPort:ASC") {
-                            handleSearch("sort", "endPort:DESC");
-                          } else {
-                            handleSearch("sort", "endPort:ASC");
-                          }
-                        }}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        color={sort === "endPort:DESC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort === "endPort:DESC") {
-                            handleSearch("sort", "endPort:ASC");
-                          } else {
-                            handleSearch("sort", "endPort:DESC");
-                          }
-                        }}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
+                  Route Status
                 </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>CreatedAt</th>
                 <th style={{ width: 140, padding: "12px 6px" }}>
-                  <Stack
-                    direction="row"
-                    sx={{ alignItems: "center", margin: "auto" }}>
-                    Status
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{ justifyContent: "center", alignItems: "center" }}>
-                      <IconButton
-                        color={sort === "status:ASC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort === "status:ASC") {
-                            handleSearch("sort", "status:DESC");
-                          } else {
-                            handleSearch("sort", "status:ASC");
-                          }
-                        }}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        color={sort === "status:DESC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort === "status:DESC") {
-                            handleSearch("sort", "status:ASC");
-                          } else {
-                            handleSearch("sort", "status:DESC");
-                          }
-                        }}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
+                  Departure Date
                 </th>
-                <th style={{ width: 140, padding: "12px 6px" }}>
-                  <Stack
-                    direction="row"
-                    sx={{ alignItems: "center", margin: "auto" }}>
-                    CreatedAt
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{ justifyContent: "center", alignItems: "center" }}>
-                      <IconButton
-                        color={sort === "createdAt:ASC" ? "primary" : "neutral"}
-                        onClick={() => {
-                          if (sort === "createdAt:ASC") {
-                            handleSearch("sort", "createdAt:DESC");
-                          } else {
-                            handleSearch("sort", "createdAt:ASC");
-                          }
-                        }}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        color={
-                          sort === "createdAt:DESC" ? "primary" : "neutral"
-                        }
-                        onClick={() => {
-                          if (sort === "createdAt:DESC") {
-                            handleSearch("sort", "createdAt:ASC");
-                          } else {
-                            handleSearch("sort", "createdAt:DESC");
-                          }
-                        }}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 140, padding: "12px 6px" }}>
-                  <Stack
-                    direction="row"
-                    sx={{ alignItems: "center", margin: "auto" }}>
-                    Departure Date
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{ justifyContent: "center", alignItems: "center" }}>
-                      <IconButton
-                        color={
-                          sort === "departureDate:ASC" ? "primary" : "neutral"
-                        }
-                        onClick={() => {
-                          if (sort === "departureDate:ASC") {
-                            handleSearch("sort", "departureDate:DESC");
-                          } else {
-                            handleSearch("sort", "departureDate:ASC");
-                          }
-                        }}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        color={
-                          sort === "departureDate:DESC" ? "primary" : "neutral"
-                        }
-                        onClick={() => {
-                          if (sort === "departureDate:DESC") {
-                            handleSearch("sort", "departureDate:ASC");
-                          } else {
-                            handleSearch("sort", "departureDate:DESC");
-                          }
-                        }}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 140, padding: "12px 6px" }}>
-                  <Stack
-                    direction="row"
-                    sx={{ alignItems: "center", margin: "auto" }}>
-                    ArrivalDate
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{ justifyContent: "center", alignItems: "center" }}>
-                      <IconButton
-                        color={
-                          sort === "arrivalDate:ASC" ? "primary" : "neutral"
-                        }
-                        onClick={() => {
-                          if (sort === "arrivalDate:ASC") {
-                            handleSearch("sort", "arrivalDate:DESC");
-                          } else {
-                            handleSearch("sort", "arrivalDate:ASC");
-                          }
-                        }}>
-                        <ArrowUpwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                      <IconButton
-                        color={
-                          sort === "arrivalDate:DESC" ? "primary" : "neutral"
-                        }
-                        onClick={() => {
-                          if (sort === "arrivalDate:DESC") {
-                            handleSearch("sort", "arrivalDate:ASC");
-                          } else {
-                            handleSearch("sort", "arrivalDate:DESC");
-                          }
-                        }}>
-                        <ArrowDownwardIcon style={{ fontSize: "18px" }} />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                </th>
-                <th style={{ width: 140, padding: "12px 6px" }}> </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>ArrivalDate</th>
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(data.data) && data.data.length > 0 ? (
-                [...data.data].map((row, index) => (
+              {Array.isArray(data) && data.length > 0 ? (
+                data.map((row, index) => (
                   <tr key={row.id}>
                     <td style={{ textAlign: "center", width: 120 }}>
                       <Typography level="body-xs">{index + 1}</Typography>
                     </td>
                     <td>
                       <Typography level="body-xs">
-                        {row.userId.substring(0, 4).toUpperCase()}
+                        {row.route.startPort.address}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {row.route.endPort.address}
                       </Typography>
                     </td>
                     <td>
@@ -535,6 +337,20 @@ export default function MyBookingTable() {
                       </Chip>
                     </td>
                     <td>
+                      <Chip
+                        variant="soft"
+                        size="sm"
+                        color={
+                          {
+                            Available: "danger",
+                            Transit: "warning",
+                            Completed: "success",
+                          }[String(row.route.status)] as ColorPaletteProp
+                        }>
+                        {row.route.status.toString()}
+                      </Chip>
+                    </td>
+                    <td>
                       <Typography level="body-xs">
                         {new Date(row.createdAt).toISOString().substring(0, 10)}
                       </Typography>
@@ -552,16 +368,6 @@ export default function MyBookingTable() {
                           .toISOString()
                           .substring(0, 10)}
                       </Typography>
-                    </td>
-                    <td>
-                      <Box
-                        sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                        <RowMenu
-                          dataId={(row.id as string) || ""}
-                          setOpenUpdateStatus={setOpenUpdateStatusModal}
-                          setId={setselectedId}
-                        />
-                      </Box>
                     </td>
                   </tr>
                 ))
@@ -648,12 +454,6 @@ export default function MyBookingTable() {
           Next
         </Button>
       </Box>
-      <UpdateBookingStatusModal
-        open={openUpdateStatusModal}
-        setOpen={setOpenUpdateStatusModal}
-        id={selectedId}
-        setSelectedId={setselectedId}
-      />
     </React.Fragment>
   );
 }
