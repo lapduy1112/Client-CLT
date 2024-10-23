@@ -23,8 +23,7 @@ const Footer = () => {
               Phone:{" "}
               <a
                 href="tel:+01234567890"
-                className="text-blue-400 hover:underline"
-              >
+                className="text-blue-400 hover:underline">
                 +012 345 67890
               </a>
             </Typography>
@@ -32,8 +31,7 @@ const Footer = () => {
               Email:{" "}
               <a
                 href="mailto:info@example.com"
-                className="text-blue-400 hover:underline"
-              >
+                className="text-blue-400 hover:underline">
                 info@example.com
               </a>
             </Typography>
@@ -45,29 +43,25 @@ const Footer = () => {
                 <IconButton
                   href="https://facebook.com"
                   target="_blank"
-                  color="inherit"
-                >
+                  color="inherit">
                   <FacebookIcon />
                 </IconButton>
                 <IconButton
                   href="https://twitter.com"
                   target="_blank"
-                  color="inherit"
-                >
+                  color="inherit">
                   <TwitterIcon />
                 </IconButton>
                 <IconButton
                   href="https://instagram.com"
                   target="_blank"
-                  color="inherit"
-                >
+                  color="inherit">
                   <InstagramIcon />
                 </IconButton>
                 <IconButton
                   href="https://linkedin.com"
                   target="_blank"
-                  color="inherit"
-                >
+                  color="inherit">
                   <LinkedInIcon />
                 </IconButton>
               </Box>
@@ -80,23 +74,15 @@ const Footer = () => {
             </Typography>
             <Link
               href="/home"
-              className="text-blue-400 hover:underline mb-1 block"
-            >
+              className="text-blue-400 hover:underline mb-1 block">
               Home
-            </Link>
-            <Link
-              href="/service"
-              className="text-blue-400 hover:underline mb-1 block"
-            >
-              Service
             </Link>
             <Link href="/route" className="text-blue-400 hover:underline block">
               Route
             </Link>
             <Link
               href="/port"
-              className="text-blue-400 hover:underline mb-1 block"
-            >
+              className="text-blue-400 hover:underline mb-1 block">
               Port
             </Link>
           </Box>

@@ -3,6 +3,7 @@ export interface Port {
   address: string;
   lat: string;
   lon: string;
+  imageUrl: string;
 }
 
 export interface PortsResponse {
@@ -22,7 +23,7 @@ export interface Route {
   departureDate: Date;
   arrivalDate: Date;
   travelTime: number;
-  status:string;
+  status: string;
 }
 export interface RouteResponse {
   data: Route[];

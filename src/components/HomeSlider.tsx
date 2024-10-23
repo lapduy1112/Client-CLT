@@ -63,8 +63,9 @@ export const HomeSlider = () => {
     router.push(`/dashboard/profile`);
     handleClose();
   };
-  const handleHistory = () => {
-    router.push(`/history`);
+  const handleDashboard = () => {
+    console.log("History clicked");
+    router.push(`/dashboard/profile`);
     handleClose();
   };
 
@@ -209,8 +210,7 @@ export const HomeSlider = () => {
                     </div>
                   </MenuItem>
                   <Divider />
-                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
-                  <MenuItem>Dashboard</MenuItem>
+              <MenuItem onClick={handleDashboard}>Dashboard</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </div>

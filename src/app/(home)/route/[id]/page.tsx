@@ -1,15 +1,28 @@
 "use client";
-
 import MainLayout from "@/app/(home)/MainLayout";
 import MapLeaflet from "@/components/MapLeaflet";
 import RouteInfo from "@/components/RouteInfo";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { CircularProgress, Box, Button } from "@mui/material";
+import {
+  CircularProgress,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { useStore } from "@/providers/ZustandProvider";
 import { createBooking } from "@/services/api";
 import { toast } from "react-toastify";
+
 interface Port {
   address: string;
   lat: number;
@@ -33,7 +46,11 @@ export default function RouteDetailPage() {
   const [routeDetail, setRouteDetail] = useState<RouteDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // console.log(user);
+
+  // State for modal
+  const [openModal, setOpenModal] = useState(false);
+  const [goodsDetails, setGoodsDetails] = useState("");
+  const [weightRange, setWeightRange] = useState("");
   useEffect(() => {
     const fetchRouteDetail = async () => {
       if (id) {
@@ -43,7 +60,6 @@ export default function RouteDetailPage() {
           );
 
           setRouteDetail(response.data);
-          console.log(response.data);
         } catch (err: any) {
           console.error("Error fetching route data", err);
           setError(err.message || "Something went wrong");
@@ -91,7 +107,7 @@ export default function RouteDetailPage() {
       toast.error("User not found or not logged in.");
       return;
     }
-    if (!user || !user.isVerified) {
+    if (!user.isVerified) {
       toast.error("You must verify your email.");
       return;
     }
@@ -100,12 +116,13 @@ export default function RouteDetailPage() {
       return;
     }
     try {
-      await createBooking(id, user.id);
+      await createBooking(id, user.id, goodsDetails, weightRange);
       toast.success("Booking created successfully!");
-      // router.push("/history");
+      setGoodsDetails("");
+      setWeightRange("");
+      setOpenModal(false);
     } catch (error) {
       console.log(error);
-
       toast.error("Failed to create booking.");
     }
   };
@@ -140,7 +157,7 @@ export default function RouteDetailPage() {
                 variant="contained"
                 color="primary"
                 size="large"
-                onClick={handleBooking}
+                onClick={() => setOpenModal(true)} // Mở modal khi nhấn nút
                 sx={{
                   backgroundColor: "#0e243c",
                   padding: "12px 24px",
@@ -155,6 +172,42 @@ export default function RouteDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Modal for Good Detail */}
+        <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+          <DialogTitle>Enter Good Details</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Good Details"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={goodsDetails}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setGoodsDetails(e.target.value)
+              }
+            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="weight-range-label">Weight</InputLabel>
+              <Select
+                labelId="weight-range-label"
+                value={weightRange}
+                onChange={(e) => setWeightRange(e.target.value)}>
+                <MenuItem value="0-5kg">0-5kg</MenuItem>
+                <MenuItem value="5-10kg">5-10kg</MenuItem>
+                <MenuItem value="10-15kg">10-15kg</MenuItem>
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenModal(false)}>Cancel</Button>
+            <Button onClick={handleBooking} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </MainLayout>
   );

@@ -7,6 +7,7 @@ import {
   RouteUpdateInterface,
   RouteUpdateStatusInterface,
 } from "@/libs/common/interfaces/update-route.interface";
+import { SearchBookingQueryInterface } from "@/libs/common/interfaces/search_booking_query.interface";
 
 const BASE_URL = BE_ROUTE_API_URL || "http://localhost:3000";
 const customAxiosWithCredentials = axios.create({
@@ -88,6 +89,38 @@ export function searchRoutes(query?: SearchRouteQueryInterface) {
 
   return customAxiosWithCredentials.get(`/routes`).then((res) => res.data);
 }
+
+export function searchBooking(query?: SearchBookingQueryInterface) {
+  if (query) {
+    let searchQuery = `/booking?`;
+
+    if (query.search) {
+      searchQuery += `search=${query.search}&`;
+    }
+
+    if (query.page) {
+      searchQuery += `page=${query.page}&`;
+    }
+
+    if (query.sortBy) {
+      searchQuery += `sortBy=${query.sortBy}&`;
+    }
+
+    if (query.sortOrder) {
+      searchQuery += `sortOrder=${query.sortOrder}&`;
+    }
+    if (query.status) {
+      searchQuery += `status=${query.status}&`;
+    }
+    searchQuery = searchQuery.endsWith("&")
+      ? searchQuery.slice(0, -1)
+      : searchQuery;
+
+    return customAxiosWithCredentials.get(searchQuery).then((res) => res.data);
+  }
+  return customAxiosWithCredentials.get(`/routes`).then((res) => res.data);
+}
+
 export function deleteRoute(id: string) {
   return customAxiosWithCredentials.delete(`/routes/${id}`);
 }
@@ -104,5 +137,11 @@ export function updateRoute(data: RouteUpdateInterface, id: string) {
 export function updateRouteStatus(id: string) {
   return customAxiosWithCredentials
     .patch(`/routes/${id}/status`)
+    .then((res) => res.data);
+}
+
+export function updateBookingStatus(id: string) {
+  return customAxiosWithCredentials
+    .patch(`/booking/${id}/status`)
     .then((res) => res.data);
 }

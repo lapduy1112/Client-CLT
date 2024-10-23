@@ -140,8 +140,22 @@ export const searchPorts = async (
     throw error;
   }
 };
-
-export const addPort = async (data: { address: string }) => {
+export const uploadImage = async (formData: FormData) => {
+  console.log(formData);
+  try {
+    const response = await api.post("/cloudinary/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("Error upload Image:", error);
+    throw error;
+  }
+};
+export const addPort = async (data: { address: string; imageUrl: string }) => {
   try {
     const response = await api.post('/port/create', data);
     console.log(response.data);
@@ -153,6 +167,7 @@ export const addPort = async (data: { address: string }) => {
     throw error;
   }
 };
+
 export const addRoute = async (newRoute: {
   startPort_id: string;
   endPort_id: string;
@@ -170,11 +185,18 @@ export const addRoute = async (newRoute: {
   }
 };
 
-export const createBooking = async (routeId: string, userId: string) => {
+export const createBooking = async (
+  routeId: string,
+  userId: string,
+  goodsDetails: string,
+  weightRange: string
+) => {
   try {
     const response = await api.post('/booking', {
       routeId,
       userId,
+      goodsDetails,
+      weightRange,
     });
     console.log(response.data);
     return response.data;
@@ -183,4 +205,5 @@ export const createBooking = async (routeId: string, userId: string) => {
     throw error;
   }
 };
+
 export default api;

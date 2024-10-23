@@ -29,17 +29,17 @@ export default function LoginForm() {
   const setAbilities = useStore((state) => state.setAbilities);
   const router = useRouter();
   const handleSignUpClick = () => {
-    router.push('/register');
+    router.push("/register");
   };
   const handleForgotClick = () => {
-    router.push('/forgot');
+    router.push("/forgot");
   };
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string().required('Password is required'),
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
   });
   const mutation = useMutation({
     mutationFn: login,
@@ -51,37 +51,37 @@ export default function LoginForm() {
         role: data.role.role,
         permission: permission,
       };
-      toast.success('User login successfully!');
+      toast.success("User login successfully!");
       setUser(user);
       const abilities: abilitiesMap = new Map();
       for (let i = 0; i < permission.length; i++) {
-        if (permission[i].possession === 'any') {
+        if (permission[i].possession === "any") {
           const key = `${permission[i].action}:${permission[i].object}`;
           abilities.set(key, true);
         }
       }
       setAbilities(abilities);
-      router.push('/');
+      router.push("/");
     },
     onError: (error: Error | AxiosError) => {
-      console.log('Error', error);
+      console.log("Error", error);
       if (axios.isAxiosError(error)) {
         toast.error(getErrorMessage(error?.response?.data));
-        formik.setFieldError('email', getErrorMessage(error?.response?.data));
+        formik.setFieldError("email", getErrorMessage(error?.response?.data));
       } else {
         toast.error(getErrorMessage(error));
-        formik.setFieldError('email', getErrorMessage(error));
+        formik.setFieldError("email", getErrorMessage(error));
       }
     },
   });
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log('Form values', values);
+      console.log("Form values", values);
       mutation.mutate({
         email: values.email,
         password: values.password,
@@ -105,7 +105,7 @@ export default function LoginForm() {
   return (
     <div className="max-w-md w-full p-6">
       <h1 className="text-3xl font-semibold mb-6 text-blue-600 text-center">
-        SSMS
+        Simple Shipping Management System
       </h1>
       <h1 className="text-2xl font-semibold mb-6 text-blue-600 text-center">
         Sign in to your account
@@ -121,8 +121,7 @@ export default function LoginForm() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
               className="w-4"
-              id="google"
-            >
+              id="google">
               <path
                 fill="#fbbb00"
                 d="M113.47 309.408 95.648 375.94l-65.139 1.378C11.042 341.211 0 299.9 0 256c0-42.451 10.324-82.483 28.624-117.732h.014L86.63 148.9l25.404 57.644c-5.317 15.501-8.215 32.141-8.215 49.456.002 18.792 3.406 36.797 9.651 53.408z"
@@ -139,29 +138,28 @@ export default function LoginForm() {
                 fill="#f14336"
                 d="m419.404 58.936-82.933 67.896C313.136 112.246 285.552 103.82 256 103.82c-66.729 0-123.429 42.957-143.965 102.724l-83.397-68.276h-.014C71.23 56.123 157.06 0 256 0c62.115 0 119.068 22.126 163.404 58.936z"
               />
-            </svg>{' '}
-            Google{' '}
+            </svg>{" "}
+            Google{" "}
           </button>
         </div>
         {/* <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
           <button
             type="button"
+
             className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
               id="facebook"
-              className="w-5"
-            >
+              className="w-5">
               <linearGradient
                 id="Ld6sqrtcxMyckEl6xeDdMa"
                 x1="9.993"
                 x2="40.615"
                 y1="9.993"
                 y2="40.615"
-                gradientUnits="userSpaceOnUse"
-              >
+                gradientUnits="userSpaceOnUse">
                 <stop offset="0" stopColor="#2aa4f4" />
                 <stop offset="1" stopColor="#007ad9" />
               </linearGradient>
@@ -179,12 +177,11 @@ export default function LoginForm() {
         </div> */}
       </div>
       <div className="my-4 text-sm text-gray-600 text-center">
-        <p>Or with email and password</p>
+        <p>With email and password</p>
       </div>
       <form
         className="w-full flex flex-col items-center"
-        onSubmit={formik.handleSubmit}
-      >
+        onSubmit={formik.handleSubmit}>
         <div className="mb-4 w-full">
           <TextField
             fullWidth
@@ -198,7 +195,7 @@ export default function LoginForm() {
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
             sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '25px' },
+              "& .MuiOutlinedInput-root": { borderRadius: "25px" },
             }}
             disabled={mutation.isPending}
           />
@@ -210,14 +207,14 @@ export default function LoginForm() {
             name="password"
             label="Password"
             variant="outlined"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
             sx={{
-              '& .MuiOutlinedInput-root': { borderRadius: '25px' },
+              "& .MuiOutlinedInput-root": { borderRadius: "25px" },
             }}
             InputProps={{
               endAdornment: (
@@ -226,8 +223,7 @@ export default function LoginForm() {
                     aria-label="toggle password visibility"
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
+                    edge="end">
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -240,8 +236,7 @@ export default function LoginForm() {
           <a
             href="#"
             className="text-blue-500 hover:underline"
-            onClick={handleForgotClick}
-          >
+            onClick={handleForgotClick}>
             Forgot password?
           </a>
         </div>
@@ -249,20 +244,18 @@ export default function LoginForm() {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
             type="submit"
-            disabled={mutation.isPending}
-          >
+            disabled={mutation.isPending}>
             Sign In
           </button>
         </div>
       </form>
       <div className="mt-4 text-lg text-gray-600 text-center">
         <p>
-          Don&apos;t have account?{' '}
+          Don&apos;t have account?{" "}
           <a
             href="#"
             className="text-blue-500 hover:underline"
-            onClick={handleSignUpClick}
-          >
+            onClick={handleSignUpClick}>
             Sign up
           </a>
         </p>

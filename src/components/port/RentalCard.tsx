@@ -12,18 +12,16 @@ import WorkspacePremiumRoundedIcon from "@mui/icons-material/WorkspacePremiumRou
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
 
-// Định nghĩa kiểu cho props của PortCard
 type PortCardProps = {
   image: string;
-  liked?: boolean; // Trạng thái yêu thích (mặc định là false)
-  lat: string; // Vĩ độ
-  lon: string; // Kinh độ
-  status?: boolean; // Trạng thái hoạt động (mặc định là true)
-  address: string; // Địa chỉ
-  onClick: () => void; // Thêm thuộc tính onClick
+  liked?: boolean;
+  lat: string;
+  lon: string;
+  status?: boolean;
+  address: string;
+  onClick: () => void;
 };
 
-// Thành phần RentalCard
 export default function RentalCard(props: PortCardProps) {
   const {
     address,
@@ -33,10 +31,9 @@ export default function RentalCard(props: PortCardProps) {
     lat,
     lon,
     onClick,
-  } = props; // Nhận onClick từ props
+  } = props;
   const [isLiked, setIsLiked] = React.useState(liked);
 
-  // Hàm xử lý việc bật/tắt yêu thích
   const handleLikeToggle = () => {
     setIsLiked((prev) => !prev);
   };
@@ -54,8 +51,7 @@ export default function RentalCard(props: PortCardProps) {
           borderColor: "var(--joy-palette-neutral-outlinedDisabledBorder)",
         },
       }}
-      onClick={onClick} // Gọi hàm onClick khi nhấp vào thẻ
-    >
+      onClick={onClick}>
       <CardOverflow
         sx={{
           mr: { xs: "var(--CardOverflow-offset)", sm: 0 },
@@ -119,14 +115,6 @@ export default function RentalCard(props: PortCardProps) {
               </Link>
             </Typography>
           </div>
-          <IconButton
-            variant="plain"
-            size="sm"
-            color={isLiked ? "danger" : "neutral"}
-            onClick={handleLikeToggle}
-            sx={{ display: { xs: "none", sm: "flex" }, borderRadius: "50%" }}>
-            <FavoriteRoundedIcon />
-          </IconButton>
         </Stack>
         <Stack
           spacing="0.25rem 1rem"
