@@ -199,6 +199,7 @@ export const HomeSlider = () => {
                         alt={user?.username}
                         src={user?.profileImage}
                         sx={{ width: 48, height: 48 }}
+                        slotProps={{ img: { referrerPolicy: 'no-referrer' } }}
                       />
                     </div>
                     <div className="">

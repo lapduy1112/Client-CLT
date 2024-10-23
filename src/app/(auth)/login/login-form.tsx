@@ -1,24 +1,30 @@
-"use client";
-import { useFormik } from "formik";
-import { useState } from "react";
-import * as Yup from "yup";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import GoogleIcon from "@mui/icons-material/Google";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "./login";
-import { toast } from "react-toastify";
-import { getErrorMessage } from "@/libs/common/utils/error";
-import axios, { AxiosError } from "axios";
-import { useStore } from "@/providers/ZustandProvider";
-import { UserInterface } from "@/libs/common/interfaces/user.interface";
-import { PermissionInterface } from "@/libs/common/interfaces/permission.interface";
-import { abilitiesMap } from "@/providers/ZustandProvider";
+'use client';
+import { useFormik } from 'formik';
+import { useState, useEffect } from 'react';
+import * as Yup from 'yup';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { login } from './login';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@/libs/common/utils/error';
+import axios, { AxiosError } from 'axios';
+import { useStore } from '@/providers/ZustandProvider';
+import { UserInterface } from '@/libs/common/interfaces/user.interface';
+import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
+import { abilitiesMap } from '@/providers/ZustandProvider';
+import { BE_API_URL } from '@/libs/common/constants/api';
 export default function LoginForm() {
+  const user = useStore((state) => state.user);
+  useEffect(() => {
+    if (user) {
+      router.push('/home');
+    }
+  }, [user]);
   const setUser = useStore((state) => state.setUser);
   const setAbilities = useStore((state) => state.setAbilities);
   const router = useRouter();
@@ -105,10 +111,12 @@ export default function LoginForm() {
         Sign in to your account
       </h1>
       <div className="mt-4 flex flex-col lg:flex-row items-center justify-between">
-        <div className="w-full lg:w-1/2 mb-2 lg:mb-0">
+        <div className="w-full mb-2 lg:mb-0">
           <button
             type="button"
-            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300">
+            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
+            onClick={() => router.push(`${BE_API_URL}/auth/google/signin`)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
@@ -134,18 +142,12 @@ export default function LoginForm() {
             Google{" "}
           </button>
         </div>
-        <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
+        {/* <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
           <button
             type="button"
-            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300">
-            {/* <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    id="github"
-                    className="w-4"
-                  >
-                    <path d="M7.999 0C3.582 0 0 3.596 0 8.032a8.031 8.031 0 0 0 5.472 7.621c.4.074.546-.174.546-.387 0-.191-.007-.696-.011-1.366-2.225.485-2.695-1.077-2.695-1.077-.363-.928-.888-1.175-.888-1.175-.727-.498.054-.488.054-.488.803.057 1.225.828 1.225.828.714 1.227 1.873.873 2.329.667.072-.519.279-.873.508-1.074-1.776-.203-3.644-.892-3.644-3.969 0-.877.312-1.594.824-2.156-.083-.203-.357-1.02.078-2.125 0 0 .672-.216 2.2.823a7.633 7.633 0 0 1 2.003-.27 7.65 7.65 0 0 1 2.003.271c1.527-1.039 2.198-.823 2.198-.823.436 1.106.162 1.922.08 2.125.513.562.822 1.279.822 2.156 0 3.085-1.87 3.764-3.652 3.963.287.248.543.738.543 1.487 0 1.074-.01 1.94-.01 2.203 0 .215.144.465.55.386A8.032 8.032 0 0 0 16 8.032C16 3.596 12.418 0 7.999 0z" />
-                  </svg> */}
+
+            className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
@@ -172,7 +174,7 @@ export default function LoginForm() {
             </svg>
             Facebook
           </button>
-        </div>
+        </div> */}
       </div>
       <div className="my-4 text-sm text-gray-600 text-center">
         <p>With email and password</p>

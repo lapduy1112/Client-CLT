@@ -1,5 +1,5 @@
-"use client";
-import React, { useState, useEffect } from "react";
+'use client';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   IconButton,
@@ -14,25 +14,24 @@ import {
   Pagination,
   Box,
   CircularProgress,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import MainLayout from "../MainLayout";
-import AddRoute from "@/components/admin/AddRoute";
-import { getRoutes, getPorts, searchRoutes } from "@/services/api";
-import { useRouter, useSearchParams } from "next/navigation";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Route } from "@/libs/common/interfaces/route.interface";
-
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import MainLayout from '../MainLayout';
+import AddRoute from '@/components/admin/AddRoute';
+import { getRoutes, getPorts, searchRoutes } from '@/services/api';
+import { useRouter, useSearchParams } from 'next/navigation';
+import 'react-toastify/dist/ReactToastify.css';
+import { Route } from '@/libs/common/interfaces/route.interface';
+import { Port } from '@/services/interface';
 export default function RouteManagePage() {
   const [routes, setRoutes] = useState<Route[]>([]);
   const [ports, setPorts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
   const [page, setPage] = useState(1);
 
@@ -46,15 +45,15 @@ export default function RouteManagePage() {
         const fetchedPorts = await getPorts();
         const processedRoutes = fetchedRoutes.map((route: Route) => ({
           ...route,
-          departureDate: route.departureDate.split("T")[0],
-          arrivalDate: route.arrivalDate.split("T")[0],
+          departureDate: route.departureDate.split('T')[0],
+          arrivalDate: route.arrivalDate.split('T')[0],
         }));
         setRoutes(processedRoutes);
         setFilteredRoutes(processedRoutes);
         setPorts(fetchedPorts);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching routes:", error);
+        console.error('Error fetching routes:', error);
         setLoading(false);
       }
     };
@@ -64,19 +63,19 @@ export default function RouteManagePage() {
 
   useEffect(() => {
     const searchRoutesByQuery = async () => {
-      const searchParam = searchParams.get("search") || "";
+      const searchParam = searchParams.get('search') || '';
       setSearchQuery(searchParam);
       if (searchParam) {
         try {
           const fetchedRoutes = await searchRoutes(searchParam);
           const processedRoutes = fetchedRoutes.map((route: Route) => ({
             ...route,
-            departureDate: route.departureDate.split("T")[0],
-            arrivalDate: route.arrivalDate.split("T")[0],
+            departureDate: route.departureDate.split('T')[0],
+            arrivalDate: route.arrivalDate.split('T')[0],
           }));
           setFilteredRoutes(processedRoutes);
         } catch (error) {
-          console.error("Error fetching searched routes:", error);
+          console.error('Error fetching searched routes:', error);
           setFilteredRoutes([]);
         }
       } else {
@@ -97,7 +96,7 @@ export default function RouteManagePage() {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       router.push(`/admin/routemanage?search=${searchQuery}`);
     }
   };
@@ -109,7 +108,8 @@ export default function RouteManagePage() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh">
+          height="100vh"
+        >
           <CircularProgress size={60} />
         </Box>
       </MainLayout>
@@ -132,7 +132,8 @@ export default function RouteManagePage() {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={handleClickOpen}>
+          onClick={handleClickOpen}
+        >
           Add new
         </Button>
       </div>
