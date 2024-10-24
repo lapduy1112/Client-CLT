@@ -57,8 +57,11 @@ const AddRoute: React.FC<AddRouteProps> = ({
       setStartPort("");
       setEndPort("");
       setDepartureDate("");
-      setError(null); // Reset thông báo lỗi
+      setError(null); 
       onClose();
+              setTimeout(() => {
+          window.location.reload();
+        }, 3000);
     } catch (error) {
       console.error("Error adding route:", error);
     }

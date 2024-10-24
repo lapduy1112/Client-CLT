@@ -1,4 +1,8 @@
-import { Box, Typography, Avatar } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import Image from "next/image";
 export default function UserInfo() {
   return (
@@ -14,20 +18,20 @@ export default function UserInfo() {
           more accessible for businesses.
         </p>
       </div>
-
       <div className="flex justify-center space-x-8">
         <div className="flex max-w-lg items-center space-x-6">
-          <Image
-            src="/images/avatar1.jpg"
-            alt=""
-            width={0}
-            height={0}
-            sizes="100vw"
-            className="h-full w-full"
-          />
+          <div className="relative w-44 h-44">
+            <Image
+              src="/images/avatar2.jpg"
+              alt="To Thanh Hien"
+              layout="fill"
+              objectFit="cover"
+              className="h-full w-full"
+            />
+          </div>
           <div>
             <h3 className="text-xl font-semibold">To Thanh Hien</h3>
-            <a href="#" className="text-blue-600 hover:underline">
+            <a href="#" className="text-blue-600 font-semibold hover:underline">
               Developer
             </a>
             <p className="text-gray-500 mt-2">
@@ -35,30 +39,42 @@ export default function UserInfo() {
               project.
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-purple-600">
-                <i className="fab fa-xing fa-lg"></i>
-              </a>
-              <a href="#" className="text-gray-600">
-                <i className="fab fa-instagram fa-lg"></i>
-              </a>
-              <a href="#" className="text-blue-600">
-                <i className="fab fa-linkedin fa-lg"></i>
-              </a>
+              <Box className="flex space-x-3">
+                <IconButton
+                  href="https://facebook.com"
+                  target="_blank"
+                  color="inherit">
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton
+                  href="https://instagram.com"
+                  target="_blank"
+                  color="inherit">
+                  <InstagramIcon />
+                </IconButton>
+                <IconButton
+                  href="https://linkedin.com"
+                  target="_blank"
+                  color="inherit">
+                  <LinkedInIcon />
+                </IconButton>
+              </Box>
             </div>
           </div>
         </div>
         <div className="flex max-w-lg items-center space-x-6">
-          <Image
-            src="/images/avatar1.jpg"
-            alt=""
-            width={0}
-            height={0}
-            sizes="100vw"
-            className="h-full w-full"
-          />
+          <div className="relative w-44 h-44">
+            <Image
+              src="/images/avatar1.jpg"
+              alt="Nguyen Duy Lap"
+              layout="fill"
+              objectFit="cover"
+              className="rounded-full"
+            />
+          </div>
           <div>
             <h3 className="text-xl font-semibold">Nguyen Duy Lap</h3>
-            <a href="#" className="text-blue-600 hover:underline">
+            <a href="#" className="text-blue-600 font-semibold hover:underline">
               Developer
             </a>
             <p className="text-gray-500 mt-2">
@@ -66,15 +82,26 @@ export default function UserInfo() {
               the project
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-purple-600">
-                <i className="fab fa-xing fa-lg"></i>
-              </a>
-              <a href="#" className="text-gray-600">
-                <i className="fab fa-instagram fa-lg"></i>
-              </a>
-              <a href="#" className="text-blue-600">
-                <i className="fab fa-linkedin fa-lg"></i>
-              </a>
+              <Box className="flex space-x-3">
+                <IconButton
+                  href="https://facebook.com"
+                  target="_blank"
+                  color="inherit">
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton
+                  href="https://instagram.com"
+                  target="_blank"
+                  color="inherit">
+                  <InstagramIcon />
+                </IconButton>
+                <IconButton
+                  href="https://linkedin.com"
+                  target="_blank"
+                  color="inherit">
+                  <LinkedInIcon />
+                </IconButton>
+              </Box>
             </div>
           </div>
         </div>

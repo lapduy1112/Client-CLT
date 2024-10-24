@@ -1,28 +1,28 @@
-'use client';
-import { useFormik } from 'formik';
-import { useState, useEffect } from 'react';
-import * as Yup from 'yup';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
-import { login } from './login';
-import { toast } from 'react-toastify';
-import { getErrorMessage } from '@/libs/common/utils/error';
-import axios, { AxiosError } from 'axios';
-import { useStore } from '@/providers/ZustandProvider';
-import { UserInterface } from '@/libs/common/interfaces/user.interface';
-import { PermissionInterface } from '@/libs/common/interfaces/permission.interface';
-import { abilitiesMap } from '@/providers/ZustandProvider';
-import { BE_API_URL } from '@/libs/common/constants/api';
+"use client";
+import { useFormik } from "formik";
+import { useState, useEffect } from "react";
+import * as Yup from "yup";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "./login";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/libs/common/utils/error";
+import axios, { AxiosError } from "axios";
+import { useStore } from "@/providers/ZustandProvider";
+import { UserInterface } from "@/libs/common/interfaces/user.interface";
+import { PermissionInterface } from "@/libs/common/interfaces/permission.interface";
+import { abilitiesMap } from "@/providers/ZustandProvider";
+import { BE_API_URL } from "@/libs/common/constants/api";
 export default function LoginForm() {
   const user = useStore((state) => state.user);
   useEffect(() => {
     if (user) {
-      router.push('/home');
+      router.push("/home");
     }
   }, [user]);
   const setUser = useStore((state) => state.setUser);
@@ -115,8 +115,10 @@ export default function LoginForm() {
           <button
             type="button"
             className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
-            onClick={() => router.push(`${BE_API_URL}/auth/google/signin`)}
-          >
+            // onClick={() => router.push(`${BE_API_URL}/auth/google/signin`)}
+            onClick={() =>
+              window.open(`${BE_API_URL}/auth/google/signin`, "_blank")
+            }>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"

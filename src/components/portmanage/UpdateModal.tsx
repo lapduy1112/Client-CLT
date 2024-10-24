@@ -151,6 +151,7 @@ export default function UpdatePortModal({
                           formik.touched.address &&
                           Boolean(formik.errors.address)
                         }
+                        disabled
                       />
                       {formik.touched.address &&
                         Boolean(formik.errors.address) && (

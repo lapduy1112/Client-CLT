@@ -77,7 +77,7 @@ export default function Sidebar({ tab }: { tab?: string }) {
     mutationFn: logOut,
     onSuccess: () => {
       toast.success("Logged out successfully");
-      router.push("/login");
+
       deleteUser();
     },
     onError: (error: Error | AxiosError) => {
@@ -91,8 +91,8 @@ export default function Sidebar({ tab }: { tab?: string }) {
   });
   const handleLogout = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
     mutation.mutate();
+    router.push("/login");
   };
   return (
     <Sheet
@@ -356,7 +356,8 @@ export default function Sidebar({ tab }: { tab?: string }) {
             variant="outlined"
             size="sm"
             src={user?.profileImage}
-            imgProps={{ referrerPolicy: "no-referrer" }}
+            // imgProps={{ referrerPolicy: "no-referrer" }}
+            referrerPolicy="no-referrer"
           />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography

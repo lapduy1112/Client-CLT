@@ -11,6 +11,7 @@ import {
 } from "@mui/joy";
 import { addPort, uploadImage } from "@/services/api";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 interface AddPortProps {
   open: boolean;
@@ -52,6 +53,10 @@ const AddPort: React.FC<AddPortProps> = ({ open, onClose, onPortAdded }) => {
         setPortName("");
         setSelectedImageFile(null);
         onClose();
+
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -62,7 +67,9 @@ const AddPort: React.FC<AddPortProps> = ({ open, onClose, onPortAdded }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <ModalDialog>
-        <Typography component="h2">Add New Port</Typography>
+        <Typography component="h2" level="h4" mb={1}>
+          Add New Port
+        </Typography>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel>Address</FormLabel>
           <Typography component="h4">

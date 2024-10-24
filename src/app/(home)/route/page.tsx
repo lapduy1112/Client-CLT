@@ -8,6 +8,7 @@ import { getRoutes, searchRoutes } from "@/services/api";
 import Pagination from "@/components/route/Pagination";
 import Search from "@/components/route/Search";
 import OrderSelector from "@/components/route/OrderSelector";
+import StatusSelector from "@/components/route/StatusSelector";
 
 interface Port {
   id: string;
@@ -42,6 +43,7 @@ export default function RoutePage() {
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState("DESC");
   const [searchQuery, setSearchQuery] = useState("");
+  const [status, setStatus] = React.useState<string>("");
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
 
@@ -62,12 +64,14 @@ export default function RoutePage() {
               page,
               routePerPage,
               sortBy,
-              sortOrder
+              sortOrder,
+              status
             )
-          : await getRoutes(page, routePerPage, sortBy, sortOrder);
+          : await getRoutes(page, routePerPage, sortBy, sortOrder, status);
 
         setRoutes(fetchedRoutes.data);
         setFilteredRoutes(fetchedRoutes.data);
+        console.log(fetchedRoutes.data);
         setTotalPages(fetchedRoutes.lastPage);
         setCurrentPage(page);
       } catch (error) {
@@ -78,7 +82,7 @@ export default function RoutePage() {
     };
 
     fetchRoutes();
-  }, [searchParams, sortBy, sortOrder]);
+  }, [searchParams, sortBy, sortOrder, status]);
   const handleSearch = () => {
     setLoading(true);
     if (searchQuery.trim() === "") {
@@ -96,7 +100,7 @@ export default function RoutePage() {
       handleSearch();
     }
   };
-    const handleNextPage = () => {
+  const handleNextPage = () => {
     setLoading(true);
     if (currentPage < totalPages) {
       handlePageChange(currentPage + 1);
@@ -124,7 +128,10 @@ export default function RoutePage() {
     setSortOrder(sortOrder);
     handlePageChange(1);
   };
-
+  const handleStatusChange = (newStatus: string) => {
+    setStatus(newStatus);
+    console.log("Selected status:", newStatus);
+  };
   if (loading) {
     return (
       <MainLayout>
@@ -163,10 +170,16 @@ export default function RoutePage() {
               />
             </div>
           </div>
-          <div className="relative inline-block text-left">
-            <OrderSelector onSortChange={handleSortChange} />
+          <div className="flex space-x-2">
+            <div className="relative inline-block text-left">
+              <OrderSelector onSortChange={handleSortChange} />
+            </div>
+            <div className="relative inline-block text-left">
+              <StatusSelector onStatusChange={handleStatusChange} />
+            </div>
           </div>
         </div>
+
         <Grid
           container
           spacing={3}

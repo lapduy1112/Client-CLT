@@ -157,7 +157,7 @@ export default function RouteDetailPage() {
                 variant="contained"
                 color="primary"
                 size="large"
-                onClick={() => setOpenModal(true)} // Mở modal khi nhấn nút
+                onClick={() => setOpenModal(true)}
                 sx={{
                   backgroundColor: "#0e243c",
                   padding: "12px 24px",

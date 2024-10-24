@@ -13,10 +13,10 @@ const Home = () => {
       <HomePageLayout>
         <HomeSlider />
         <AnotherHomeCarousel />
-        <Stats />
+        <UserInfo />
         <About />
         <AboutUs />
-        <UserInfo />
+        <Stats />
       </HomePageLayout>
     </Suspense>
   );

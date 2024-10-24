@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import type { Metadata } from "next";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -16,6 +17,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 };

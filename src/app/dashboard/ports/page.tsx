@@ -36,7 +36,6 @@ export default function PortManagement() {
   };
   const handlePortAdded = (newPort: any) => {
     setPorts((prevPorts) => [...prevPorts, newPort]);
-    toast.success("Port added successfully");
   };
   return (
     <Box

@@ -16,7 +16,7 @@ import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -532,9 +532,8 @@ export default function PortTable({ ports }: { ports: Port[] }) {
           endDecorator={<KeyboardArrowRightIcon />}
           disabled={!data || data.nextPage == null}
           onClick={() => {
-            const nextPage = String(Number(page) + 1);
-            handleSearch("page", nextPage);
-            setCurPage(nextPage);
+            handleSearch("page", String(Number(data.currentPage) + 1));
+            setCurPage(String(Number(data.currentPage) + 1));
           }}>
           Next
         </Button>
